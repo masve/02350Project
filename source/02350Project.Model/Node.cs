@@ -32,8 +32,11 @@ namespace _02350Project.Model
         public Point East { get { east.X = X + Width; east.Y = Y + Height / 2;      return east; } }
         public Point West { get { west.X = X; west.Y = Y + Height / 2;              return west; } }
 
-        //public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); } }
+        public int CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged("X"); } }
+        public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged("Y"); } }
 
+        //public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); } }
+        
         public Node()
         {
             //isSelected = false;

@@ -26,8 +26,8 @@ namespace _02350Project.Command
 
         public void Execute()
         {
-            node.X = newX;
-            node.Y = newY;
+            node.CanvasCenterX = newX;
+            node.CanvasCenterY = newY;
         }
 
     }

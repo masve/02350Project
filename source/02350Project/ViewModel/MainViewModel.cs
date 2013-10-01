@@ -85,8 +85,8 @@ namespace _02350Project.ViewModel
                 if (moveNodePoint == default(Point))
                     moveNodePoint = mousePosition;
 
-                movingNode.X = (int)mousePosition.X;
-                movingNode.Y = (int)mousePosition.Y;
+                movingNode.CanvasCenterX = (int)mousePosition.X;
+                movingNode.CanvasCenterY = (int)mousePosition.Y;
             }
         }
 
