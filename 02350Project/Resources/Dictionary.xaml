@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    
+    <!--TOOLTIPS TAB/GROUP CONTENT-->
+    <system:String x:Key="pasteTooltipTitle">Paste (Ctrl+V)</system:String>
+    <system:String x:Key="pasteTooltipDesc">Paste the content of the Clipboard.</system:String>
+
+    <system:String x:Key="cutTooltipTitle">Cut (Ctrl+X)</system:String>
+    <system:String x:Key="cutTooltipDesc">Cut the selected and put it on the Clipboard.</system:String>
+
+    <system:String x:Key="copyTooltipTitle">Copy (Ctrl+C)</system:String>
+    <system:String x:Key="copyTooltipDesc">Copy the selected and put it on the Clipboard.</system:String>
+
+    <system:String x:Key="undoTooltipTitle">Undo (Ctrl+Z)</system:String>
+    <system:String x:Key="undoTooltipDesc">Undo last action.</system:String>
+
+    <system:String x:Key="redoTooltipTitle">Redo (Ctrl+Y)</system:String>
+    <system:String x:Key="redoTooltipDesc">Redo last action.</system:String>
+
+    <!--TOOLTIPS APPLICATIONMENU CONTENT-->
+    <system:String x:Key="newTooltipTitle">New (Ctrl+N)</system:String>
+    <system:String x:Key="newTooltipDesc">Create a new diagram.</system:String>
+
+    <system:String x:Key="openTooltipTitle">Open (Ctrl+O)</system:String>
+    <system:String x:Key="openTooltipDesc">Open an existing diagram.</system:String>
+
+    <system:String x:Key="saveTooltipTitle">Save (Ctrl+S)</system:String>
+    <system:String x:Key="saveTooltipDesc">Save the current diagram.</system:String>
+
+    <system:String x:Key="saveAsTooltipTitle">Save as (Ctrl+F12)</system:String>
+    <system:String x:Key="saveAsTooltipDesc">Save the current diagram as a new file.</system:String>
+
+    <system:String x:Key="printTooltipTitle">Print (Ctrl+P)</system:String>
+    <system:String x:Key="printTooltipDesc">Print the diagram picture.</system:String>
+
+</ResourceDictionary>

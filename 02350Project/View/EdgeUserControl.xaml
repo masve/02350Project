@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="_02350Project.View.EdgeUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Line Stroke="Black" StrokeThickness="10" X1="{Binding EndA.NorthX}" Y1="{Binding EndA.NorthY}" X2="{Binding EndB.NorthX}" Y2="{Binding EndB.NorthY}"/> 
+</UserControl>

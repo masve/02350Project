@@ -1,0 +1,27 @@
+﻿<Window x:Class="_02350Project.View.CreateClassWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create class" Height="343" Width="329" ResizeMode="NoResize">
+
+    <DockPanel LastChildFill="True" Background="WhiteSmoke">
+        <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" LastChildFill="True">
+            <Label DockPanel.Dock="Left" Width="100" FontWeight="Bold">Class name</Label>
+            <TextBox DockPanel.Dock="Right"/>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" LastChildFill="True">
+            <Label DockPanel.Dock="Left" Width="100" FontWeight="Bold">Attributes</Label>
+            <TextBox DockPanel.Dock="Right" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" LastChildFill="True">
+            <Label DockPanel.Dock="Left" Width="100" FontWeight="Bold">Operations</Label>
+            <TextBox DockPanel.Dock="Right" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10,10,10" HorizontalAlignment="Right">
+            <Button Content="Create" Width="79" Height="23" Margin="0,0,4,0"/>
+            <Button Content="Cancel" Width="79" Height="23"/>
+
+        </StackPanel>
+    </DockPanel>
+
+
+</Window>
