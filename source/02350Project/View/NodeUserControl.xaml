@@ -7,13 +7,22 @@
              mc:Ignorable="d" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Width="{Binding Width}" Height="{Binding Height}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="180" d:DesignWidth="135">
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="5" >
-        <Rectangle Fill="WhiteSmoke">
-            
-            <i:Interaction.Triggers>
+        <Border BorderBrush="Black" BorderThickness="1" >
+            <DockPanel Background="WhiteSmoke">
+                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
+                    <TextBlock>[CLASS_NAME]</TextBlock>
+                    <Separator/>
+                    <TextBlock>- ATTRIBUTE</TextBlock>
+                    <TextBlock>- ATTRIBUTE</TextBlock>
+                    <TextBlock>- ATTRIBUTE</TextBlock>
+                    <Separator/>
+                    <TextBlock>+ OPERATION</TextBlock>
+                    <TextBlock>+ OPERATION</TextBlock>
+                </StackPanel>
                 
+                <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
@@ -23,10 +32,8 @@
                 <i:EventTrigger EventName="MouseMove">
                     <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
-
             </i:Interaction.Triggers>
-            
-        </Rectangle>
+            </DockPanel>
         </Border>
     </Grid>
 </UserControl>
