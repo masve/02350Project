@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Diagnostics;
 
+// Test
 
 namespace _02350Project.ViewModel
 {
