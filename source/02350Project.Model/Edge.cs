@@ -14,10 +14,6 @@ namespace _02350Project.Model
         public Node EndA { get { return endA; } set { endA = value; NotifyPropertyChanged("EndA"); } }
         public Node EndB { get { return endB; } set { endB = value; NotifyPropertyChanged("EndB"); } }
 
-        //public Edge(Node _endA, Node _endB)
-        //{
-        //    EndA = _endA;
-        //    EndB = _endB;
-        //}
+        
     }
 }

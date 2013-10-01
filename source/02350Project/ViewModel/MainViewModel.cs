@@ -105,8 +105,8 @@ namespace _02350Project.ViewModel
                 {
                     AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
                     m.Execute();
-                    firstSelectedEdgeEnd = null;
                     isAddingEdge = false;
+                    firstSelectedEdgeEnd = null;
                 }
             }
             else
