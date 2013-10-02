@@ -72,6 +72,7 @@
     <Compile Include="Command\AddEdgeCommand.cs" />
     <Compile Include="Command\AddNodeCommand.cs" />
     <Compile Include="Command\MoveNodeCommand.cs" />
+    <Compile Include="testhest.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\CreateClassWindow.xaml.cs">
