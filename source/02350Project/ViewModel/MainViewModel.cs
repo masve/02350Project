@@ -23,6 +23,8 @@ namespace _02350Project.ViewModel
         public ObservableCollection<Edge> Edges { get; set; }
 
         private Point moveNodePoint;
+        private int posX;
+        private int posY;
 
         private bool isAddingEdge = false;
         private Node firstSelectedEdgeEnd;
@@ -38,13 +40,13 @@ namespace _02350Project.ViewModel
         {
             Nodes = new ObservableCollection<Node>()
             {
-                 new Node() {X = 30, Y = 30, Width = 90, Height = 120},
-                 new Node() {X = 250, Y = 250, Width = 90, Height = 120}
+                //     new Node() {X = 30, Y = 30, Width = 90, Height = 120},
+                //     new Node() {X = 250, Y = 250, Width = 90, Height = 120}
             };
 
             Edges = new ObservableCollection<Edge>()
             {
-                new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
+                //  new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
             };
 
             AddNodeCommand = new RelayCommand(AddNode);
@@ -85,8 +87,26 @@ namespace _02350Project.ViewModel
                 if (moveNodePoint == default(Point))
                     moveNodePoint = mousePosition;
 
-                movingNode.CanvasCenterX = (int)mousePosition.X;
-                movingNode.CanvasCenterY = (int)mousePosition.Y;
+                //movingNode.CanvasCenterX = ((int)mousePosition.X > 0 ? (int)mousePosition.X : 0);
+                //movingNode.CanvasCenterY = ((int)mousePosition.Y > 0 ? (int)mousePosition.Y : 0);
+                if (mousePosition.X - (movingNode.Height / 2) > 0)
+                {
+                    movingNode.CanvasCenterX = (int)mousePosition.X;
+                }
+                else
+                {
+                    movingNode.CanvasCenterX = movingNode.Width / 2;
+                }
+                if (mousePosition.Y - (movingNode.Width / 2) > 0)
+                {
+                    movingNode.CanvasCenterY = (int)mousePosition.Y;
+                }
+                else
+                {
+                    movingNode.CanvasCenterY = movingNode.Height / 2;
+                }
+                posX = movingNode.CanvasCenterX;
+                posY = movingNode.CanvasCenterY;
             }
         }
 
@@ -116,7 +136,7 @@ namespace _02350Project.ViewModel
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 Point mousePosition = Mouse.GetPosition(canvas);
 
-                MoveNodeCommand m = new MoveNodeCommand(movingNode, (int)mousePosition.X, (int)mousePosition.Y, (int)moveNodePoint.X, (int)moveNodePoint.Y);
+                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
                 m.Execute();
 
                 moveNodePoint = new Point();

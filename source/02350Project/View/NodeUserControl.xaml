@@ -12,7 +12,7 @@
         <Border BorderBrush="Black" BorderThickness="1" >
             <DockPanel Background="WhiteSmoke">
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
-                    <TextBlock>[CLASS_NAME]</TextBlock>
+                    <Button>[CLASS_NAME]</Button>
                     <Separator/>
                     <TextBlock>- ATTRIBUTE</TextBlock>
                     <TextBlock>- ATTRIBUTE</TextBlock>
