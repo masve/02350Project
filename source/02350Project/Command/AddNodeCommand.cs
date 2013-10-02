@@ -12,6 +12,7 @@ namespace _02350Project.Command
     class AddNodeCommand
     {
         // Use this one!
+        // test
 
         private ObservableCollection<Node> nodes;
         private Node node;
