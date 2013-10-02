@@ -17,7 +17,6 @@ namespace _02350Project.Command
         public AddEdgeCommand(ObservableCollection<Edge> _edges, Node _endA, Node _endB)
         {
             edges = _edges;
-            //edge = new Edge(_endA, _endB);
             edge = new Edge() { EndA = _endA, EndB = _endB };
         }
 
@@ -26,5 +25,9 @@ namespace _02350Project.Command
             edges.Add(edge);
         }
 
+        public void UnExecute()
+        {
+            edges.Remove(edge);
+        }
     }
 }

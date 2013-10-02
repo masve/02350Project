@@ -30,5 +30,11 @@ namespace _02350Project.Command
             node.CanvasCenterY = newY;
         }
 
+        public void UnExecute()
+        {
+            node.CanvasCenterX = x;
+            node.CanvasCenterY = y;
+        }
+
     }
 }
