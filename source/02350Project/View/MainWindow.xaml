@@ -6,7 +6,9 @@
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="RibbonTest" Height="600" Width="800">
-    
+    <Window.InputBindings>
+        <KeyBinding Key="C" Modifiers="CTRL" Command="{Binding AddNodeCommand}"/>
+    </Window.InputBindings>
     <Window.Resources>
         <DataTemplate DataType="{x:Type Model:Node}">
             <Canvas>
