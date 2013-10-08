@@ -74,6 +74,7 @@
     <Compile Include="Command\MoveNodeCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\XMLSerial.cs" />
     <Compile Include="View\CreateClassWindow.xaml.cs">
       <DependentUpon>CreateClassWindow.xaml</DependentUpon>
     </Compile>

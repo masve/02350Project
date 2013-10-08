@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System;
+using System.Runtime.InteropServices;
 
 // Test F# er godt
 
@@ -36,12 +38,18 @@ namespace _02350Project.ViewModel
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
 
+        public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
+        private double northEast = -1.0 * Math.PI / 4.0;
+        private double northWest = -3.0 * Math.PI / 4.0;
+        private double southEast = Math.PI / 4.0;
+        private double southWest = 3.0 * Math.PI / 4.0;
+
         public MainViewModel()
         {
             Nodes = new ObservableCollection<Node>()
             {
-                //     new Node() {X = 30, Y = 30, Width = 90, Height = 120},
-                //     new Node() {X = 250, Y = 250, Width = 90, Height = 120}
+                     new Node() {X = 30, Y = 30, Width = 90, Height = 120},
+                     new Node() {X = 250, Y = 250, Width = 90, Height = 120}
             };
 
             Edges = new ObservableCollection<Edge>()
@@ -89,6 +97,8 @@ namespace _02350Project.ViewModel
 
                 //movingNode.CanvasCenterX = ((int)mousePosition.X > 0 ? (int)mousePosition.X : 0);
                 //movingNode.CanvasCenterY = ((int)mousePosition.Y > 0 ? (int)mousePosition.Y : 0);
+
+                //Move the class
                 if (mousePosition.X - (movingNode.Height / 2) > 0)
                 {
                     movingNode.CanvasCenterX = (int)mousePosition.X;
@@ -105,8 +115,76 @@ namespace _02350Project.ViewModel
                 {
                     movingNode.CanvasCenterY = movingNode.Height / 2;
                 }
+
+                CalculateAnchor(movingNode);
+
+
                 posX = movingNode.CanvasCenterX;
                 posY = movingNode.CanvasCenterY;
+            }
+        }
+
+        public void CalculateAnchor(Node node)
+        {
+            foreach (Edge e in Edges)
+            {
+                if (e.EndA.Equals(node))
+                {
+                    setEnds(e);
+
+                }
+                else if (e.EndB.Equals(node))
+                {
+                    setEnds(e);
+                }
+            }
+        }
+
+        public void setEnds(Edge e)
+        {
+            ANCHOR A = findAnchor(e.EndA.CanvasCenterX, e.EndA.CanvasCenterY, e.EndB.CanvasCenterX, e.EndB.CanvasCenterY);
+            ANCHOR B = findAnchor(e.EndB.CanvasCenterX, e.EndB.CanvasCenterY, e.EndA.CanvasCenterX, e.EndA.CanvasCenterY);
+            switch (A)
+            {
+                case ANCHOR.NORTH:
+                    e.AX = (int)e.EndA.North.X;
+                    e.AY = (int)e.EndA.North.Y;
+                    break;
+                case ANCHOR.EAST:
+                    e.AX = (int)e.EndA.East.X;
+                    e.AY = (int)e.EndA.East.Y;
+
+                    break;
+                case ANCHOR.SOUTH:
+                    e.AX = (int)e.EndA.South.X;
+                    e.AY = (int)e.EndA.South.Y;
+
+                    break;
+                case ANCHOR.WEST:
+                    e.AX = (int)e.EndA.West.X;
+                    e.AY = (int)e.EndA.West.Y;
+                    break;
+            }
+            switch (B)
+            {
+                case ANCHOR.NORTH:
+                    e.BX = (int)e.EndB.North.X;
+                    e.BY = (int)e.EndB.North.Y;
+                    break;
+                case ANCHOR.EAST:
+                    e.BX = (int)e.EndB.East.X;
+                    e.BY = (int)e.EndB.East.Y;
+
+                    break;
+                case ANCHOR.SOUTH:
+                    e.BX = (int)e.EndB.South.X;
+                    e.BY = (int)e.EndB.South.Y;
+
+                    break;
+                case ANCHOR.WEST:
+                    e.BX = (int)e.EndB.West.X;
+                    e.BY = (int)e.EndB.West.Y;
+                    break;
             }
         }
 
@@ -144,6 +222,38 @@ namespace _02350Project.ViewModel
             }
         }
 
+        private ANCHOR findAnchor(int x1, int y1, int x2, int y2)
+        {
+            int deltaX = x2 - x1;
+            int deltaY = y2 - y1;
+
+
+            double angle = Math.Atan2(deltaY, deltaX);
+
+
+            if (northEast > angle && angle >= northWest)
+            {
+                return ANCHOR.NORTH;
+
+            }
+            else if (southWest > angle && angle >= southEast)
+            {
+                return ANCHOR.SOUTH;
+
+            }
+            else if (southEast > angle && angle >= northEast)
+            {
+                return ANCHOR.EAST;
+
+            }
+            else if (northWest > angle || angle >= southWest)
+            {
+                return ANCHOR.WEST;
+
+            }
+            return ANCHOR.NORTH;
+        }
+
         // Finds parent of element
         private static T FindParentOfType<T>(DependencyObject o)
         {
@@ -153,5 +263,13 @@ namespace _02350Project.ViewModel
             else
                 return FindParentOfType<T>(parent);
         }
+
+        //public void WriteToConsole(string message)
+        //{
+        //    AttachConsole(-1);
+        //    Console.WriteLine(message);
+        //}
+        //[DllImport("Kernel32.dll")]
+        //public static extern bool AttachConsole(int processId);
     }
 }

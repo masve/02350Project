@@ -5,5 +5,5 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
-    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="5,2" X1="{Binding EndA.North.X}" Y1="{Binding EndA.North.Y}" X2="{Binding EndB.North.X}" Y2="{Binding EndB.North.Y}"/> 
+    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="5,2" X1="{Binding AX}" Y1="{Binding AY}" X2="{Binding BX}" Y2="{Binding BY}"/> 
 </UserControl>
