@@ -80,11 +80,13 @@ namespace _02350Project.ViewModel
 
         public void AddEdge()
         {
+            isRemovingNode = false;
             isAddingEdge = true;
         }
 
         public void RemoveNode()
         {
+            isAddingEdge = false;
             isRemovingNode = true;
         }
 
@@ -222,9 +224,9 @@ namespace _02350Project.ViewModel
             {
                 FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
                 Node NodeToRemove = (Node)rectNode.DataContext;
-                RemoveEdgeCommand m = new RemoveEdgeCommand(Edges, NodeToRemove);
-                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, NodeToRemove);
-                m.Execute();
+               // RemoveEdgeCommand m = new RemoveEdgeCommand(Edges, NodeToRemove);
+                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
+              //  m.Execute();
                 n.Execute();
                 isRemovingNode = false;
             }

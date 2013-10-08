@@ -7,11 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// Not yet implemented.
 namespace _02350Project.Command
 {
     class RemoveEdgeCommand
     {
-        private ObservableCollection<Edge> edges;
+ /*       private ObservableCollection<Edge> edges;
         private Node node;
 
         public RemoveEdgeCommand(ObservableCollection<Edge> _edges, Node _node)
@@ -30,6 +31,6 @@ namespace _02350Project.Command
                     edges.Remove(e);
             }
             
-        }
+*/        }
     }
 }
