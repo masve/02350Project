@@ -31,6 +31,6 @@ namespace _02350Project.Command
                     edges.Remove(e);
             }
             
-*/        }
+        }*/
     }
 }
