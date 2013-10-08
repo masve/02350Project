@@ -212,13 +212,13 @@
     <Resource Include="1380121204_65588.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\appmenu\menuicon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\02350Project.Model\02350Project.Model.csproj">
       <Project>{83ae2b48-c0fc-49b4-84ad-223bd7fff12f}</Project>
       <Name>02350Project.Model</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\appmenu\menuicon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

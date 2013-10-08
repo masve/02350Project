@@ -28,7 +28,7 @@
     <system:String x:Key="saveTooltipTitle">Save (Ctrl+S)</system:String>
     <system:String x:Key="saveTooltipDesc">Save the current diagram.</system:String>
 
-    <system:String x:Key="saveAsTooltipTitle">Save as (Ctrl+F12)</system:String>
+    <system:String x:Key="saveAsTooltipTitle">Save as F12</system:String>
     <system:String x:Key="saveAsTooltipDesc">Save the current diagram as a new file.</system:String>
 
     <system:String x:Key="printTooltipTitle">Print (Ctrl+P)</system:String>

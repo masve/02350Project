@@ -11,8 +11,8 @@ namespace _02350Project.Model
         private Node endA;
         private Node endB;
         private enum ANCHOR { NORTH, SOUTH, WEST, EAST };
-        private ANCHOR anchorA;
-        private ANCHOR anchorB;
+        //private ANCHOR anchorA;
+        //private ANCHOR anchorB;
 
         private int aX, aY, bX, bY;
 

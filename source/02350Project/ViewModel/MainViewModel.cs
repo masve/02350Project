@@ -158,7 +158,6 @@ namespace _02350Project.ViewModel
                 case ANCHOR.SOUTH:
                     e.AX = (int)e.EndA.South.X;
                     e.AY = (int)e.EndA.South.Y;
-
                     break;
                 case ANCHOR.WEST:
                     e.AX = (int)e.EndA.West.X;
