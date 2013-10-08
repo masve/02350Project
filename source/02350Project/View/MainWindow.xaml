@@ -9,6 +9,7 @@
     
     <Window.InputBindings>
         <KeyBinding Key="C" Modifiers="CTRL" Command="{Binding AddNodeCommand}"/>
+        <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
     
     <Window.Resources>

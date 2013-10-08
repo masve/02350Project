@@ -29,10 +29,14 @@ namespace _02350Project.ViewModel
         private int posY;
 
         private bool isAddingEdge = false;
+        private bool isRemovingNode = false;
         private Node firstSelectedEdgeEnd;
 
         public ICommand AddNodeCommand { get; private set; }
         public ICommand AddEdgeCommand { get; private set; }
+
+        public ICommand RemoveNodeCommand { get; private set; }
+        public ICommand RemoveEdgeCommand { get; private set; }
 
         public ICommand MouseDownNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
@@ -60,6 +64,8 @@ namespace _02350Project.ViewModel
             AddNodeCommand = new RelayCommand(AddNode);
             AddEdgeCommand = new RelayCommand(AddEdge);
 
+            RemoveNodeCommand = new RelayCommand(RemoveNode);
+
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
@@ -77,15 +83,20 @@ namespace _02350Project.ViewModel
             isAddingEdge = true;
         }
 
+        public void RemoveNode()
+        {
+            isRemovingNode = true;
+        }
+
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-            if (!isAddingEdge)
+            if (!isAddingEdge && !isRemovingNode)
                 e.MouseDevice.Target.CaptureMouse();
         }
 
         public void MouseMoveNode(MouseEventArgs e)
         {
-            if (Mouse.Captured != null && !isAddingEdge)
+            if (Mouse.Captured != null && !isAddingEdge && !isRemovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 Node movingNode = (Node)movingRect.DataContext;
@@ -202,9 +213,20 @@ namespace _02350Project.ViewModel
                 {
                     AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
                     m.Execute();
+                    CalculateAnchor(rectNode);
                     isAddingEdge = false;
                     firstSelectedEdgeEnd = null;
                 }
+            } 
+            else if (isRemovingNode)
+            {
+                FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
+                Node NodeToRemove = (Node)rectNode.DataContext;
+                RemoveEdgeCommand m = new RemoveEdgeCommand(Edges, NodeToRemove);
+                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, NodeToRemove);
+                m.Execute();
+                n.Execute();
+                isRemovingNode = false;
             }
             else
             {
