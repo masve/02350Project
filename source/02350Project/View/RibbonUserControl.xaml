@@ -37,7 +37,7 @@
 
             <RibbonTab Header="Home">
                 <RibbonGroup Name="Clipboard" Header="Clipboard">
-                    <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}"/>
+                    <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}" Click="RibbonButton_Click_1"/>
                     <RibbonButton Label="Cut" SmallImageSource="../Resources/Images/clipboardgroup/edit-cut.png" ToolTipTitle="{StaticResource cutTooltipTitle}" ToolTipDescription="{StaticResource cutTooltipDesc}"/>
                     <RibbonButton Label="Copy" SmallImageSource="../Resources/Images/clipboardgroup/edit-copy.png" ToolTipTitle="{StaticResource copyTooltipTitle}" ToolTipDescription="{StaticResource copyTooltipDesc}"/>
                 </RibbonGroup>

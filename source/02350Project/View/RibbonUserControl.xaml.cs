@@ -24,12 +24,12 @@ namespace _02350Project.View
         {
             InitializeComponent();
         }
-#if false
+#if true
         private void RibbonButton_Click_1(object sender, RoutedEventArgs e)
         {
             View.CreateClassWindow rt = new View.CreateClassWindow();
             rt.Show();
-        } 
+        }
 #endif
     }
 }

@@ -37,7 +37,8 @@
                 <Canvas.Effect>
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
                 </Canvas.Effect>
-            </Canvas>
+
+                </Canvas>
             <!--</ScrollViewer>-->
         </Grid>
         <!--</DockPanel>-->
