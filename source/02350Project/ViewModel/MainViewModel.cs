@@ -82,6 +82,7 @@ namespace _02350Project.ViewModel
         {
             isRemovingNode = false;
             isAddingEdge = true;
+            Mouse.OverrideCursor = Cursors.Hand;
         }
 
         public void RemoveNode()
@@ -110,8 +111,9 @@ namespace _02350Project.ViewModel
 
                 //movingNode.CanvasCenterX = ((int)mousePosition.X > 0 ? (int)mousePosition.X : 0);
                 //movingNode.CanvasCenterY = ((int)mousePosition.Y > 0 ? (int)mousePosition.Y : 0);
-
+                
                 //Move the class
+
                 if (mousePosition.X - (movingNode.Height / 2) > 0)
                 {
                     movingNode.CanvasCenterX = (int)mousePosition.X;
@@ -120,7 +122,7 @@ namespace _02350Project.ViewModel
                 {
                     movingNode.CanvasCenterX = movingNode.Width / 2;
                 }
-                if (mousePosition.Y - (movingNode.Width / 2) > 0)
+                if (mousePosition.Y - (movingNode.Width / 2) > 0 )
                 {
                     movingNode.CanvasCenterY = (int)mousePosition.Y;
                 }
@@ -128,6 +130,23 @@ namespace _02350Project.ViewModel
                 {
                     movingNode.CanvasCenterY = movingNode.Height / 2;
                 }
+                //if (mousePosition.X + (movingNode.Width / 2) < canvas.ActualWidth)
+                //{
+                //    movingNode.CanvasCenterX = (int)mousePosition.X;
+                //}
+                //else
+                //{
+                //    movingNode.CanvasCenterX = (int)canvas.ActualWidth - movingNode.Width / 2;
+                //}
+                //if (mousePosition.Y + (movingNode.Height / 2) < canvas.ActualHeight)
+                //{
+                //    movingNode.CanvasCenterY = (int)mousePosition.Y;
+                //}
+                //else
+                //{
+                //    movingNode.CanvasCenterY = (int)canvas.ActualHeight - movingNode.Height / 2;
+                //}
+
 
                 CalculateAnchor(movingNode);
 
@@ -217,6 +236,7 @@ namespace _02350Project.ViewModel
                     m.Execute();
                     CalculateAnchor(rectNode);
                     isAddingEdge = false;
+                    Mouse.OverrideCursor = Cursors.Arrow;
                     firstSelectedEdgeEnd = null;
                 }
             } 
@@ -236,6 +256,7 @@ namespace _02350Project.ViewModel
                 Node movingNode = (Node)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 Point mousePosition = Mouse.GetPosition(canvas);
+                
 
                 MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
                 m.Execute();
@@ -287,12 +308,12 @@ namespace _02350Project.ViewModel
                 return FindParentOfType<T>(parent);
         }
 
-        //public void WriteToConsole(string message)
+        //public void writetoconsole(string message)
         //{
-        //    AttachConsole(-1);
-        //    Console.WriteLine(message);
+        //    attachconsole(-1);
+        //    console.writeline(message);
         //}
-        //[DllImport("Kernel32.dll")]
-        //public static extern bool AttachConsole(int processId);
+        //[dllimport("kernel32.dll")]
+        //public static extern bool attachconsole(int processid);
     }
 }
