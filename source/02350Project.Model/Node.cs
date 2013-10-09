@@ -19,6 +19,12 @@ namespace _02350Project.Model
         private Point east;
         private Point west;
 
+        private string name;
+        private bool abstractFlag;
+        private bool interfaceFlag;
+        private List<string> attributes;
+        private List<string> methods;
+
         //private bool isSelected;
 
         public int X { get { return x; } set { x = value; NotifyPropertyChanged("X"); NotifyPropertyChanged("CanvasCenterX"); NotifyPropertyChanged("North"); NotifyPropertyChanged("South"); NotifyPropertyChanged("East"); NotifyPropertyChanged("West"); } }
@@ -36,6 +42,13 @@ namespace _02350Project.Model
         public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged("Y"); NotifyPropertyChanged("Height"); } }
 
         //public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); } }
+
+        public string Name { get { return name; } set { name = value; NotifyPropertyChanged("Name"); } }
+        public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; NotifyPropertyChanged("AbstractFlag"); } }
+        public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; NotifyPropertyChanged("InterfaceFlag"); } }
+
+        public List<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
+        public List<string> Methods { get { return methods; } set { methods = value; NotifyPropertyChanged("Methods"); } }
 
         public Node()
         {
