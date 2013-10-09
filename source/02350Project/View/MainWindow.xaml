@@ -27,8 +27,9 @@
     
     <DockPanel LastChildFill="True">
         <View:RibbonUserControl DockPanel.Dock="Top"/>
-        <DockPanel Background="LightSteelBlue" LastChildFill="True">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+       <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
+        <Grid Name="MyGrid" Background="LightSteelBlue">
+           <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
             <Canvas DockPanel.Dock="Top" Background="White" Margin="5,5,6,6">
                 <ItemsControl ItemsSource="{Binding Nodes}"/>
                 <ItemsControl ItemsSource="{Binding Edges}"/>
@@ -37,8 +38,9 @@
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
                 </Canvas.Effect>
             </Canvas>
-            </ScrollViewer>
-        </DockPanel>
+            <!--</ScrollViewer>-->
+        </Grid>
+        <!--</DockPanel>-->
     </DockPanel>
     
 </Window>
