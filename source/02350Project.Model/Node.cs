@@ -25,6 +25,8 @@ namespace _02350Project.Model
         private List<string> attributes;
         private List<string> methods;
 
+        private int longestString;
+
         //private bool isSelected;
 
         public int X { get { return x; } set { x = value; NotifyPropertyChanged("X"); NotifyPropertyChanged("CanvasCenterX"); NotifyPropertyChanged("North"); NotifyPropertyChanged("South"); NotifyPropertyChanged("East"); NotifyPropertyChanged("West"); } }
@@ -49,6 +51,8 @@ namespace _02350Project.Model
 
         public List<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
         public List<string> Methods { get { return methods; } set { methods = value; NotifyPropertyChanged("Methods"); } }
+
+        public int LongestString { get { return longestString; } set { longestString = value; NotifyPropertyChanged("LongestString"); } }
 
         public Node()
         {
