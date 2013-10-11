@@ -82,7 +82,7 @@ namespace _02350Project.ViewModel
         {
             isRemovingNode = false;
             isAddingEdge = true;
-            Mouse.OverrideCursor = Cursors.Hand;
+            //Mouse.OverrideCursor = Cursors.Hand;
         }
 
         public void RemoveNode()
@@ -111,7 +111,7 @@ namespace _02350Project.ViewModel
 
                 //movingNode.CanvasCenterX = ((int)mousePosition.X > 0 ? (int)mousePosition.X : 0);
                 //movingNode.CanvasCenterY = ((int)mousePosition.Y > 0 ? (int)mousePosition.Y : 0);
-                
+
                 //Move the class
 
                 if (mousePosition.X - (movingNode.Height / 2) > 0)
@@ -122,7 +122,7 @@ namespace _02350Project.ViewModel
                 {
                     movingNode.CanvasCenterX = movingNode.Width / 2;
                 }
-                if (mousePosition.Y - (movingNode.Width / 2) > 0 )
+                if (mousePosition.Y - (movingNode.Width / 2) > 0)
                 {
                     movingNode.CanvasCenterY = (int)mousePosition.Y;
                 }
@@ -236,17 +236,17 @@ namespace _02350Project.ViewModel
                     m.Execute();
                     CalculateAnchor(rectNode);
                     isAddingEdge = false;
-                    Mouse.OverrideCursor = Cursors.Arrow;
+                    //Mouse.OverrideCursor = Cursors.Arrow;
                     firstSelectedEdgeEnd = null;
                 }
-            } 
+            }
             else if (isRemovingNode)
             {
                 FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
                 Node NodeToRemove = (Node)rectNode.DataContext;
-               // RemoveEdgeCommand m = new RemoveEdgeCommand(Edges, NodeToRemove);
+                // RemoveEdgeCommand m = new RemoveEdgeCommand(Edges, NodeToRemove);
                 RemoveNodeCommand n = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-              //  m.Execute();
+                //  m.Execute();
                 n.Execute();
                 isRemovingNode = false;
             }
@@ -256,7 +256,7 @@ namespace _02350Project.ViewModel
                 Node movingNode = (Node)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 Point mousePosition = Mouse.GetPosition(canvas);
-                
+
 
                 MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
                 m.Execute();

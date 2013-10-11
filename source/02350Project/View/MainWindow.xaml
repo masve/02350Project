@@ -30,15 +30,16 @@
        <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
         <Grid Name="MyGrid" Background="LightSteelBlue">
            <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
-            <Canvas DockPanel.Dock="Top" Background="White" Margin="5,5,6,6">
+            <Border Margin="5,5,6,6">
+            <Canvas Background="White" ClipToBounds="True">
                 <ItemsControl ItemsSource="{Binding Nodes}"/>
                 <ItemsControl ItemsSource="{Binding Edges}"/>
                 
-                <Canvas.Effect>
-                    <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
-                </Canvas.Effect>
-
                 </Canvas>
+                <Border.Effect>
+                    <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
+                </Border.Effect>
+            </Border>
             <!--</ScrollViewer>-->
         </Grid>
         <!--</DockPanel>-->
