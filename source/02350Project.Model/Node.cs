@@ -52,7 +52,7 @@ namespace _02350Project.Model
         public string Name { get { return name; } set { name = value; NotifyPropertyChanged("Name"); } }
         public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; NotifyPropertyChanged("AbstractFlag"); } }
         public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; NotifyPropertyChanged("InterfaceFlag"); } }
-
+                
         public ObservableCollection<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
         public List<string> Methods { get { return methods; } set { methods = value; NotifyPropertyChanged("Methods"); } }
 
