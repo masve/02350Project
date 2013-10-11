@@ -50,9 +50,11 @@ namespace _02350Project.ViewModel
 
         public MainViewModel()
         {
+            ObservableCollection<String> Attributes = new ObservableCollection<String>();
+            Attributes.Add("Hello");
             Nodes = new ObservableCollection<Node>()
             {
-                     new Node() {X = 30, Y = 30, Width = 90, Height = 120},
+                     new Node() {X = 30, Y = 30, Width = 90, Height = 120, Attributes = Attributes},
                      new Node() {X = 250, Y = 250, Width = 90, Height = 120}
             };
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +24,12 @@ namespace _02350Project.Model
         private string name;
         private bool abstractFlag;
         private bool interfaceFlag;
-        private List<string> attributes;
+        private ObservableCollection<string> attributes;
         private List<string> methods;
 
-        private int longestString;
+        private ICollectionView attributeView;
+
+        //private int longestString;
 
         //private bool isSelected;
 
@@ -49,10 +53,12 @@ namespace _02350Project.Model
         public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; NotifyPropertyChanged("AbstractFlag"); } }
         public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; NotifyPropertyChanged("InterfaceFlag"); } }
 
-        public List<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
+        public ObservableCollection<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
         public List<string> Methods { get { return methods; } set { methods = value; NotifyPropertyChanged("Methods"); } }
 
-        public int LongestString { get { return longestString; } set { longestString = value; NotifyPropertyChanged("LongestString"); } }
+
+
+        // public int LongestString { get { return longestString; } set { longestString = value; NotifyPropertyChanged("LongestString"); } }
 
         public Node()
         {

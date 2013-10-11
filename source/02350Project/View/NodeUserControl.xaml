@@ -12,11 +12,12 @@
         <Border BorderBrush="Black" BorderThickness="1" >
             <DockPanel Background="WhiteSmoke">
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
-                    <Button>[CLASS_NAME]</Button>
+                    <TextBlock>[CLASS_NAME]</TextBlock>
                     <Separator/>
+                    <!--<TextBlock>- ATTRIBUTE</TextBlock>
                     <TextBlock>- ATTRIBUTE</TextBlock>
-                    <TextBlock>- ATTRIBUTE</TextBlock>
-                    <TextBlock>- ATTRIBUTE</TextBlock>
+                    <TextBlock>- ATTRIBUTE</TextBlock>-->
+                    <ListBox IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Attributes}" IsEnabled="False"></ListBox>
                     <Separator/>
                     <TextBlock>+ OPERATION</TextBlock>
                     <TextBlock>+ OPERATION</TextBlock>
