@@ -22,12 +22,14 @@ namespace _02350Project.Model
         private Point west;
 
         private string name;
+        private bool noneFlag;
         private bool abstractFlag;
         private bool interfaceFlag;
-        private ObservableCollection<string> attributes;
+        private List<string> attributes;
         private List<string> methods;
+        //public enum nodeFlag { NONE, ABSTRACT, INTERFACE };
 
-        private ICollectionView attributeView;
+        //private ICollectionView attributeView;
 
         //private int longestString;
 
@@ -50,10 +52,21 @@ namespace _02350Project.Model
         //public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); } }
 
         public string Name { get { return name; } set { name = value; NotifyPropertyChanged("Name"); } }
+
+        //public nodeFlag SetNodeFlag
+        //{
+        //    set
+        //    {
+        //        if (value == nodeFlag.NONE) { NoneFlag = true; AbstractFlag = false; InterfaceFlag = false; }
+        //        else if (value == nodeFlag.ABSTRACT) { NoneFlag = false; AbstractFlag = true; InterfaceFlag = false; }
+        //        else if (value == nodeFlag.INTERFACE) { NoneFlag = false; AbstractFlag = false; InterfaceFlag = true; }
+        //    }
+        //}
+        public bool NoneFlag { get { return NoneFlag; } set { noneFlag = value; NotifyPropertyChanged("NoneFlag"); } }
         public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; NotifyPropertyChanged("AbstractFlag"); } }
         public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; NotifyPropertyChanged("InterfaceFlag"); } }
                 
-        public ObservableCollection<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
+        public List<string> Attributes { get { return attributes; } set { attributes = value; NotifyPropertyChanged("Attributes"); } }
         public List<string> Methods { get { return methods; } set { methods = value; NotifyPropertyChanged("Methods"); } }
 
 
@@ -65,7 +78,9 @@ namespace _02350Project.Model
             //isSelected = false;
 
             X = Y = 50;
-            Width = Height = 100;
+            Height = 100;
+            Width = 100;
+            Name = "test";
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,8 +25,16 @@ namespace _02350Project.View
         public MainWindow()
         {
             InitializeComponent();
+            Messenger.Default.Register<int>(this, "key6", a => OpenView(a));
         }
 
-        
+        public void OpenView(int a)
+        {
+            if (a == 1001)
+            {
+                var createDialog = new CreateClassWindow();
+                createDialog.ShowDialog();
+            }
+        }
     }
 }

@@ -12,12 +12,12 @@
         <Border BorderBrush="Black" BorderThickness="1" >
             <DockPanel Background="WhiteSmoke">
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
-                    <TextBlock>[CLASS_NAME]</TextBlock>
+                    <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}"/>
                     <Separator/>
                     <!--<TextBlock>- ATTRIBUTE</TextBlock>
                     <TextBlock>- ATTRIBUTE</TextBlock>
                     <TextBlock>- ATTRIBUTE</TextBlock>-->
-                    <ListBox ItemsSource="{Binding Attributes}" BorderThickness="0" Padding="0" Margin="0">
+                    <ListBox ItemsSource="{Binding Attributes}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="BorderThickness" Value="0" />
@@ -32,8 +32,20 @@
                         </ListBox.ItemContainerStyle>
                     </ListBox>
                     <Separator/>
-                    <TextBlock>+ OPERATION</TextBlock>
-                    <TextBlock>+ OPERATION</TextBlock>
+                    <ListBox ItemsSource="{Binding Methods}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="IsEnabled" Value="False" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Foreground" Value="Black" />
+                                        <Setter Property="Background" Value="WhiteSmoke" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                 </StackPanel>
                 
                 <i:Interaction.Triggers>

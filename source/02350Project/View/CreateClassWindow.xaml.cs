@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GalaSoft.MvvmLight;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GalaSoft.MvvmLight.Messaging;
+using System.Runtime.InteropServices;
 
 namespace _02350Project.View
 {
@@ -22,11 +25,16 @@ namespace _02350Project.View
         public CreateClassWindow()
         {
             InitializeComponent();
+
+            Messenger.Default.Register<int>(this, "CloseClassDialogView", a => closeView(a));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void closeView(int a)
         {
-
+            if (a == 1000)
+            {
+                this.Close();
+            }
         }
     }
 }

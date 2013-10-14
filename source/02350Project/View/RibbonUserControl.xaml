@@ -37,7 +37,7 @@
 
             <RibbonTab Header="Home">
                 <RibbonGroup Name="Clipboard" Header="Clipboard">
-                    <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}" Click="RibbonButton_Click_1"/>
+                    <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}"/>
                     <RibbonButton Label="Cut" SmallImageSource="../Resources/Images/clipboardgroup/edit-cut.png" ToolTipTitle="{StaticResource cutTooltipTitle}" ToolTipDescription="{StaticResource cutTooltipDesc}"/>
                     <RibbonButton Label="Copy" SmallImageSource="../Resources/Images/clipboardgroup/edit-copy.png" ToolTipTitle="{StaticResource copyTooltipTitle}" ToolTipDescription="{StaticResource copyTooltipDesc}"/>
                 </RibbonGroup>
@@ -46,7 +46,7 @@
                     <RibbonButton Label="Redo" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
-                    <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding AddNodeCommand}"/>
+                    <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding OpenCreateDialogCommand}"/>
                     <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png"/>
                     <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveNodeCommand}"/>
                 </RibbonGroup>

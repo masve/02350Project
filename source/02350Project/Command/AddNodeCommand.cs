@@ -16,15 +16,22 @@ namespace _02350Project.Command
 
         private ObservableCollection<Node> nodes;
         private Node node;
+        private Node createNode;
+        //private List<string> attributes;
+        //private string name;
 
-        public AddNodeCommand(ObservableCollection<Node> _nodes)
+        public AddNodeCommand(ObservableCollection<Node> _nodes, /*string _name, List<string> _attributes*/ Node _createNode)
         {
             nodes = _nodes;
+            createNode = _createNode;
+
+            /*name = _name;
+            attributes = _attributes;*/
         }
 
         public void Execute()
         {
-            nodes.Add(node = new Node());
+            nodes.Add(node = createNode);
         }
 
         public void UnExecute()

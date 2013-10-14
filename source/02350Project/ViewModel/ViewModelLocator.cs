@@ -43,6 +43,7 @@ namespace _02350Project.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<CreateClassViewModel>();
         }
 
         public MainViewModel Main
@@ -50,6 +51,14 @@ namespace _02350Project.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+
+        public CreateClassViewModel CreateClassDialog
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<CreateClassViewModel>();
             }
         }
         
