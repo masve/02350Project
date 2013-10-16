@@ -74,9 +74,7 @@
     <Compile Include="Command\MoveNodeCommand.cs" />
     <Compile Include="Command\RemoveEdgeCommand.cs" />
     <Compile Include="Command\RemoveNodeCommand.cs" />
-    <Compile Include="Other\BoolConverter.cs" />
     <Compile Include="Other\ConsolePrinter.cs" />
-    <Compile Include="Other\EnumRadioButton.cs" />
     <Compile Include="ViewModel\CreateClassViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

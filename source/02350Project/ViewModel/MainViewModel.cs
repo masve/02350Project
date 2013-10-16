@@ -44,6 +44,7 @@ namespace _02350Project.ViewModel
 
         public ICommand OpenCreateDialogCommand { get; private set; }
 
+
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
         private double northEast = -1.0 * Math.PI / 4.0;
         private double northWest = -3.0 * Math.PI / 4.0;
@@ -53,12 +54,19 @@ namespace _02350Project.ViewModel
         public MainViewModel()
         {
             List<string> Attributes = new List<string>();
-            Attributes.Add("Hello");
-            Attributes.Add("HelloHelloHelloHelloHelloHello");
-            Attributes.Add("Hello");
+            List<string> Methods = new List<string>();
+            Attributes.Add("- a : int");
+            Attributes.Add("- b : int");
+            Attributes.Add("- sum : int");
+            Methods.Add("+ add ( val1 : int, val2 : int )");
+            Methods.Add("+ sub ( val1 : int, val2 : int )");
+            Methods.Add("+ mul ( val1 : int, val2 : int )");
+            Methods.Add("+ div ( val1 : int, val2 : int )");
+            Node testNode = new Node() { X = 30, Y = 30, Width = 140, Height = 150, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
+
             Nodes = new ObservableCollection<Node>()
             {
-                     new Node() {X = 30, Y = 30, Width = 90, Height = 120, Attributes = Attributes},
+                     testNode,
                      new Node() {X = 250, Y = 250, Width = 90, Height = 120}
             };
 
@@ -77,6 +85,7 @@ namespace _02350Project.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
+
 
             /*
              * We use messages throughout the application to communicate between viewmodels.
@@ -118,6 +127,8 @@ namespace _02350Project.ViewModel
             isRemovingNode = true;
         }
 
+        #region Mouse UP DOWN MOVE
+        
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             if (!isAddingEdge && !isRemovingNode)
@@ -136,7 +147,7 @@ namespace _02350Project.ViewModel
                 if (moveNodePoint == default(Point))
                     moveNodePoint = mousePosition;
 
-                if (mousePosition.X - (movingNode.Height / 2) > 0)
+                if (mousePosition.X - (movingNode.Width / 2) > 0)
                 {
                     movingNode.CanvasCenterX = (int)mousePosition.X;
                 }
@@ -144,7 +155,7 @@ namespace _02350Project.ViewModel
                 {
                     movingNode.CanvasCenterX = movingNode.Width / 2;
                 }
-                if (mousePosition.Y - (movingNode.Width / 2) > 0)
+                if (mousePosition.Y - (movingNode.Height / 2) > 0)
                 {
                     movingNode.CanvasCenterY = (int)mousePosition.Y;
                 }
@@ -159,6 +170,52 @@ namespace _02350Project.ViewModel
                 posY = movingNode.CanvasCenterY;
             }
         }
+
+        public void MouseUpNode(MouseButtonEventArgs e)
+        {
+            if (isAddingEdge)
+            {
+                FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
+                Node rectNode = (Node)rectEnd.DataContext;
+
+                if (firstSelectedEdgeEnd == null)
+                {
+                    firstSelectedEdgeEnd = rectNode;
+                }
+                else if (firstSelectedEdgeEnd != rectNode)
+                {
+                    AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
+                    m.Execute();
+                    CalculateAnchor(rectNode);
+                    isAddingEdge = false;
+                    //Mouse.OverrideCursor = Cursors.Arrow;
+                    firstSelectedEdgeEnd = null;
+                }
+            }
+            else if (isRemovingNode)
+            {
+                FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
+                Node NodeToRemove = (Node)rectNode.DataContext;
+                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
+                n.Execute();
+                isRemovingNode = false;
+            }
+            else
+            {
+                FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
+                Node movingNode = (Node)movingRect.DataContext;
+                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                Point mousePosition = Mouse.GetPosition(canvas);
+
+
+                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
+                m.Execute();
+
+                moveNodePoint = new Point();
+                e.MouseDevice.Target.ReleaseMouseCapture();
+            }
+        }
+        #endregion
 
         #region Dynamic Anchorpoint Calculations
         public void CalculateAnchor(Node node)
@@ -257,51 +314,6 @@ namespace _02350Project.ViewModel
         }
         
         #endregion
-
-        public void MouseUpNode(MouseButtonEventArgs e)
-        {
-            if (isAddingEdge)
-            {
-                FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
-                Node rectNode = (Node)rectEnd.DataContext;
-
-                if (firstSelectedEdgeEnd == null)
-                {
-                    firstSelectedEdgeEnd = rectNode;
-                }
-                else if (firstSelectedEdgeEnd != rectNode)
-                {
-                    AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
-                    m.Execute();
-                    CalculateAnchor(rectNode);
-                    isAddingEdge = false;
-                    //Mouse.OverrideCursor = Cursors.Arrow;
-                    firstSelectedEdgeEnd = null;
-                }
-            }
-            else if (isRemovingNode)
-            {
-                FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
-                Node NodeToRemove = (Node)rectNode.DataContext;
-                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-                n.Execute();
-                isRemovingNode = false;
-            }
-            else
-            {
-                FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                Node movingNode = (Node)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
-                Point mousePosition = Mouse.GetPosition(canvas);
-
-
-                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
-                m.Execute();
-
-                moveNodePoint = new Point();
-                e.MouseDevice.Target.ReleaseMouseCapture();
-            }
-        }
 
         /*
          * Handling open and close for views and view models http://stackoverflow.com/questions/18435173/open-close-view-from-viewmodel 

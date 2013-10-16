@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace _02350Project.ViewModel
@@ -26,6 +27,7 @@ namespace _02350Project.ViewModel
         public bool abstractCheck;
         public bool interfaceCheck;
        // private nodeFlag selectedFlag;
+        public string longString;
         
 
         public ICommand AddAttributeCommand { get; private set; }
@@ -34,12 +36,21 @@ namespace _02350Project.ViewModel
         public ICommand CreateNodeCommand { get; private set; }
         public ICommand CancelNodeCommand { get; private set; }
 
+        public string radio;
+        public ObservableCollection<string> radioChoices = new ObservableCollection<string>();
+
         public CreateClassViewModel()
         {
             attributes = new ObservableCollection<string>();
             methods = new ObservableCollection<string>();
 
             NoneCheck = true;
+
+            RadioChoices.Add("Default");
+            RadioChoices.Add("Interface");
+            RadioChoices.Add("Abstract");
+
+            SelectedChoice = "Default";
 
             AddAttributeCommand = new RelayCommand(addAttribute);
             AddMethodCommand = new RelayCommand(addMethod);
@@ -59,6 +70,13 @@ namespace _02350Project.ViewModel
         public bool NoneCheck { get { return noneCheck; } set { noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
         public bool AbstractCheck { get { return abstractCheck; } set { abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
         public bool InterfaceCheck { get { return interfaceCheck; } set { interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
+        //public string LongString { get { return longString; } set { longString = value; RaisePropertyChanged("LongString"); } }
+
+      
+        public string SelectedChoice { get { return radio; } set { radio = value; RaisePropertyChanged("selectedradio"); } }
+        public ObservableCollection<string> RadioChoices { get { return radioChoices; } set { radioChoices = value; RaisePropertyChanged("Choices"); } }
+       
+        
 
 
         public void addAttribute()
@@ -71,8 +89,37 @@ namespace _02350Project.ViewModel
             Attributes.Add(ActualAttribute);
 
             ActualAttribute = "";
+        }
 
-            //Other.ConsolePrinter.WriteToConsole("none: " + NoneCheck + ", abstract: " + AbstractCheck + ", interface: " + InterfaceCheck);
+        /*
+         * Used to convert from the new solution from the gui back to the model.
+         */
+        public void listboxToBoolRadioConverter()
+        {
+            if (SelectedChoice.Equals("Default")){
+                NoneCheck = true;
+                AbstractCheck = false;
+                interfaceCheck = false;
+            }
+            else if (SelectedChoice.Equals("Abstract"))
+            {
+                NoneCheck = false;
+                AbstractCheck = true;
+                interfaceCheck = false;
+            }
+            else if (SelectedChoice.Equals("Interface"))
+            {
+                NoneCheck = false;
+                AbstractCheck = false;
+                interfaceCheck = true;
+            }
+            else
+            {
+                NoneCheck = false;
+                AbstractCheck = false;
+                interfaceCheck = false;
+            } 
+
         }
 
         public void addMethod()
@@ -85,6 +132,7 @@ namespace _02350Project.ViewModel
             Methods.Add(ActualMethod);
 
             ActualMethod = "";
+            NoneCheck = true;
         }
 
         // Better implementation
@@ -103,7 +151,10 @@ namespace _02350Project.ViewModel
 
         public void createNode()
         {
-            MessengerInstance.Send<Node>(new Node(){Name = NodeName, NoneFlag = NoneCheck, AbstractFlag = AbstractCheck, 
+
+            listboxToBoolRadioConverter();
+
+            MessengerInstance.Send<Node>(new Node(){Name = NodeName, NoneFlag = NoneCheck, AbstractFlag = AbstractCheck,
                                                     InterfaceFlag = InterfaceCheck, Attributes = this.Attributes.ToList<string>(), 
                                                     Methods = this.Methods.ToList<string>()}, "key1");
 
@@ -115,12 +166,28 @@ namespace _02350Project.ViewModel
             //MessengerInstance.Send(new DialogMessage())
         }
 
+        //public void longestString()
+        //{
+        //    LongString = NodeName;
+
+        //    foreach (string str in Attributes)
+        //        if (str.Length > LongString.Length)
+        //            LongString = str;
+
+        //    foreach (string str in Methods)
+        //        if (str.Length > LongString.Length)
+        //            LongString = str;
+        //}
+
         public void resetDialog()
         {
+            NoneCheck = true;
+            SelectedChoice = "interface";
             Methods.Clear();
             Attributes.Clear();
+            ActualAttribute = "";
+            ActualMethod = "";
             NodeName = "";
-            NoneCheck = true;
         }
     }
 }

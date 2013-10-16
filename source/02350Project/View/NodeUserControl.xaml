@@ -8,58 +8,141 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Width="{Binding Width}" Height="{Binding Height}"
              d:DesignHeight="180" d:DesignWidth="135">
+    <!--
+        ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
+    -->
+
+    <UserControl.Resources>
+        <!--http://stackoverflow.com/questions/1499016/reusing-a-treeviews-expand-and-collapse-buttons-in-wpf-->
+        <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
+        <ControlTemplate x:Key="toggleButtonTemplate" TargetType="ToggleButton">
+            <Grid
+            Width="15"
+            Height="13"
+            Background="Transparent">
+                <Path x:Name="ExpandPath"
+              HorizontalAlignment="Left" 
+              VerticalAlignment="Center" 
+              Margin="1,1,1,1"
+              Fill="{StaticResource GlyphBrush}"
+              Data="M 4 0 L 8 4 L 4 8 Z"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked"
+                 Value="True">
+                    <Setter Property="Data"
+                  TargetName="ExpandPath"
+                  Value="M 0 4 L 8 4 L 4 8 Z"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="toggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template" Value="{StaticResource toggleButtonTemplate}" />
+        </Style>
+        
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
     <Grid>
-        <Border BorderBrush="Black" BorderThickness="1" >
-            <DockPanel Background="WhiteSmoke">
-                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
-                    <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}"/>
-                    <Separator/>
-                    <!--<TextBlock>- ATTRIBUTE</TextBlock>
-                    <TextBlock>- ATTRIBUTE</TextBlock>
-                    <TextBlock>- ATTRIBUTE</TextBlock>-->
-                    <ListBox ItemsSource="{Binding Attributes}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="IsEnabled" Value="False" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="Foreground" Value="Black" />
-                                        <Setter Property="Background" Value="WhiteSmoke" />
-                                    </Trigger>
-                                </Style.Triggers>
+
+        <!--http://www.codeproject.com/Tips/286211/All-purpose-Boolean-to-Visibility-Converter
+            Convert VisibilityToBoolean so true:Visible, false:Hidden and not true:Visible, false:Collapsed-->
+        
+        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="WhiteSmoke">
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.25" ShadowDepth="2" />
+            </Border.Effect>
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+                   <!-- <TextBlock Text="«Interface»" FontSize="10" TextAlignment="Center" Visibility="{Binding InterfaceFlag, Converter={StaticResource BoolToVis}}"/>-->
+
+                    <StackPanel  Margin="7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="Italic" FontWeight="Bold" Grid.Column="0"/>
+                            <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}"/>
+                        </Grid>
+                    <TextBlock Text="{Binding NodeSubText}" FontSize="11"/>
+                    </StackPanel>
+                    
+                    <StackPanel Visibility="{Binding NodeCollapsed, Converter={StaticResource BoolToVis}}">
+
+                    <StackPanel Orientation="Horizontal" Background="LightGray">
+                        <ToggleButton Cursor="Hand" Height="10" Width="10" Content="+" Style="{StaticResource toggleButtonStyle}" Margin="5,0,0,0" IsChecked="{Binding AttCollapsed}"/>
+                        <TextBlock Text="Attributes" Margin="5,0,0,0" FontSize="11"/>
+                    </StackPanel>
+
+                    <ListBox IsEnabled="False" ItemsSource="{Binding Attributes}" Margin="10,2,10,2" Visibility="{Binding AttCollapsed, Converter={StaticResource BoolToVis}}">
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <Grid>
+                                    <Border BorderThickness="0"/>
+                                    <ScrollViewer Margin="1" Focusable="false" Background="WhiteSmoke" Padding="-1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="Black">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                        <ListBox.Resources>
+                            <Style x:Key="{x:Type ListBoxItem}">
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <ContentPresenter/>
+                                        </ControlTemplate >
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
-                        </ListBox.ItemContainerStyle>
+                        </ListBox.Resources>
                     </ListBox>
-                    <Separator/>
-                    <ListBox ItemsSource="{Binding Methods}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="IsEnabled" Value="False" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="Foreground" Value="Black" />
-                                        <Setter Property="Background" Value="WhiteSmoke" />
-                                    </Trigger>
-                                </Style.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Background="LightGray">
+                        <ToggleButton Height="10" Width="10" Content="+" Style="{StaticResource toggleButtonStyle}" Margin="5,0,0,0" IsChecked="{Binding MetCollapsed}" Cursor="Hand"/>
+                        <TextBlock Text="Methods" Margin="5,0,0,0" FontSize="11"/>
+                    </StackPanel>
+
+                    <ListBox IsEnabled="False" ItemsSource="{Binding Methods}" Margin="10,2,10,2" Visibility="{Binding MetCollapsed, Converter={StaticResource BoolToVis}}">
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <Grid>
+                                    <Border BorderThickness="0"/>
+                                    <ScrollViewer Margin="1" Focusable="false" Background="WhiteSmoke" Padding="-1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="Black">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                        <ListBox.Resources>
+                            <Style x:Key="{x:Type ListBoxItem}">
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <ContentPresenter/>
+                                        </ControlTemplate >
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
-                        </ListBox.ItemContainerStyle>
+                        </ListBox.Resources>
                     </ListBox>
+                    </StackPanel>
                 </StackPanel>
-                
-                <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseUp">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseMove">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
             </DockPanel>
         </Border>
+        
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDown">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseUp">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseMove">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
     </Grid>
 </UserControl>
