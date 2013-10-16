@@ -62,7 +62,7 @@ namespace _02350Project.ViewModel
             Methods.Add("+ sub ( val1 : int, val2 : int )");
             Methods.Add("+ mul ( val1 : int, val2 : int )");
             Methods.Add("+ div ( val1 : int, val2 : int )");
-            Node testNode = new Node() { X = 30, Y = 30, Width = 140, Height = 150, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
+            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
 
             Nodes = new ObservableCollection<Node>()
             {

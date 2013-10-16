@@ -68,7 +68,7 @@ namespace _02350Project.Model
         private bool metCollapsed;
         private bool isSelected;
 
-        public bool NodeCollapsed { get { return nodeCollapsed; } set { nodeCollapsed = value; NotifyPropertyChanged("NodeCollapsed"); } }
+        public bool NodeCollapsed { get { return nodeCollapsed; } set { nodeCollapsed = value; if (nodeCollapsed == false) Height = 47; else Height = 200; NotifyPropertyChanged("NodeCollapsed"); NotifyPropertyChanged("Height"); } }
         public bool AttCollapsed { get { return attCollapsed; } set { attCollapsed = value; NotifyPropertyChanged("AttCollapsed"); } }
         public bool MetCollapsed { get { return metCollapsed; } set { metCollapsed = value; NotifyPropertyChanged("MetCollapsed"); } }
         public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); } }

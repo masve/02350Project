@@ -39,7 +39,7 @@
         <Style x:Key="toggleButtonStyle" TargetType="ToggleButton">
             <Setter Property="Template" Value="{StaticResource toggleButtonTemplate}" />
         </Style>
-        
+
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
 
@@ -47,35 +47,44 @@
 
         <!--http://www.codeproject.com/Tips/286211/All-purpose-Boolean-to-Visibility-Converter
             Convert VisibilityToBoolean so true:Visible, false:Hidden and not true:Visible, false:Collapsed-->
-        
+
         <Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="WhiteSmoke">
             <Border.Effect>
                 <DropShadowEffect Opacity="0.25" ShadowDepth="2" />
             </Border.Effect>
             <DockPanel LastChildFill="True">
-                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                   <!-- <TextBlock Text="«Interface»" FontSize="10" TextAlignment="Center" Visibility="{Binding InterfaceFlag, Converter={StaticResource BoolToVis}}"/>-->
 
-                    <StackPanel  Margin="7">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="Italic" FontWeight="Bold" Grid.Column="0"/>
-                            <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}"/>
-                        </Grid>
+                <!-- <TextBlock Text="«Interface»" FontSize="10" TextAlignment="Center" Visibility="{Binding InterfaceFlag, Converter={StaticResource BoolToVis}}"/>-->
+
+                <!--NODE HEADER START-->
+
+                <StackPanel Margin="7" DockPanel.Dock="Top">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="Italic" FontWeight="Bold" Grid.Column="0"/>
+                        <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}"/>
+                    </Grid>
                     <TextBlock Text="{Binding NodeSubText}" FontSize="11"/>
-                    </StackPanel>
-                    
-                    <StackPanel Visibility="{Binding NodeCollapsed, Converter={StaticResource BoolToVis}}">
+                </StackPanel>
 
+                <!--NODE HEADER END-->
+
+                <!--NODE CONTENT START-->
+                <StackPanel Visibility="{Binding NodeCollapsed, Converter={StaticResource BoolToVis}}">
+
+                    <!--ATTRIBUTE START-->
+                    <!--ATTRIBUTE HEADER START-->
                     <StackPanel Orientation="Horizontal" Background="LightGray">
                         <ToggleButton Cursor="Hand" Height="10" Width="10" Content="+" Style="{StaticResource toggleButtonStyle}" Margin="5,0,0,0" IsChecked="{Binding AttCollapsed}"/>
                         <TextBlock Text="Attributes" Margin="5,0,0,0" FontSize="11"/>
                     </StackPanel>
+                    <!--ATTRIBUTE HEADER END-->
 
+                    <!--ATTRIBUTE CONTENT START-->
                     <ListBox IsEnabled="False" ItemsSource="{Binding Attributes}" Margin="10,2,10,2" Visibility="{Binding AttCollapsed, Converter={StaticResource BoolToVis}}">
                         <ListBox.Template>
                             <ControlTemplate TargetType="{x:Type ListBox}">
@@ -99,12 +108,18 @@
                             </Style>
                         </ListBox.Resources>
                     </ListBox>
+                    <!--ATTRIBUTE CONTENT END-->
+                    <!--ATTRIBUTE END-->
 
+                    <!--METHOD START-->
+                    <!--METHOD HEADER START-->
                     <StackPanel Orientation="Horizontal" Background="LightGray">
                         <ToggleButton Height="10" Width="10" Content="+" Style="{StaticResource toggleButtonStyle}" Margin="5,0,0,0" IsChecked="{Binding MetCollapsed}" Cursor="Hand"/>
                         <TextBlock Text="Methods" Margin="5,0,0,0" FontSize="11"/>
                     </StackPanel>
+                    <!--METHOD HEADER END-->
 
+                    <!--METHOD CONTENT START-->
                     <ListBox IsEnabled="False" ItemsSource="{Binding Methods}" Margin="10,2,10,2" Visibility="{Binding MetCollapsed, Converter={StaticResource BoolToVis}}">
                         <ListBox.Template>
                             <ControlTemplate TargetType="{x:Type ListBox}">
@@ -128,11 +143,15 @@
                             </Style>
                         </ListBox.Resources>
                     </ListBox>
-                    </StackPanel>
+                    <!--METHOD CONTENT END-->
+                    <!--METHOD END-->
                 </StackPanel>
+                <!--NODE CONTENT END-->
+
             </DockPanel>
         </Border>
-        
+
+        <!--MOUSE TRIGGERS START-->
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDown">
                 <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
@@ -144,5 +163,6 @@
                 <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
+        <!--MOUSE TRIGGERS END-->
     </Grid>
 </UserControl>
