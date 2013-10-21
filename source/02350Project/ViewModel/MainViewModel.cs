@@ -44,6 +44,8 @@ namespace _02350Project.ViewModel
 
         public ICommand OpenCreateDialogCommand { get; private set; }
 
+        public ICommand HelloCommand { get; private set; }
+
 
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
         private double northEast = -1.0 * Math.PI / 4.0;
@@ -62,7 +64,7 @@ namespace _02350Project.ViewModel
             Methods.Add("+ sub ( val1 : int, val2 : int )");
             Methods.Add("+ mul ( val1 : int, val2 : int )");
             Methods.Add("+ div ( val1 : int, val2 : int )");
-            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
+            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator", AbstractFlag = true };
 
             Nodes = new ObservableCollection<Node>()
             {
@@ -85,6 +87,7 @@ namespace _02350Project.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
+            HelloCommand = new RelayCommand(Hello);
 
 
             /*
@@ -105,6 +108,15 @@ namespace _02350Project.ViewModel
             MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
             
         }
+        public void Hello()
+        {
+            Other.ConsolePrinter.WriteToConsole("Hello");
+            
+            //FrameworkElement usrControl = (FrameworkElement)e.MouseDevice.Target;
+            //Node usrControlData = (Node)usrControl.DataContext;
+            //Other.ConsolePrinter.WriteToConsole("height: " + usrControlData.Height);
+        }
+
 
         public void AddNode(/*string name, List<string> attributes*/ Node node)
         {
@@ -132,6 +144,8 @@ namespace _02350Project.ViewModel
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             if (!isAddingEdge && !isRemovingNode)
+                e.MouseDevice.Target.CaptureMouse();
+            else if (isAddingEdge && !isRemovingNode)
                 e.MouseDevice.Target.CaptureMouse();
         }
 
@@ -168,6 +182,12 @@ namespace _02350Project.ViewModel
 
                 posX = movingNode.CanvasCenterX;
                 posY = movingNode.CanvasCenterY;
+                //movingNode.Height = (int)movingRect.ActualHeight;
+                //movingNode.Width = (int)movingRect.ActualWidth;
+                //var infiniteSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
+                //movingRect.Measure(infiniteSize);
+                //Other.ConsolePrinter.WriteToConsole("height: " + movingNode.Height);
+                
             }
         }
 

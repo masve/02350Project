@@ -6,35 +6,50 @@
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="RibbonTest" Height="600" Width="800">
-    
+
     <Window.InputBindings>
         <KeyBinding Key="C" Modifiers="CTRL" Command="{Binding AddNodeCommand}"/>
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
-    
+
     <Window.Resources>
         <DataTemplate DataType="{x:Type Model:Node}">
             <Canvas>
                 <View:NodeUserControl/>
             </Canvas>
-         </DataTemplate>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type Model:Edge}">
             <Canvas>
                 <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
     </Window.Resources>
-    
+
     <DockPanel LastChildFill="True">
         <View:RibbonUserControl DockPanel.Dock="Top"/>
-       <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
+        <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
         <Grid Name="MyGrid" Background="LightSteelBlue">
-           <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
+
+            <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
             <Border Margin="5,5,6,6">
-            <Canvas Background="White" ClipToBounds="True">
-                <ItemsControl ItemsSource="{Binding Nodes}"/>
-                <ItemsControl ItemsSource="{Binding Edges}"/>
-                
+
+                <Canvas ClipToBounds="True">
+                    <ItemsControl ItemsSource="{Binding Nodes}"/>
+                    <ItemsControl ItemsSource="{Binding Edges}"/>
+
+                    <!--http://social.msdn.microsoft.com/Forums/vstudio/en-US/ec22563c-97db-4166-a1f8-2689f0f6e3db/wpf-gridlines-on-canvas?forum=wpf-->
+                    <Canvas.Background>
+                        <VisualBrush TileMode="Tile" Stretch="Fill"
+                             Viewport="-1 -1 10 10" ViewportUnits="Absolute" 
+                             ViewboxUnits="Absolute">
+                            <VisualBrush.Visual>
+                                <Grid Background="White">
+                                    <Rectangle Width="1" Height="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="1"/>
+                                    <Rectangle Height="1" Width="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="1"/>
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Canvas.Background>
                 </Canvas>
                 <Border.Effect>
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
@@ -44,5 +59,5 @@
         </Grid>
         <!--</DockPanel>-->
     </DockPanel>
-    
+
 </Window>

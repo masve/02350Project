@@ -16,18 +16,19 @@ namespace _02350Project.ViewModel
 {
     public class CreateClassViewModel : ViewModelBase
     {
-        public ObservableCollection<String> attributes;
-        public ObservableCollection<String> methods;
-        public string nodeName;
-        public string attribute;
-        public string method;
-        public string selectedAttribute;
+        private ObservableCollection<String> attributes;
+        private ObservableCollection<String> methods;
+        private string nodeName;
+        private string attribute;
+        private string method;
+        private string selectedAttribute;
         //public enum nodeFlag { NONE, ABSTRACT, INTERFACE };
-        public bool noneCheck;
-        public bool abstractCheck;
-        public bool interfaceCheck;
+        private bool noneCheck;
+        private bool abstractCheck;
+        private bool interfaceCheck;
        // private nodeFlag selectedFlag;
-        public string longString;
+        //private string longString;
+        private enum entryType { ATTRIBUTE, METHOD };
         
 
         public ICommand AddAttributeCommand { get; private set; }
@@ -36,13 +37,14 @@ namespace _02350Project.ViewModel
         public ICommand CreateNodeCommand { get; private set; }
         public ICommand CancelNodeCommand { get; private set; }
 
-        public string radio;
-        public ObservableCollection<string> radioChoices = new ObservableCollection<string>();
+        private string nodeType;
+        private ObservableCollection<string> nodeTypes;
 
         public CreateClassViewModel()
         {
             attributes = new ObservableCollection<string>();
             methods = new ObservableCollection<string>();
+            nodeTypes = new ObservableCollection<string>();
 
             NoneCheck = true;
 
@@ -73,11 +75,8 @@ namespace _02350Project.ViewModel
         //public string LongString { get { return longString; } set { longString = value; RaisePropertyChanged("LongString"); } }
 
       
-        public string SelectedChoice { get { return radio; } set { radio = value; RaisePropertyChanged("selectedradio"); } }
-        public ObservableCollection<string> RadioChoices { get { return radioChoices; } set { radioChoices = value; RaisePropertyChanged("Choices"); } }
-       
-        
-
+        public string SelectedChoice { get { return nodeType; } set { nodeType = value; RaisePropertyChanged("selectedradio"); } }
+        public ObservableCollection<string> RadioChoices { get { return nodeTypes; } set { nodeTypes = value; RaisePropertyChanged("Choices"); } }
 
         public void addAttribute()
         {
@@ -86,9 +85,43 @@ namespace _02350Project.ViewModel
             // If already in collection don't add
             if (Attributes.Contains(ActualAttribute)) return;
 
-            Attributes.Add(ActualAttribute);
+            addEntry(ActualAttribute, entryType.ATTRIBUTE);
 
             ActualAttribute = "";
+        }
+
+        public void addMethod()
+        {
+            // If empty don't add
+            if (ActualMethod == "") return;
+            // If already in collection don't add
+            if (Methods.Contains(ActualMethod)) return;
+
+            addEntry(ActualMethod, entryType.METHOD);
+
+            ActualMethod = "";
+        }
+
+        /*
+         * Appends entry with default visibility if not mentioned.
+         * Public(+) for attributes.
+         * Private(-) for methods.
+         */
+        private void addEntry(string entry, entryType type)
+        {
+            switch (type)
+            {
+                case entryType.ATTRIBUTE:
+                    if (entry[0].Equals('-')) Attributes.Add(entry);
+                    else if (entry[0].Equals('+')) Attributes.Add(entry);
+                    else Attributes.Add("- " + entry);
+                    break;
+                case entryType.METHOD:
+                    if (entry[0].Equals('-')) Methods.Add(entry);
+                    else if (entry[0].Equals('+')) Methods.Add(entry);
+                    else Methods.Add("+ " + entry);
+                    break;
+            }
         }
 
         /*
@@ -118,21 +151,7 @@ namespace _02350Project.ViewModel
                 NoneCheck = false;
                 AbstractCheck = false;
                 interfaceCheck = false;
-            } 
-
-        }
-
-        public void addMethod()
-        {
-            // If empty don't add
-            if (ActualMethod == "") return;
-            // If already in collection don't add
-            if (Methods.Contains(ActualMethod)) return;
-
-            Methods.Add(ActualMethod);
-
-            ActualMethod = "";
-            NoneCheck = true;
+            }
         }
 
         // Better implementation
@@ -161,9 +180,6 @@ namespace _02350Project.ViewModel
             resetDialog();
 
             MessengerInstance.Send<int>(1000, "CloseClassDialogView");
-            //MessengerInstance.Send(new GenericMessage<object>("Hello viewmodel"), "key3");
-            //MessengerInstance.Send<string>(ClassName, "key2");
-            //MessengerInstance.Send(new DialogMessage())
         }
 
         //public void longestString()
@@ -182,7 +198,7 @@ namespace _02350Project.ViewModel
         public void resetDialog()
         {
             NoneCheck = true;
-            SelectedChoice = "interface";
+            SelectedChoice = "Default";
             Methods.Clear();
             Attributes.Clear();
             ActualAttribute = "";

@@ -54,7 +54,7 @@
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/dependency.png" Label=" Dependency"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/generalization.png" Label=" Generalization"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/association.png" Label=" Association" Command="{Binding AddEdgeCommand}"/>
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/aggregation.png" Label=" Aggregation"/>
+                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/aggregation.png" Label=" Aggregation" Command="{Binding HelloCommand}"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/composition.png" Label=" Composition"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Insert">
