@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System;
 using System.Runtime.InteropServices;
+using _02350Project.View;
 
 // Test F# er godt
 
@@ -21,6 +22,8 @@ namespace _02350Project.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private UndoRedoController undoRedoController = UndoRedoController.GetInstance();
+
         public ObservableCollection<Node> Nodes { get; set; }
         public ObservableCollection<Edge> Edges { get; set; }
 
@@ -44,7 +47,10 @@ namespace _02350Project.ViewModel
 
         public ICommand OpenCreateDialogCommand { get; private set; }
 
-        public ICommand HelloCommand { get; private set; }
+        public ICommand ExpandResizeCommand { get; private set; }
+
+        public ICommand UndoCommand { get; private set; }
+        public ICommand RedoCommand { get; private set; }
 
 
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
@@ -74,7 +80,7 @@ namespace _02350Project.ViewModel
 
             Edges = new ObservableCollection<Edge>()
             {
-                //  new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
+                  new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
             };
 
             //AddNodeCommand = new RelayCommand(AddNode);
@@ -87,7 +93,10 @@ namespace _02350Project.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
-            HelloCommand = new RelayCommand(Hello);
+            ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
+
+            UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
+            RedoCommand = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
 
             /*
@@ -104,33 +113,36 @@ namespace _02350Project.ViewModel
              * We register for messages regarding creation of nodes from the CreateClassViewModel.
              * 
              * NOTE: Find better alternative to string keys. Suggestion: Some centralized place
-             */ 
+             */
             MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
-            
+
         }
-        public void Hello()
+        public void ExpandResize(SizeChangedEventArgs e)
         {
-            Other.ConsolePrinter.WriteToConsole("Hello");
-            
-            //FrameworkElement usrControl = (FrameworkElement)e.MouseDevice.Target;
-            //Node usrControlData = (Node)usrControl.DataContext;
-            //Other.ConsolePrinter.WriteToConsole("height: " + usrControlData.Height);
+
+            //FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
+            //Node movingNode = (Node)movingRect.DataContext;
+            //if (node. is NodeUserControl) Other.ConsolePrinter.WriteToConsole("IT IS!");
+            FrameworkElement rect = (FrameworkElement)e.Source;
+            Node node = (Node)rect.DataContext;
+            //Node node = (Node)rect.DataContext;
+            node.Height = (int)e.NewSize.Height;
+            node.Width = (int)e.NewSize.Width;
+
+            CalculateAnchor(node);
         }
 
 
-        public void AddNode(/*string name, List<string> attributes*/ Node node)
+        public void AddNode(Node node)
         {
-            //writetoconsole("start");
-            AddNodeCommand m = new AddNodeCommand(Nodes, node);
-            m.Execute();
-            //writetoconsole("end");
+            undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
         }
 
         public void AddEdge()
         {
             isRemovingNode = false;
             isAddingEdge = true;
-            //Mouse.OverrideCursor = Cursors.Hand;
+            Other.ConsolePrinter.WriteToConsole("addedge");
         }
 
         public void RemoveNode()
@@ -140,13 +152,23 @@ namespace _02350Project.ViewModel
         }
 
         #region Mouse UP DOWN MOVE
-        
+
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             if (!isAddingEdge && !isRemovingNode)
+            {
                 e.MouseDevice.Target.CaptureMouse();
-            else if (isAddingEdge && !isRemovingNode)
-                e.MouseDevice.Target.CaptureMouse();
+
+                FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
+                Node movingNode = (Node)movingRect.DataContext;
+                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+
+                Point mousePosition = Mouse.GetPosition(canvas);
+                posX = movingNode.X;
+                posY = movingNode.Y;
+
+            }
+
         }
 
         public void MouseMoveNode(MouseEventArgs e)
@@ -187,7 +209,7 @@ namespace _02350Project.ViewModel
                 //var infiniteSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
                 //movingRect.Measure(infiniteSize);
                 //Other.ConsolePrinter.WriteToConsole("height: " + movingNode.Height);
-                
+
             }
         }
 
@@ -201,16 +223,19 @@ namespace _02350Project.ViewModel
                 if (firstSelectedEdgeEnd == null)
                 {
                     firstSelectedEdgeEnd = rectNode;
+                    Other.ConsolePrinter.WriteToConsole("first edge");
                 }
                 else if (firstSelectedEdgeEnd != rectNode)
                 {
                     AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
-                    m.Execute();
+                    undoRedoController.AddAndExecute(m);
+
                     CalculateAnchor(rectNode);
                     isAddingEdge = false;
-                    //Mouse.OverrideCursor = Cursors.Arrow;
                     firstSelectedEdgeEnd = null;
+
                 }
+
             }
             else if (isRemovingNode)
             {
@@ -229,7 +254,7 @@ namespace _02350Project.ViewModel
 
 
                 MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
-                m.Execute();
+                undoRedoController.AddAndExecute(m);
 
                 moveNodePoint = new Point();
                 e.MouseDevice.Target.ReleaseMouseCapture();
@@ -332,7 +357,7 @@ namespace _02350Project.ViewModel
             }
             return ANCHOR.NORTH;
         }
-        
+
         #endregion
 
         /*

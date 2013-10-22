@@ -26,10 +26,10 @@ namespace _02350Project.ViewModel
         private bool noneCheck;
         private bool abstractCheck;
         private bool interfaceCheck;
-       // private nodeFlag selectedFlag;
+        // private nodeFlag selectedFlag;
         //private string longString;
         private enum entryType { ATTRIBUTE, METHOD };
-        
+
 
         public ICommand AddAttributeCommand { get; private set; }
         public ICommand AddMethodCommand { get; private set; }
@@ -68,13 +68,13 @@ namespace _02350Project.ViewModel
         public ObservableCollection<string> Methods { get { return methods; } set { methods = value; RaisePropertyChanged("Methods"); } }
         public string SelectedItem { get { return selectedAttribute; } set { selectedAttribute = value; } }
         public string NodeName { get { return nodeName; } set { nodeName = value; RaisePropertyChanged("NodeName"); } }
-       // public nodeFlag SelectedFlag { get { return selectedFlag; } set { selectedFlag = value; RaisePropertyChanged("SelectedFlag"); } }
+        // public nodeFlag SelectedFlag { get { return selectedFlag; } set { selectedFlag = value; RaisePropertyChanged("SelectedFlag"); } }
         public bool NoneCheck { get { return noneCheck; } set { noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
         public bool AbstractCheck { get { return abstractCheck; } set { abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
         public bool InterfaceCheck { get { return interfaceCheck; } set { interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
         //public string LongString { get { return longString; } set { longString = value; RaisePropertyChanged("LongString"); } }
 
-      
+
         public string SelectedChoice { get { return nodeType; } set { nodeType = value; RaisePropertyChanged("selectedradio"); } }
         public ObservableCollection<string> RadioChoices { get { return nodeTypes; } set { nodeTypes = value; RaisePropertyChanged("Choices"); } }
 
@@ -129,7 +129,8 @@ namespace _02350Project.ViewModel
          */
         public void listboxToBoolRadioConverter()
         {
-            if (SelectedChoice.Equals("Default")){
+            if (SelectedChoice.Equals("Default"))
+            {
                 NoneCheck = true;
                 AbstractCheck = false;
                 interfaceCheck = false;
@@ -173,9 +174,15 @@ namespace _02350Project.ViewModel
 
             listboxToBoolRadioConverter();
 
-            MessengerInstance.Send<Node>(new Node(){Name = NodeName, NoneFlag = NoneCheck, AbstractFlag = AbstractCheck,
-                                                    InterfaceFlag = InterfaceCheck, Attributes = this.Attributes.ToList<string>(), 
-                                                    Methods = this.Methods.ToList<string>()}, "key1");
+            MessengerInstance.Send<Node>(new Node()
+            {
+                Name = NodeName,
+                NoneFlag = NoneCheck,
+                AbstractFlag = AbstractCheck,
+                InterfaceFlag = InterfaceCheck,
+                Attributes = this.Attributes.ToList<string>(),
+                Methods = this.Methods.ToList<string>()
+            }, "key1");
 
             resetDialog();
 

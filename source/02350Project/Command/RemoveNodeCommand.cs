@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace _02350Project.Command
 {
-    class RemoveNodeCommand
+    class RemoveNodeCommand : IUndoRedoCommand
     {
         private ObservableCollection<Node> nodes;
         private ObservableCollection<Edge> edges;
@@ -37,5 +37,11 @@ namespace _02350Project.Command
             nodes.Remove(nodeToRemove);
         }
 
+
+
+        public void UnExecute()
+        {
+
+        }
     }
 }

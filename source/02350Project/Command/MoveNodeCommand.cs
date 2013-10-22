@@ -7,7 +7,7 @@ using _02350Project.Model;
 
 namespace _02350Project.Command
 {
-    class MoveNodeCommand
+    class MoveNodeCommand : IUndoRedoCommand
     {
         private Node node;
         private int x;

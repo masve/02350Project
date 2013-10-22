@@ -8,8 +8,8 @@ using _02350Project.Model;
 using System.Collections.ObjectModel;
 
 namespace _02350Project.Command
-{ //git test
-    class AddEdgeCommand
+{
+    class AddEdgeCommand : IUndoRedoCommand
     {
         private Edge edge;
         private ObservableCollection<Edge> edges;

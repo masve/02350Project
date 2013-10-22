@@ -10,27 +10,36 @@ using System.Threading.Tasks;
 // Not yet implemented.
 namespace _02350Project.Command
 {
-    class RemoveEdgeCommand
+    class RemoveEdgeCommand : IUndoRedoCommand
     {
- /*       private ObservableCollection<Edge> edges;
-        private Node node;
+        /*       private ObservableCollection<Edge> edges;
+               private Node node;
 
-        public RemoveEdgeCommand(ObservableCollection<Edge> _edges, Node _node)
-        {
-            edges = _edges;
-            node = _node;
-        }
+               public RemoveEdgeCommand(ObservableCollection<Edge> _edges, Node _node)
+               {
+                   edges = _edges;
+                   node = _node;
+               }
 
+               public void Execute()
+               {
+                   foreach (Edge e in edges)
+                   {
+                       if (e.EndA.Equals(node))
+                           edges.Remove(e);
+                       else if (e.EndB.Equals(node))
+                           edges.Remove(e);
+                   }
+            
+               }*/
         public void Execute()
         {
-            foreach (Edge e in edges)
-            {
-                if (e.EndA.Equals(node))
-                    edges.Remove(e);
-                else if (e.EndB.Equals(node))
-                    edges.Remove(e);
-            }
-            
-        }*/
+            throw new NotImplementedException();
+        }
+
+        public void UnExecute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

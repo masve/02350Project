@@ -42,8 +42,8 @@
                     <RibbonButton Label="Copy" SmallImageSource="../Resources/Images/clipboardgroup/edit-copy.png" ToolTipTitle="{StaticResource copyTooltipTitle}" ToolTipDescription="{StaticResource copyTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Edit">
-                    <RibbonButton Label="Undo" LargeImageSource="../Resources/Images/editgroup/edit-undo.png" ToolTipTitle="{StaticResource undoTooltipTitle}" ToolTipDescription="{StaticResource undoTooltipDesc}"/>
-                    <RibbonButton Label="Redo" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
+                    <RibbonButton Label="Undo" Command="{Binding UndoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-undo.png" ToolTipTitle="{StaticResource undoTooltipTitle}" ToolTipDescription="{StaticResource undoTooltipDesc}"/>
+                    <RibbonButton Label="Redo" Command="{Binding RedoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
                     <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding OpenCreateDialogCommand}"/>

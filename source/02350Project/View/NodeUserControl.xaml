@@ -8,8 +8,8 @@
              mc:Ignorable="d"
              xmlns:c="clr-namespace:_02350Project.Other"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="150"
-             d:DesignHeight="180" d:DesignWidth="135">
+             Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="135"
+             d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged" >
     <!--
         ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
     -->
@@ -68,8 +68,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="{Binding AbstractFlag, Converter={StaticResource BoolToItalic}}" FontWeight="Bold" Grid.Column="0"/>
-                    <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}" 
-                                  Command="{Binding Path=DataContext.HelloCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"/>
+                    <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}" />
                 </Grid>
                 <TextBlock Text="{Binding NodeSubText, FallbackValue=ABSTRACT_CLASS}" FontSize="11"/>
             </StackPanel>
@@ -163,7 +162,7 @@
         </Border.Effect>
     </Border>
 
-    <!--MOUSE TRIGGERS START-->
+    <!--TRIGGERS START-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDown">
             <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
@@ -174,7 +173,10 @@
         <i:EventTrigger EventName="MouseMove">
             <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="SizeChanged">
+            <cmd:EventToCommand Command="{Binding DataContext.ExpandResizeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
-    <!--MOUSE TRIGGERS END-->
+    <!--TRIGGERS END-->
 
 </UserControl>

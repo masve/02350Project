@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace _02350Project.Command
 {
-    class AddNodeCommand
+    class AddNodeCommand : IUndoRedoCommand
     {
         // Use this one!
         // test

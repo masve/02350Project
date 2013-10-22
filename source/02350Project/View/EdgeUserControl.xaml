@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <c:BooleanToStrokeArrayDashConverter x:Key="BoolToDash"/>    
     </UserControl.Resources>
-    
+
     <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" X1="{Binding AX}" Y1="{Binding AY}" X2="{Binding BX}" Y2="{Binding BY}"/> <!--StrokeDashArray 5,2-->
+
 </UserControl>

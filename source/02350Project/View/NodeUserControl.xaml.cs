@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _02350Project.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace _02350Project.View
         public NodeUserControl()
         {
             InitializeComponent();
+        }
+
+        private void Node_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //SizeChangedEvent();
+            Other.ConsolePrinter.WriteToConsole("helloinit");
         }
     }
 }
