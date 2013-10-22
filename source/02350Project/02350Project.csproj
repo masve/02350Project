@@ -79,12 +79,14 @@
     <Compile Include="Other\BooleanToItalicConverter.cs" />
     <Compile Include="Other\BooleanToStrokeArrayDashConverter.cs" />
     <Compile Include="Other\ConsolePrinter.cs" />
-    <Compile Include="ViewModel\CreateClassViewModel.cs" />
+    <Compile Include="ViewModel\CreateNodeViewModel.cs" />
+    <Compile Include="ViewModel\EdgeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NodeViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\XMLSerial.cs" />
-    <Compile Include="View\CreateClassWindow.xaml.cs">
-      <DependentUpon>CreateClassWindow.xaml</DependentUpon>
+    <Compile Include="View\CreateNodeWindow.xaml.cs">
+      <DependentUpon>CreateNodeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\EdgeUserControl.xaml.cs">
       <DependentUpon>EdgeUserControl.xaml</DependentUpon>
@@ -115,7 +117,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\CreateClassWindow.xaml">
+    <Page Include="View\CreateNodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

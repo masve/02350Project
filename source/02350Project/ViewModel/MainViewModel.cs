@@ -23,7 +23,7 @@ namespace _02350Project.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region Child ViewModels
-        private CreateClassViewModel createClassViewModel;
+       // private CreateNodeViewModel createClassViewModel;
         #endregion
 
         private UndoRedoController undoRedoController = UndoRedoController.GetInstance();
@@ -66,11 +66,12 @@ namespace _02350Project.ViewModel
         private double northWest = -3.0 * Math.PI / 4.0;
         private double southEast = Math.PI / 4.0;
         private double southWest = 3.0 * Math.PI / 4.0;
-
+        
         public MainViewModel()
         {
             //createClassViewModel = new CreateClassViewModel();
 
+            #region Dummy Node
             List<string> Attributes = new List<string>();
             List<string> Methods = new List<string>();
             Attributes.Add("- a : int");
@@ -80,7 +81,9 @@ namespace _02350Project.ViewModel
             Methods.Add("+ sub ( val1 : int, val2 : int )");
             Methods.Add("+ mul ( val1 : int, val2 : int )");
             Methods.Add("+ div ( val1 : int, val2 : int )");
-            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator", AbstractFlag = true };
+            #endregion
+
+            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
 
             Nodes = new ObservableCollection<Node>()
             {
@@ -122,10 +125,28 @@ namespace _02350Project.ViewModel
             /*
              * We register for messages regarding creation of nodes from the CreateClassViewModel.
              * 
-             * NOTE: Find better alternative to string keys. Suggestion: Some centralized place
+             * NOTE: Find better alternative to string keys. Suggestion: Some enum
              */
             MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
 
+        }
+
+        public void AddNode(Node node)
+        {
+            undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
+        }
+
+        public void AddEdge()
+        {
+            isRemovingNode = false;
+            isAddingEdge = true;
+            Other.ConsolePrinter.Write("addedge");
+        }
+
+        public void RemoveNode()
+        {
+            isAddingEdge = false;
+            isRemovingNode = true;
         }
 
         public void ExpandResize(SizeChangedEventArgs e)
@@ -137,25 +158,6 @@ namespace _02350Project.ViewModel
             node.Width = (int)e.NewSize.Width;
 
             CalculateAnchor(node);
-        }
-
-
-        public void AddNode(Node node)
-        {
-            undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
-        }
-
-        public void AddEdge()
-        {
-            isRemovingNode = false;
-            isAddingEdge = true;
-            Other.ConsolePrinter.WriteToConsole("addedge");
-        }
-
-        public void RemoveNode()
-        {
-            isAddingEdge = false;
-            isRemovingNode = true;
         }
 
         #region Mouse UP DOWN MOVE
@@ -224,7 +226,7 @@ namespace _02350Project.ViewModel
                 if (firstSelectedEdgeEnd == null)
                 {
                     firstSelectedEdgeEnd = rectNode;
-                    Other.ConsolePrinter.WriteToConsole("first edge");
+                    Other.ConsolePrinter.Write("first edge");
                 }
                 else if (firstSelectedEdgeEnd != rectNode)
                 {
@@ -372,7 +374,7 @@ namespace _02350Project.ViewModel
         {
             // MessengerInstance.Send<int>(1001, "key6");
 
-            CreateClassWindow dialog = new CreateClassWindow();
+            CreateNodeWindow dialog = new CreateNodeWindow();
             dialog.ShowDialog();
         }
 

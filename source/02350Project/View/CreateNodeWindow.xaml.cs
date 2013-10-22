@@ -20,13 +20,13 @@ namespace _02350Project.View
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class CreateClassWindow : Window
+    public partial class CreateNodeWindow : Window
     {
-        public CreateClassWindow()
+        public CreateNodeWindow()
         {
             InitializeComponent();
 
-            Messenger.Default.Register<int>(this, "CloseClassDialogView", a => closeView(a));
+            Messenger.Default.Register<int>(this, "CloseNodeDialog", a => closeView(a));
         }
 
         private void closeView(int a)

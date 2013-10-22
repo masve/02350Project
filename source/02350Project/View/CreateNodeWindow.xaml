@@ -1,7 +1,7 @@
-﻿<Window x:Class="_02350Project.View.CreateClassWindow"
+﻿<Window x:Class="_02350Project.View.CreateNodeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        DataContext="{Binding CreateClassDialog, Source={StaticResource Locator}}"
+        DataContext="{Binding CreateNodeDialog, Source={StaticResource Locator}}"
         Title="Create class" Height="454" Width="370" ResizeMode="NoResize"
         >
     <!-- DataContext is set to bind our viewmodel CreateClassViewModel to this view.

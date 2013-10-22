@@ -32,7 +32,7 @@ namespace _02350Project.View
         {
             if (a == 1001)
             {
-                var createDialog = new CreateClassWindow();
+                var createDialog = new CreateNodeWindow();
                 createDialog.ShowDialog();
             }
         }

@@ -9,7 +9,7 @@ namespace _02350Project.Other
 {
     class ConsolePrinter
     {
-        public static void WriteToConsole(string message)
+        public static void Write(string message)
         {
             AttachConsole(-1);
             Console.WriteLine(message);

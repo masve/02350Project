@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace _02350Project.ViewModel
 {
-    public class CreateClassViewModel : ViewModelBase
+    public class CreateNodeViewModel : ViewModelBase
     {
         private ObservableCollection<String> attributes;
         private ObservableCollection<String> methods;
@@ -22,12 +22,9 @@ namespace _02350Project.ViewModel
         private string attribute;
         private string method;
         private string selectedAttribute;
-        //public enum nodeFlag { NONE, ABSTRACT, INTERFACE };
         private bool noneCheck;
         private bool abstractCheck;
         private bool interfaceCheck;
-        // private nodeFlag selectedFlag;
-        //private string longString;
         private enum entryType { ATTRIBUTE, METHOD };
 
 
@@ -40,7 +37,7 @@ namespace _02350Project.ViewModel
         private string nodeType;
         private ObservableCollection<string> nodeTypes;
 
-        public CreateClassViewModel()
+        public CreateNodeViewModel()
         {
             attributes = new ObservableCollection<string>();
             methods = new ObservableCollection<string>();
@@ -61,18 +58,15 @@ namespace _02350Project.ViewModel
             CancelNodeCommand = new RelayCommand(cancel);
         }
 
-        // Needs NotifyPropertyChanged (RaisePropertyChanged?)
         public string ActualAttribute { get { return attribute; } set { attribute = value; RaisePropertyChanged("ActualAttribute"); } }
         public string ActualMethod { get { return method; } set { method = value; RaisePropertyChanged("ActualMethod"); } }
         public ObservableCollection<string> Attributes { get { return attributes; } set { attributes = value; RaisePropertyChanged("Attributes"); } }
         public ObservableCollection<string> Methods { get { return methods; } set { methods = value; RaisePropertyChanged("Methods"); } }
         public string SelectedItem { get { return selectedAttribute; } set { selectedAttribute = value; } }
         public string NodeName { get { return nodeName; } set { nodeName = value; RaisePropertyChanged("NodeName"); } }
-        // public nodeFlag SelectedFlag { get { return selectedFlag; } set { selectedFlag = value; RaisePropertyChanged("SelectedFlag"); } }
         public bool NoneCheck { get { return noneCheck; } set { noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
         public bool AbstractCheck { get { return abstractCheck; } set { abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
         public bool InterfaceCheck { get { return interfaceCheck; } set { interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
-        //public string LongString { get { return longString; } set { longString = value; RaisePropertyChanged("LongString"); } }
 
 
         public string SelectedChoice { get { return nodeType; } set { nodeType = value; RaisePropertyChanged("selectedradio"); } }
@@ -166,7 +160,7 @@ namespace _02350Project.ViewModel
         public void cancel()
         {
             resetDialog();
-            MessengerInstance.Send<int>(1000, "CloseClassDialogView");
+            MessengerInstance.Send<int>(1000, "CloseNodeDialog");
         }
 
         public void createNode()
@@ -186,21 +180,8 @@ namespace _02350Project.ViewModel
 
             resetDialog();
 
-            MessengerInstance.Send<int>(1000, "CloseClassDialogView");
+            MessengerInstance.Send<int>(1000, "CloseNodeDialogView");
         }
-
-        //public void longestString()
-        //{
-        //    LongString = NodeName;
-
-        //    foreach (string str in Attributes)
-        //        if (str.Length > LongString.Length)
-        //            LongString = str;
-
-        //    foreach (string str in Methods)
-        //        if (str.Length > LongString.Length)
-        //            LongString = str;
-        //}
 
         public void resetDialog()
         {
