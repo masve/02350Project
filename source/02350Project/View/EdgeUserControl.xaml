@@ -11,6 +11,9 @@
         <c:BooleanToStrokeArrayDashConverter x:Key="BoolToDash"/>    
     </UserControl.Resources>
 
-    <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" X1="{Binding AX}" Y1="{Binding AY}" X2="{Binding BX}" Y2="{Binding BY}"/> <!--StrokeDashArray 5,2-->
-
+    <Grid>
+        <Line Stroke="Tomato" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" X1="{Binding AX, FallbackValue=0}" Y1="{Binding AY, FallbackValue=0}" X2="{Binding BX,FallbackValue=100}" Y2="{Binding BY, FallbackValue=100}"/>
+        <Polyline Points="0,0 0,20 20,0" Fill="Tomato"/>
+        
+    </Grid>
 </UserControl>

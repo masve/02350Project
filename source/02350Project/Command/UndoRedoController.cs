@@ -38,6 +38,7 @@ namespace _02350Project.Command
             undoStack.Push(command);
             command.Execute();
         }
+
         public bool CanUndo() { return undoStack.Any(); }
         public bool CanRedo() { return redoStack.Any(); }
     }

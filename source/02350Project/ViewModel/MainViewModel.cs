@@ -22,6 +22,10 @@ namespace _02350Project.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        #region Child ViewModels
+        private CreateClassViewModel createClassViewModel;
+        #endregion
+
         private UndoRedoController undoRedoController = UndoRedoController.GetInstance();
 
         public ObservableCollection<Node> Nodes { get; set; }
@@ -30,6 +34,8 @@ namespace _02350Project.ViewModel
         private Point moveNodePoint;
         private int posX;
         private int posY;
+
+        private PointCollection points = new PointCollection();
 
         private bool isAddingEdge = false;
         private bool isRemovingNode = false;
@@ -52,6 +58,8 @@ namespace _02350Project.ViewModel
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
 
+        public ICommand UndoRedoCheckCommand { get; private set; }
+
 
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
         private double northEast = -1.0 * Math.PI / 4.0;
@@ -61,6 +69,8 @@ namespace _02350Project.ViewModel
 
         public MainViewModel()
         {
+            //createClassViewModel = new CreateClassViewModel();
+
             List<string> Attributes = new List<string>();
             List<string> Methods = new List<string>();
             Attributes.Add("- a : int");
@@ -117,15 +127,12 @@ namespace _02350Project.ViewModel
             MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
 
         }
+
         public void ExpandResize(SizeChangedEventArgs e)
         {
-
-            //FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-            //Node movingNode = (Node)movingRect.DataContext;
-            //if (node. is NodeUserControl) Other.ConsolePrinter.WriteToConsole("IT IS!");
             FrameworkElement rect = (FrameworkElement)e.Source;
             Node node = (Node)rect.DataContext;
-            //Node node = (Node)rect.DataContext;
+
             node.Height = (int)e.NewSize.Height;
             node.Width = (int)e.NewSize.Width;
 
@@ -204,12 +211,6 @@ namespace _02350Project.ViewModel
 
                 posX = movingNode.CanvasCenterX;
                 posY = movingNode.CanvasCenterY;
-                //movingNode.Height = (int)movingRect.ActualHeight;
-                //movingNode.Width = (int)movingRect.ActualWidth;
-                //var infiniteSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
-                //movingRect.Measure(infiniteSize);
-                //Other.ConsolePrinter.WriteToConsole("height: " + movingNode.Height);
-
             }
         }
 
@@ -241,8 +242,8 @@ namespace _02350Project.ViewModel
             {
                 FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
                 Node NodeToRemove = (Node)rectNode.DataContext;
-                RemoveNodeCommand n = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-                n.Execute();
+                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
+                undoRedoController.AddAndExecute(m);
                 isRemovingNode = false;
             }
             else
@@ -369,7 +370,15 @@ namespace _02350Project.ViewModel
          */
         public void OpenCreateClassDialog()
         {
-            MessengerInstance.Send<int>(1001, "key6");
+            // MessengerInstance.Send<int>(1001, "key6");
+
+            CreateClassWindow dialog = new CreateClassWindow();
+            dialog.ShowDialog();
+        }
+
+        public bool UndoRedoCheck()
+        {
+            return isAddingEdge;
         }
 
         /*
