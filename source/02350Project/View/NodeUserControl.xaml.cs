@@ -28,7 +28,7 @@ namespace _02350Project.View
 
         private void Node_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            //SizeChangedEvent();
+
             Other.ConsolePrinter.Write("helloinit");
         }
     }

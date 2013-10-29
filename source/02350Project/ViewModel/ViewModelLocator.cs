@@ -44,6 +44,8 @@ namespace _02350Project.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<CreateNodeViewModel>();
+            SimpleIoc.Default.Register<NodeViewModel>();
+            SimpleIoc.Default.Register<EdgeViewModel>();
         }
 
         public MainViewModel Main
@@ -54,14 +56,30 @@ namespace _02350Project.ViewModel
             }
         }
 
-        public CreateNodeViewModel CreateNodeDialog
+        //public CreateNodeViewModel CreateNodeDialog
+        //{
+        //    get
+        //    {
+        //        return ServiceLocator.Current.GetInstance<CreateNodeViewModel>();
+        //    }
+        //}
+
+        public NodeViewModel NodeLocator
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<CreateNodeViewModel>();
+                return ServiceLocator.Current.GetInstance<NodeViewModel>();
             }
         }
-        
+
+        public EdgeViewModel EdgeLocator
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EdgeViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

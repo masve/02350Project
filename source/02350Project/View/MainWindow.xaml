@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:View="clr-namespace:_02350Project.View"
-        xmlns:Model="clr-namespace:_02350Project.Model;assembly=02350Project.Model"
+        xmlns:VM="clr-namespace:_02350Project.ViewModel"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="RibbonTest" Height="600" Width="800">
@@ -15,12 +15,12 @@
     </Window.InputBindings>
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type Model:Node}">
+        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
             <Canvas>
                 <View:NodeUserControl/>
             </Canvas>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type Model:Edge}">
+        <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
                 <View:EdgeUserControl/>
             </Canvas>

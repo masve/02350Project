@@ -12,7 +12,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" X1="{Binding AX, FallbackValue=0}" Y1="{Binding AY, FallbackValue=0}" X2="{Binding BX,FallbackValue=100}" Y2="{Binding BY, FallbackValue=100}"/>
+        <Line Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" X1="{Binding AX, FallbackValue=0}" Y1="{Binding AY, FallbackValue=0}" X2="{Binding BX,FallbackValue=300}" Y2="{Binding BY, FallbackValue=100}"/>
         <!--<Polyline Points="0,0 0,20 20,0" Fill="Tomato"/>-->
         
     </Grid>

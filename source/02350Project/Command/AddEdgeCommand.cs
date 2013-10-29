@@ -4,20 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using _02350Project.Model;
 using System.Collections.ObjectModel;
+using _02350Project.ViewModel;
 
 namespace _02350Project.Command
 {
     class AddEdgeCommand : IUndoRedoCommand
     {
-        private Edge edge;
-        private ObservableCollection<Edge> edges;
+        private EdgeViewModel edge;
+        private ObservableCollection<EdgeViewModel> edges;
 
-        public AddEdgeCommand(ObservableCollection<Edge> _edges, Node _endA, Node _endB)
+        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, NodeViewModel _endA, NodeViewModel _endB)
         {
             edges = _edges;
-            edge = new Edge() { EndA = _endA, EndB = _endB };
+            edge = _endB.newEdge(_endA);
         }
 
         public void Execute()

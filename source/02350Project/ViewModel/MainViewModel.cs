@@ -1,5 +1,4 @@
 using _02350Project.Command;
-using _02350Project.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections;
@@ -23,23 +22,23 @@ namespace _02350Project.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region Child ViewModels
-       // private CreateNodeViewModel createClassViewModel;
+        // private CreateNodeViewModel createClassViewModel;
         #endregion
 
         private UndoRedoController undoRedoController = UndoRedoController.GetInstance();
 
-        public ObservableCollection<Node> Nodes { get; set; }
-        public ObservableCollection<Edge> Edges { get; set; }
+        public ObservableCollection<NodeViewModel> Nodes { get; set; }
+        public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
         private Point moveNodePoint;
-        private int posX;
-        private int posY;
+        private double posX;
+        private double posY;
 
         private PointCollection points = new PointCollection();
 
         private bool isAddingEdge = false;
         private bool isRemovingNode = false;
-        private Node firstSelectedEdgeEnd;
+        private NodeViewModel firstSelectedEdgeEnd;
 
         public ICommand AddNodeCommand { get; private set; }
         public ICommand AddEdgeCommand { get; private set; }
@@ -60,13 +59,15 @@ namespace _02350Project.ViewModel
 
         public ICommand UndoRedoCheckCommand { get; private set; }
 
+        public ICommand TestCommand { get; private set; }
+
 
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
         private double northEast = -1.0 * Math.PI / 4.0;
         private double northWest = -3.0 * Math.PI / 4.0;
         private double southEast = Math.PI / 4.0;
         private double southWest = 3.0 * Math.PI / 4.0;
-        
+
         public MainViewModel()
         {
             //createClassViewModel = new CreateClassViewModel();
@@ -83,17 +84,19 @@ namespace _02350Project.ViewModel
             Methods.Add("+ div ( val1 : int, val2 : int )");
             #endregion
 
-            Node testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
+            //Nodev testNode = new Node() { X = 30, Y = 30, Width = 170, Height = 200, Attributes = Attributes, Methods = Methods, Name = "Calculator" };
 
-            Nodes = new ObservableCollection<Node>()
+            Nodes = new ObservableCollection<NodeViewModel>()
             {
-                     testNode,
-                     new Node() {X = 250, Y = 250, Width = 90, Height = 120}
+                //testNode,
+                //new Node() {X = 250, Y = 250, Width = 90, Height = 120}
             };
 
-            Edges = new ObservableCollection<Edge>()
+            AddNode(new NodeViewModel());
+
+            Edges = new ObservableCollection<EdgeViewModel>()
             {
-                  new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
+                //new Edge() { EndA = Nodes.ElementAt(0), EndB = Nodes.ElementAt(1) }
             };
 
             //AddNodeCommand = new RelayCommand(AddNode);
@@ -111,6 +114,8 @@ namespace _02350Project.ViewModel
             UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             RedoCommand = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
+            TestCommand = new RelayCommand(test);
+
 
             /*
              * We use messages throughout the application to communicate between viewmodels.
@@ -127,11 +132,17 @@ namespace _02350Project.ViewModel
              * 
              * NOTE: Find better alternative to string keys. Suggestion: Some enum
              */
-            MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
+            // MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
 
         }
 
-        public void AddNode(Node node)
+        public void test()
+        {
+            Other.ConsolePrinter.Write("123123");
+
+        }
+
+        public void AddNode(NodeViewModel node)
         {
             undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
         }
@@ -152,10 +163,10 @@ namespace _02350Project.ViewModel
         public void ExpandResize(SizeChangedEventArgs e)
         {
             FrameworkElement rect = (FrameworkElement)e.Source;
-            Node node = (Node)rect.DataContext;
+            NodeViewModel node = (NodeViewModel)rect.DataContext;
 
-            node.Height = (int)e.NewSize.Height;
-            node.Width = (int)e.NewSize.Width;
+            node.Height = e.NewSize.Height;
+            node.Width = e.NewSize.Width;
 
             CalculateAnchor(node);
         }
@@ -169,7 +180,7 @@ namespace _02350Project.ViewModel
                 e.MouseDevice.Target.CaptureMouse();
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                Node movingNode = (Node)movingRect.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
@@ -185,29 +196,22 @@ namespace _02350Project.ViewModel
             if (Mouse.Captured != null && !isAddingEdge && !isRemovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                Node movingNode = (Node)movingRect.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
+
                 if (moveNodePoint == default(Point))
                     moveNodePoint = mousePosition;
 
                 if (mousePosition.X - (movingNode.Width / 2) > 0)
-                {
-                    movingNode.CanvasCenterX = (int)mousePosition.X;
-                }
+                    movingNode.CanvasCenterX = mousePosition.X;
                 else
-                {
                     movingNode.CanvasCenterX = movingNode.Width / 2;
-                }
                 if (mousePosition.Y - (movingNode.Height / 2) > 0)
-                {
-                    movingNode.CanvasCenterY = (int)mousePosition.Y;
-                }
+                    movingNode.CanvasCenterY = mousePosition.Y;
                 else
-                {
                     movingNode.CanvasCenterY = movingNode.Height / 2;
-                }
 
                 CalculateAnchor(movingNode);
 
@@ -221,7 +225,7 @@ namespace _02350Project.ViewModel
             if (isAddingEdge)
             {
                 FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
-                Node rectNode = (Node)rectEnd.DataContext;
+                NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
 
                 if (firstSelectedEdgeEnd == null)
                 {
@@ -243,7 +247,7 @@ namespace _02350Project.ViewModel
             else if (isRemovingNode)
             {
                 FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
-                Node NodeToRemove = (Node)rectNode.DataContext;
+                NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
                 RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
                 undoRedoController.AddAndExecute(m);
                 isRemovingNode = false;
@@ -251,7 +255,7 @@ namespace _02350Project.ViewModel
             else
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                Node movingNode = (Node)movingRect.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 Point mousePosition = Mouse.GetPosition(canvas);
 
@@ -266,73 +270,73 @@ namespace _02350Project.ViewModel
         #endregion
 
         #region Dynamic Anchorpoint Calculations
-        public void CalculateAnchor(Node node)
+        public void CalculateAnchor(NodeViewModel node)
         {
-            foreach (Edge e in Edges)
+            foreach (EdgeViewModel e in Edges)
             {
-                if (e.EndA.Equals(node))
+                if (e.VMEndA.Equals(node))
                 {
                     setEnds(e);
 
                 }
-                else if (e.EndB.Equals(node))
+                else if (e.VMEndB.Equals(node))
                 {
                     setEnds(e);
                 }
             }
         }
 
-        public void setEnds(Edge e)
+        public void setEnds(EdgeViewModel e)
         {
-            ANCHOR A = findAnchor(e.EndA.CanvasCenterX, e.EndA.CanvasCenterY, e.EndB.CanvasCenterX, e.EndB.CanvasCenterY);
-            ANCHOR B = findAnchor(e.EndB.CanvasCenterX, e.EndB.CanvasCenterY, e.EndA.CanvasCenterX, e.EndA.CanvasCenterY);
+            ANCHOR A = findAnchor(e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY, e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY);
+            ANCHOR B = findAnchor(e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY, e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY);
             switch (A)
             {
                 case ANCHOR.NORTH:
-                    e.AX = (int)e.EndA.North.X;
-                    e.AY = (int)e.EndA.North.Y;
+                    e.AX = e.VMEndA.North.X;
+                    e.AY = e.VMEndA.North.Y;
                     break;
                 case ANCHOR.EAST:
-                    e.AX = (int)e.EndA.East.X;
-                    e.AY = (int)e.EndA.East.Y;
+                    e.AX = e.VMEndA.East.X;
+                    e.AY = e.VMEndA.East.Y;
 
                     break;
                 case ANCHOR.SOUTH:
-                    e.AX = (int)e.EndA.South.X;
-                    e.AY = (int)e.EndA.South.Y;
+                    e.AX = e.VMEndA.South.X;
+                    e.AY = e.VMEndA.South.Y;
                     break;
                 case ANCHOR.WEST:
-                    e.AX = (int)e.EndA.West.X;
-                    e.AY = (int)e.EndA.West.Y;
+                    e.AX = e.VMEndA.West.X;
+                    e.AY = e.VMEndA.West.Y;
                     break;
             }
             switch (B)
             {
                 case ANCHOR.NORTH:
-                    e.BX = (int)e.EndB.North.X;
-                    e.BY = (int)e.EndB.North.Y;
+                    e.BX = e.VMEndB.North.X;
+                    e.BY = e.VMEndB.North.Y;
                     break;
                 case ANCHOR.EAST:
-                    e.BX = (int)e.EndB.East.X;
-                    e.BY = (int)e.EndB.East.Y;
+                    e.BX = e.VMEndB.East.X;
+                    e.BY = e.VMEndB.East.Y;
 
                     break;
                 case ANCHOR.SOUTH:
-                    e.BX = (int)e.EndB.South.X;
-                    e.BY = (int)e.EndB.South.Y;
+                    e.BX = e.VMEndB.South.X;
+                    e.BY = e.VMEndB.South.Y;
 
                     break;
                 case ANCHOR.WEST:
-                    e.BX = (int)e.EndB.West.X;
-                    e.BY = (int)e.EndB.West.Y;
+                    e.BX = e.VMEndB.West.X;
+                    e.BY = e.VMEndB.West.Y;
                     break;
             }
         }
 
-        private ANCHOR findAnchor(int x1, int y1, int x2, int y2)
+        private ANCHOR findAnchor(double x1, double y1, double x2, double y2)
         {
-            int deltaX = x2 - x1;
-            int deltaY = y2 - y1;
+            double deltaX = x2 - x1;
+            double deltaY = y2 - y1;
 
 
             double angle = Math.Atan2(deltaY, deltaX);
@@ -373,9 +377,14 @@ namespace _02350Project.ViewModel
         public void OpenCreateClassDialog()
         {
             // MessengerInstance.Send<int>(1001, "key6");
+            NodeViewModel newNode = new NodeViewModel();
 
-            CreateNodeWindow dialog = new CreateNodeWindow();
-            dialog.ShowDialog();
+            var dialog = new CreateNodeWindow();
+            //newnode gives med som reference, derfor kan vi bare redigere den direkte i vores dialog
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(newNode, dialog);
+            dialog.DataContext = dialogViewModel;
+            if (dialog.ShowDialog() == true)
+                AddNode(newNode);
         }
 
         public bool UndoRedoCheck()

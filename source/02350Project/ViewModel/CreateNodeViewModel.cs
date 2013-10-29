@@ -1,5 +1,4 @@
-﻿using _02350Project.Model;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
@@ -16,6 +15,8 @@ namespace _02350Project.ViewModel
 {
     public class CreateNodeViewModel : ViewModelBase
     {
+        private Window window;
+
         private ObservableCollection<String> attributes;
         private ObservableCollection<String> methods;
         private string nodeName;
@@ -27,6 +28,8 @@ namespace _02350Project.ViewModel
         private bool interfaceCheck;
         private enum entryType { ATTRIBUTE, METHOD };
 
+        private NodeViewModel node;
+
 
         public ICommand AddAttributeCommand { get; private set; }
         public ICommand AddMethodCommand { get; private set; }
@@ -37,8 +40,12 @@ namespace _02350Project.ViewModel
         private string nodeType;
         private ObservableCollection<string> nodeTypes;
 
-        public CreateNodeViewModel()
+        public CreateNodeViewModel(NodeViewModel _node, Window _window)
         {
+            Other.ConsolePrinter.Write("hello");
+            window = _window;
+            node = _node;
+
             attributes = new ObservableCollection<string>();
             methods = new ObservableCollection<string>();
             nodeTypes = new ObservableCollection<string>();
@@ -56,6 +63,7 @@ namespace _02350Project.ViewModel
             RemoveItemCommand = new RelayCommand(removeItem);
             CreateNodeCommand = new RelayCommand(createNode);
             CancelNodeCommand = new RelayCommand(cancel);
+
         }
 
         public string ActualAttribute { get { return attribute; } set { attribute = value; RaisePropertyChanged("ActualAttribute"); } }
@@ -159,8 +167,9 @@ namespace _02350Project.ViewModel
 
         public void cancel()
         {
-            resetDialog();
-            MessengerInstance.Send<int>(1000, "CloseNodeDialog");
+            //resetDialog();
+            //MessengerInstance.Send<int>(1000, "CloseNodeDialog");
+            window.DialogResult = false;
         }
 
         public void createNode()
@@ -168,19 +177,30 @@ namespace _02350Project.ViewModel
 
             listboxToBoolRadioConverter();
 
-            MessengerInstance.Send<Node>(new Node()
-            {
-                Name = NodeName,
-                NoneFlag = NoneCheck,
-                AbstractFlag = AbstractCheck,
-                InterfaceFlag = InterfaceCheck,
-                Attributes = this.Attributes.ToList<string>(),
-                Methods = this.Methods.ToList<string>()
-            }, "key1");
+            node.Name = NodeName;
+            node.NoneFlag = NoneCheck;
+            node.AbstractFlag = AbstractCheck;
+            node.InterfaceFlag = InterfaceCheck;
+            node.Methods = this.Methods.ToList<string>();
+            node.Attributes = this.Attributes.ToList<string>();
 
-            resetDialog();
 
-            MessengerInstance.Send<int>(1000, "CloseNodeDialog");
+            window.DialogResult = true;
+
+            //MessengerInstance.Send<Node>(new Node()
+            //{
+
+            //    Name = NodeName,
+            //    NoneFlag = NoneCheck,
+            //    AbstractFlag = AbstractCheck,
+            //    InterfaceFlag = InterfaceCheck,
+            //    Attributes = this.Attributes.ToList<string>(),
+            //    Methods = this.Methods.ToList<string>()
+            //}, "key1");
+
+            //resetDialog();
+
+            //MessengerInstance.Send<int>(1000, "CloseNodeDialog");
         }
 
         public void resetDialog()

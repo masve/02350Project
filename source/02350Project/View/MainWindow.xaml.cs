@@ -25,16 +25,7 @@ namespace _02350Project.View
         public MainWindow()
         {
             InitializeComponent();
-            Messenger.Default.Register<int>(this, "key6", a => OpenView(a));
         }
 
-        public void OpenView(int a)
-        {
-            if (a == 1001)
-            {
-                var createDialog = new CreateNodeWindow();
-                createDialog.ShowDialog();
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using _02350Project.Model;
+﻿using _02350Project.ViewModel;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -14,13 +14,13 @@ namespace _02350Project.Command
         // Use this one!
         // test
 
-        private ObservableCollection<Node> nodes;
-        private Node node;
-        private Node createNode;
+        private ObservableCollection<NodeViewModel> nodes;
+        private NodeViewModel node;
+        private NodeViewModel createNode;
         //private List<string> attributes;
         //private string name;
 
-        public AddNodeCommand(ObservableCollection<Node> _nodes, /*string _name, List<string> _attributes*/ Node _createNode)
+        public AddNodeCommand(ObservableCollection<NodeViewModel> _nodes, /*string _name, List<string> _attributes*/ NodeViewModel _createNode)
         {
             nodes = _nodes;
             createNode = _createNode;

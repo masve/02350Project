@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using _02350Project.Model;
+using _02350Project.ViewModel;
 
 namespace _02350Project.Command
 {
     class MoveNodeCommand : IUndoRedoCommand
     {
-        private Node node;
-        private int x;
-        private int y;
-        private int newX;
-        private int newY;
+        private NodeViewModel node;
+        private double x;
+        private double y;
+        private double newX;
+        private double newY;
 
-        public MoveNodeCommand(Node _node, int _newX, int _newY, int _x, int _y)
+        public MoveNodeCommand(NodeViewModel _node, double _newX, double _newY, double _x, double _y)
         {
             node = _node;
             x = _x;

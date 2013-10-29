@@ -11,27 +11,30 @@ namespace _02350Project.Model
     {
         private Node endA;
         private Node endB;
-        private bool dash;
-        private enum ANCHOR { NORTH, SOUTH, WEST, EAST };
+        private string type;
+        //private bool dash;
+        //private enum ANCHOR { NORTH, SOUTH, WEST, EAST };
 
-        private int aX, aY, bX, bY;
+        //private int aX, aY, bX, bY;
 
-        public Node EndA { get { return endA; } set { endA = value; NotifyPropertyChanged("EndA"); } }
-        public Node EndB { get { return endB; } set { endB = value; NotifyPropertyChanged("EndB"); } }
+        public Node EndA { get { return endA; } set { endA = value; } }
+        public Node EndB { get { return endB; } set { endB = value; } }
 
-        public bool Dash { get { return dash; } set { dash = value; NotifyPropertyChanged("Dash"); } }
+        public string Type { get { return type; } set { type = value; } }
 
-        //public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; NotifyPropertyChanged("AnchorA"); NotifyPropertyChanged("AX"); NotifyPropertyChanged("AY"); } }
-        //public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; NotifyPropertyChanged("AnchorB"); NotifyPropertyChanged("BX"); NotifyPropertyChanged("BY"); } }
+        //public bool Dash { get { return dash; } set { dash = value; NotifyPropertyChanged("Dash"); } }
 
-        public int AX { get { return aX; } set { aX = value; NotifyPropertyChanged("AX"); } }
-        public int AY { get { return aY; } set { aY = value; NotifyPropertyChanged("AY"); } }
-        public int BX { get { return bX; } set { bX = value; NotifyPropertyChanged("BX"); } }
-        public int BY { get { return bY; } set { bY = value; NotifyPropertyChanged("BY"); } }
+        ////public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; NotifyPropertyChanged("AnchorA"); NotifyPropertyChanged("AX"); NotifyPropertyChanged("AY"); } }
+        ////public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; NotifyPropertyChanged("AnchorB"); NotifyPropertyChanged("BX"); NotifyPropertyChanged("BY"); } }
 
-        public Edge()
-        {
-            Dash = true;
-        }
+        //public int AX { get { return aX; } set { aX = value; NotifyPropertyChanged("AX"); } }
+        //public int AY { get { return aY; } set { aY = value; NotifyPropertyChanged("AY"); } }
+        //public int BX { get { return bX; } set { bX = value; NotifyPropertyChanged("BX"); } }
+        //public int BY { get { return bY; } set { bY = value; NotifyPropertyChanged("BY"); } }
+
+        //public Edge()
+        //{
+        //    Dash = true;
+        //}
     }
 }

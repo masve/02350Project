@@ -51,7 +51,7 @@
                     <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveNodeCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/dependency.png" Label=" Dependency"/>
+                    <RibbonButton Command="{Binding TestCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png" Label=" Dependency"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/generalization.png" Label=" Generalization"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/association.png" Label=" Association" Command="{Binding AddEdgeCommand}"/>
                     <RibbonButton SmallImageSource="../Resources/Images/linegroup/aggregation.png" Label=" Aggregation" Command="{Binding HelloCommand}"/>

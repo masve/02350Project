@@ -25,16 +25,7 @@ namespace _02350Project.View
         public CreateNodeWindow()
         {
             InitializeComponent();
-
-            Messenger.Default.Register<int>(this, "CloseNodeDialog", a => closeView(a));
         }
 
-        private void closeView(int a)
-        {
-            if (a == 1000)
-            {
-                this.Close();
-            }
-        }
     }
 }
