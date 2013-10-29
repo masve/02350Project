@@ -180,7 +180,7 @@ namespace _02350Project.ViewModel
 
             resetDialog();
 
-            MessengerInstance.Send<int>(1000, "CloseNodeDialogView");
+            MessengerInstance.Send<int>(1000, "CloseNodeDialog");
         }
 
         public void resetDialog()
