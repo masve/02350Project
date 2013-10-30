@@ -84,9 +84,9 @@ namespace _02350Project.ViewModel
         public bool MetCollapsed { get { return metCollapsed; } set { metCollapsed = value; RaisePropertyChanged("MetCollapsed"); } }
         public bool IsSelected { get { return isSelected; } set { isSelected = value; RaisePropertyChanged("IsSelected"); } }
 
-        public EdgeViewModel newEdge(NodeViewModel fromNode)
+        public EdgeViewModel newEdge(NodeViewModel fromNode, string type)
         {
-            EdgeViewModel newEdge = new EdgeViewModel(fromNode.node, this.node, fromNode, this);
+            EdgeViewModel newEdge = new EdgeViewModel(fromNode.node, this.node, fromNode, this, type);
             //newEdge.VMEndA = fromNode;
             //newEdge.EndA = fromNode.node;
             //newEdge.VMEndB = this;

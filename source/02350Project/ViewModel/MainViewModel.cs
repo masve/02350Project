@@ -34,6 +34,8 @@ namespace _02350Project.ViewModel
         private double posX;
         private double posY;
 
+        private string edgeType;
+
         private PointCollection points = new PointCollection();
 
         private bool isAddingEdge = false;
@@ -59,6 +61,14 @@ namespace _02350Project.ViewModel
         public ICommand RedoCommand { get; private set; }
 
         public ICommand UndoRedoCheckCommand { get; private set; }
+
+        #region Edge type commands
+        public ICommand AddAGGCommand { get; private set; }
+        public ICommand AddDEPCommand { get; private set; }
+        public ICommand AddCOMCommand { get; private set; }
+        public ICommand AddASSCommand { get; private set; }
+        public ICommand AddGENCommand { get; private set; }
+        #endregion
 
         public ICommand TestCommand { get; private set; }
 
@@ -94,7 +104,7 @@ namespace _02350Project.ViewModel
             };
 
             //AddNodeCommand = new RelayCommand(AddNode);
-            AddEdgeCommand = new RelayCommand(AddEdge);
+            //AddEdgeCommand = new RelayCommand(AddEdge);
 
             RemoveNodeCommand = new RelayCommand(RemoveNode);
 
@@ -107,6 +117,12 @@ namespace _02350Project.ViewModel
 
             UndoCommand = new RelayCommand(undo, canUndo);
             RedoCommand = new RelayCommand(redo, canRedo);
+
+            AddAGGCommand = new RelayCommand(AddAgg);
+            AddASSCommand = new RelayCommand(AddAss);
+            AddDEPCommand = new RelayCommand(AddDep);
+            AddCOMCommand = new RelayCommand(AddCom);
+            AddGENCommand = new RelayCommand(AddGen);
 
             TestCommand = new RelayCommand(test);
 
@@ -183,12 +199,38 @@ namespace _02350Project.ViewModel
             undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
         }
 
+        #region Add edge
         public void AddEdge()
         {
             isRemovingNode = false;
             isAddingEdge = true;
-            Other.ConsolePrinter.Write("addedge");
         }
+        public void AddGen()
+        {
+            AddEdge();
+            edgeType = "GEN";
+        }
+        public void AddAss()
+        {
+            AddEdge();
+            edgeType = "ASS";
+        }
+        public void AddAgg()
+        {
+            AddEdge();
+            edgeType = "AGG";
+        }
+        public void AddDep()
+        {
+            AddEdge();
+            edgeType = "DEP";
+        }
+        public void AddCom()
+        {
+            AddEdge();
+            edgeType = "COM";
+        }
+        #endregion
 
         public void RemoveNode()
         {
@@ -270,7 +312,7 @@ namespace _02350Project.ViewModel
                 }
                 else if (firstSelectedEdgeEnd != rectNode)
                 {
-                    AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode);
+                    AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode, edgeType);
                     undoRedoController.AddAndExecute(m);
 
                     CalculateAnchor(rectNode);

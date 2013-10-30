@@ -51,14 +51,14 @@
                     <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveNodeCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">
-                    <RibbonButton Command="{Binding TestCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png" Label=" Dependency"/>
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/generalization.png" Label=" Generalization"/>
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/association.png" Label=" Association" Command="{Binding AddEdgeCommand}"/>
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/aggregation.png" Label=" Aggregation" Command="{Binding HelloCommand}"/>
-                    <RibbonButton SmallImageSource="../Resources/Images/linegroup/composition.png" Label=" Composition"/>
+                    <RibbonButton Label=" Dependency"     Command="{Binding AddDEPCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png"/>
+                    <RibbonButton Label=" Generalization" Command="{Binding AddGENCommand}" SmallImageSource="../Resources/Images/linegroup/generalization.png" />
+                    <RibbonButton Label=" Association"    Command="{Binding AddASSCommand}" SmallImageSource="../Resources/Images/linegroup/association.png" />
+                    <RibbonButton Label=" Aggregation"    Command="{Binding AddAGGCommand}" SmallImageSource="../Resources/Images/linegroup/aggregation.png" />
+                    <RibbonButton Label=" Composition"    Command="{Binding AddCOMCommand}" SmallImageSource="../Resources/Images/linegroup/composition.png"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Insert">
-                    <RibbonButton Label="Note" LargeImageSource="../Resources/Images/other/note.png"/>
+                    <RibbonButton Label="Note" Command="{Binding TestCommand}" LargeImageSource="../Resources/Images/other/note.png"/>
                 </RibbonGroup>
 
             </RibbonTab>

@@ -14,10 +14,10 @@ namespace _02350Project.Command
         private EdgeViewModel edge;
         private ObservableCollection<EdgeViewModel> edges;
 
-        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, NodeViewModel _endA, NodeViewModel _endB)
+        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, NodeViewModel _endA, NodeViewModel _endB, string _type)
         {
             edges = _edges;
-            edge = _endB.newEdge(_endA);
+            edge = _endB.newEdge(_endA, _type);
         }
 
         public void Execute()

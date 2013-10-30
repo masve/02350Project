@@ -167,8 +167,6 @@ namespace _02350Project.ViewModel
 
         public void cancel()
         {
-            //resetDialog();
-            //MessengerInstance.Send<int>(1000, "CloseNodeDialog");
             window.DialogResult = false;
         }
 
@@ -187,31 +185,7 @@ namespace _02350Project.ViewModel
 
             window.DialogResult = true;
 
-            //MessengerInstance.Send<Node>(new Node()
-            //{
-
-            //    Name = NodeName,
-            //    NoneFlag = NoneCheck,
-            //    AbstractFlag = AbstractCheck,
-            //    InterfaceFlag = InterfaceCheck,
-            //    Attributes = this.Attributes.ToList<string>(),
-            //    Methods = this.Methods.ToList<string>()
-            //}, "key1");
-
-            //resetDialog();
-
-            //MessengerInstance.Send<int>(1000, "CloseNodeDialog");
         }
 
-        public void resetDialog()
-        {
-            NoneCheck = true;
-            SelectedChoice = "Default";
-            Methods.Clear();
-            Attributes.Clear();
-            ActualAttribute = "";
-            ActualMethod = "";
-            NodeName = "";
-        }
     }
 }

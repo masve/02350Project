@@ -18,6 +18,8 @@ namespace _02350Project.ViewModel
         private NodeViewModel vMEndB;
 
         private bool dash;
+        private Brush color;
+        private bool filled;
 
         public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
 
@@ -27,10 +29,14 @@ namespace _02350Project.ViewModel
         private double aX, aY, bX, bY;
 
         private PointCollection pointyArrow = new PointCollection();
+        private PointCollection rhombusArrow = new PointCollection();
 
         public PointCollection actualArrow = new PointCollection();
 
-        public EdgeViewModel(Node fromNode, Node toNode, NodeViewModel fromVM, NodeViewModel toVM)
+
+
+
+        public EdgeViewModel(Node fromNode, Node toNode, NodeViewModel fromVM, NodeViewModel toVM, string type)
         {
             edge = new Edge();
             EndA = fromNode;
@@ -41,15 +47,87 @@ namespace _02350Project.ViewModel
             AX = AY = 200;
             BX = BY = 300;
             Other.ConsolePrinter.Write(fromNode.Name + " + " + toNode.Name);
-            PointyArrowTemplate();
+
+            Type = typeConverter(type);
+
+            initPointyArrowTemplate();
+            initRhombusArrowTemplate();
+
+            setFlags();
         }
 
-        private void PointyArrowTemplate()
+        private Edge.typeEnum typeConverter(string type)
+        {
+            switch (type)
+            {
+                case "ASS":
+                    return Edge.typeEnum.ASS;
+                case "AGG":
+                    return Edge.typeEnum.AGG;
+                case "COM":
+                    return Edge.typeEnum.COM;
+                case "GEN":
+                    return Edge.typeEnum.GEN;
+                case "DEP":
+                    return Edge.typeEnum.DEP;
+                default:
+                    return Edge.typeEnum.ASS;
+            }
+        }
+
+        private void setFlags()
+        {
+            switch (Type)
+            {
+                case Edge.typeEnum.GEN:
+                    Filled = true;
+                    Color = Brushes.White;
+                    Dash = false;
+                    break;
+                case Edge.typeEnum.COM:
+                    Filled = true;
+                    Color = Brushes.Black;
+                    Dash = false;
+                    break;
+                case Edge.typeEnum.AGG:
+                    Filled = true;
+                    Color = Brushes.White;
+                    Dash = false;
+                    break;
+                case Edge.typeEnum.DEP:
+                    Filled = false;
+                    Dash = true;
+                    Color = Brushes.Transparent;
+                    break;
+                case Edge.typeEnum.ASS:
+                    Filled = false;
+                    Dash = false;
+                    Color = Brushes.Transparent;
+                    break;
+            }
+        }
+
+        private void initPointyArrowTemplate()
         {
             Point p1 = new Point(10.0, 5.0);
             Point p2 = new Point(10.0, -5.0);
             pointyArrow.Add(p1);
             pointyArrow.Add(p2);
+
+            if (Edge.typeEnum.GEN == Type)
+                pointyArrow.Add(p1);
+        }
+
+        private void initRhombusArrowTemplate()
+        {
+            Point p1 = new Point(10.0, 5.0);
+            Point p2 = new Point(10.0, -5.0);
+            Point p3 = new Point(20.0, 0.0);
+            Point p4 = new Point(10.0, 5.0);
+            rhombusArrow.Add(p1);
+            rhombusArrow.Add(p2);
+            rhombusArrow.Add(p3);
+            rhombusArrow.Add(p4);
         }
 
         public NodeViewModel VMEndA { get { return vMEndA; } set { vMEndA = value; RaisePropertyChanged("VMEndA"); RaisePropertyChanged("AnchorA"); } }
@@ -58,6 +136,8 @@ namespace _02350Project.ViewModel
         public Node EndB { get { return edge.EndB; } set { edge.EndB = value; RaisePropertyChanged("EndB"); RaisePropertyChanged("AnchorB"); } }
 
         public Edge.typeEnum Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
+        public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
+        public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
 
         public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
 
@@ -71,7 +151,9 @@ namespace _02350Project.ViewModel
 
         public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
 
+
         private PointCollection PointyArrow { get { return pointyArrow; } }
+        private PointCollection RhombusArrow { get { return rhombusArrow; } }
 
         private double calculateAngle()
         {
@@ -111,16 +193,42 @@ namespace _02350Project.ViewModel
 
         public void ArrowControl()
         {
-            PointCollection temp = rotatePoint((new Point(BX, BY)), OffsetTemplate(new Point(BX, BY), PointyArrow), calculateAngle());
-            for (int i = 0; i < temp.Count(); i++)
+            if (Edge.typeEnum.ASS != Type)
             {
-                if (i == 1)
+                Point refPoint = new Point(BX, BY);
+                PointCollection temp2 = new PointCollection();
+                PointCollection temp3 = new PointCollection();
+                switch (Type)
                 {
-                    ActualArrow.Add(new Point(BX, BY));
+                    case Edge.typeEnum.DEP:
+                        temp3 = OffsetTemplate(refPoint, PointyArrow);
+                        break;
+                    case Edge.typeEnum.GEN:
+                        temp3 = OffsetTemplate(refPoint, PointyArrow);
+                        break;
+                    case Edge.typeEnum.AGG:
+                        temp3 = OffsetTemplate(refPoint, RhombusArrow);
+                        break;
+                    case Edge.typeEnum.COM:
+                        temp3 = OffsetTemplate(refPoint, RhombusArrow);
+                        break;
                 }
-                ActualArrow.Add(temp[i]);
+                PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle());
+                for (int i = 0; i < temp.Count(); i++)
+                {
+                    if (i == 1)
+                        temp2.Add(new Point(BX, BY));
+
+                    temp2.Add(temp[i]);
+                }
+                ActualArrow = temp2;
             }
-            // Other.ConsolePrinter.Write(ActualArrow.ToString());
+
+
+
+
+
+
         }
 
     }
