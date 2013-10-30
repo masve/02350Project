@@ -14,24 +14,18 @@ namespace _02350Project.ViewModel
         private Node node;
 
         /*
- * Coordinates and dimensions
-         * 
-         * 
- */
+         * Coordinates and dimensions
+         */
         private double height;
         private double width;
 
-        //private double canvasCenterX;
-        //private double canvasCenterY;
-
-
-        public double X { get { return node.X; } set { node.X = value; RaisePropertyChanged("X"); RaisePropertyChanged("CanvasCenterX"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
-        public double Y { get { return node.Y; } set { node.Y = value; RaisePropertyChanged("Y"); RaisePropertyChanged("CanvasCenterY"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double X { get { return node.X; } set { node.X = (int)value; RaisePropertyChanged("X"); RaisePropertyChanged("CanvasCenterX"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double Y { get { return node.Y; } set { node.Y = (int)value; RaisePropertyChanged("Y"); RaisePropertyChanged("CanvasCenterY"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
         public double Height { get { return height; } set { height = value; RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
         public double Width { get { return width; } set { width = value; RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
 
-        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = value - Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); } }
-        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = value - Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); } }
+        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); } }
+        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); } }
 
         /*
          * Edge anchor points
@@ -61,8 +55,7 @@ namespace _02350Project.ViewModel
         public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; RaisePropertyChanged("InterfaceFlag"); RaisePropertyChanged("NodeSubText"); } }
         public string NodeSubText
         {
-            get { return node.NodeSubText; }
-            set
+            get
             {
                 if (AbstractFlag == true)
                     node.NodeSubText = "Abstract class";
@@ -70,7 +63,9 @@ namespace _02350Project.ViewModel
                     node.NodeSubText = "Interface";
                 else
                     node.NodeSubText = "Class";
+                return node.NodeSubText;
             }
+
         }
 
         public List<string> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged("Attributes"); } }
@@ -107,7 +102,7 @@ namespace _02350Project.ViewModel
             AttCollapsed = true;
             MetCollapsed = true;
             Name = "placeholder";
-            NodeSubText = "";
+            
         }
 
     }

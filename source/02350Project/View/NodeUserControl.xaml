@@ -9,7 +9,7 @@
              xmlns:c="clr-namespace:_02350Project.Other"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="135"
-             d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged" >
+             d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged">
     <!--
         ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
     -->
@@ -50,7 +50,7 @@
 
     <!--http://www.codeproject.com/Tips/286211/All-purpose-Boolean-to-Visibility-Converter
             Convert VisibilityToBoolean so true:Visible, false:Hidden and not true:Visible, false:Collapsed-->
-    <Border Name="border" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="WhiteSmoke">
+    <Border Name="border" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="WhiteSmoke" SnapsToDevicePixels="True">
         
 
 

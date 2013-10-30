@@ -135,19 +135,19 @@ namespace _02350Project.ViewModel
             {
                 NoneCheck = true;
                 AbstractCheck = false;
-                interfaceCheck = false;
+                InterfaceCheck = false;
             }
             else if (SelectedChoice.Equals("Abstract"))
             {
                 NoneCheck = false;
                 AbstractCheck = true;
-                interfaceCheck = false;
+                InterfaceCheck = false;
             }
             else if (SelectedChoice.Equals("Interface"))
             {
                 NoneCheck = false;
                 AbstractCheck = false;
-                interfaceCheck = true;
+                InterfaceCheck = true;
             }
             else
             {
@@ -183,7 +183,7 @@ namespace _02350Project.ViewModel
             node.InterfaceFlag = InterfaceCheck;
             node.Methods = this.Methods.ToList<string>();
             node.Attributes = this.Attributes.ToList<string>();
-
+            
 
             window.DialogResult = true;
 

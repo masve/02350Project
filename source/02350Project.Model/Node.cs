@@ -13,15 +13,18 @@ namespace _02350Project.Model
     public class Node : NotifyBase
     {
         /*
-         * Coordinates and dimensions
+         * Coordinates
          */
-        private double x;
-        private double y;
+        private int x;
+        private int y;
 
 
-        public double X { get { return x; } set { x = value; } }
-        public double Y { get { return y; } set { y = value; } }
+        public int X { get { return x; } set { x = value; } }
+        public int Y { get { return y; } set { y = value; } }
 
+        /*
+         * Node Content
+         */
         private string name;
         private string nodeSubText;
         private List<string> attributes;
@@ -32,17 +35,7 @@ namespace _02350Project.Model
         public List<string> Attributes { get { return attributes; } set { attributes = value; } }
         public List<string> Methods { get { return methods; } set { methods = value; } }
 
-        //public Node()
-        //{
-        //    NodeCollapsed = true;
-        //    AttCollapsed = true;
-        //    MetCollapsed = true;
-        //    X = Y = 50;
-        //    Height = 100;
-        //    Width = 100;
-        //    Name = "test";
-        //}
-
+        #region ConsoleDebugger
         public static void WriteToConsole(string message)
         {
             AttachConsole(-1);
@@ -50,5 +43,6 @@ namespace _02350Project.Model
         }
         [DllImport("Kernel32.dll")]
         public static extern bool AttachConsole(int processId);
+        #endregion
     }
 }
