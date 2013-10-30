@@ -19,6 +19,5 @@ namespace _02350Project.Model
         public Node EndB { get { return endB; } set { endB = value; } }
 
         public typeEnum Type { get { return type; } set { type = value; } }
-
     }
 }

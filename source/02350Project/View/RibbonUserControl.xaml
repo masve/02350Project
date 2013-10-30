@@ -71,6 +71,7 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Show and hide">
                     <RibbonCheckBox Label="Gridlines"/>
+                    
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

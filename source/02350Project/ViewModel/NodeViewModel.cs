@@ -11,10 +11,11 @@ namespace _02350Project.ViewModel
 {
     public class NodeViewModel : ViewModelBase
     {
+        #region Fields and Properties
         private Node node;
 
         /*
-         * Coordinates and dimensions
+         * Coordinates and Dimensions
          */
         private double height;
         private double width;
@@ -28,7 +29,7 @@ namespace _02350Project.ViewModel
         public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
 
         /*
-         * Edge anchor points
+         * Edge Anchor Points
          */
         private Point north;
         private Point south;
@@ -41,13 +42,11 @@ namespace _02350Project.ViewModel
         public Point West { get { west.X = node.X; west.Y = node.Y + Height / 2; return west; } set { west.X = node.X; west.Y = node.Y + Height / 2; RaisePropertyChanged("West"); } }
 
         /*
-         * Usercontrol contents
+         * Content
          */
-
         private bool noneFlag;
         private bool abstractFlag;
         private bool interfaceFlag;
-
 
         public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); RaisePropertyChanged("NodeSubText"); } }
         public bool NoneFlag { get { return noneFlag; } set { noneFlag = value; RaisePropertyChanged("NoneFlag"); RaisePropertyChanged("NodeSubText"); } }
@@ -65,14 +64,12 @@ namespace _02350Project.ViewModel
                     node.NodeSubText = "Class";
                 return node.NodeSubText;
             }
-
         }
-
         public List<string> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged("Attributes"); } }
         public List<string> Methods { get { return node.Methods; } set { node.Methods = value; RaisePropertyChanged("Methods"); } }
 
         /*
-         * Usercontrol visual cues
+         * Visuals
          */
         private bool nodeCollapsed;
         private bool attCollapsed;
@@ -83,18 +80,22 @@ namespace _02350Project.ViewModel
         public bool AttCollapsed { get { return attCollapsed; } set { attCollapsed = value; RaisePropertyChanged("AttCollapsed"); } }
         public bool MetCollapsed { get { return metCollapsed; } set { metCollapsed = value; RaisePropertyChanged("MetCollapsed"); } }
         public bool IsSelected { get { return isSelected; } set { isSelected = value; RaisePropertyChanged("IsSelected"); } }
+        #endregion
 
+        /// <summary>
+        /// Returns a new EdgeViewModel with 'this' NodeViewModel and 'this' Node as ending Node, 
+        /// fromNode as starting node and type as the edge type.
+        /// </summary>
+        /// <param name="fromNode"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public EdgeViewModel newEdge(NodeViewModel fromNode, string type)
         {
             EdgeViewModel newEdge = new EdgeViewModel(fromNode.node, this.node, fromNode, this, type);
-            //newEdge.VMEndA = fromNode;
-            //newEdge.EndA = fromNode.node;
-            //newEdge.VMEndB = this;
-            //newEdge.EndB = this.node; //TODO spørg bo om dette er korrekt
-
             return newEdge;
         }
 
+        #region Constructor
         public NodeViewModel()
         {
             node = new Node();
@@ -102,16 +103,10 @@ namespace _02350Project.ViewModel
             AttCollapsed = true;
             MetCollapsed = true;
             Name = "placeholder";
-
         }
+        #endregion
 
-        public void Resize(double h, double w)
-        {
-            Height = h;
-            Width = w;
-        }
-
-        #region Dynamic Anchorpoint Calculations
+        #region Anchorpoint Calculations
         public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
         private double northEast = -1.0 * Math.PI / 4.0;
         private double northWest = -3.0 * Math.PI / 4.0;

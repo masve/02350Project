@@ -12,6 +12,7 @@ namespace _02350Project.ViewModel
 {
     public class EdgeViewModel : ViewModelBase
     {
+        #region Private Fields
         private Edge edge;
 
         private NodeViewModel vMEndA;
@@ -21,8 +22,6 @@ namespace _02350Project.ViewModel
         private Brush color;
         private bool filled;
 
-        public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
-
         private ANCHOR anchorA;
         private ANCHOR anchorB;
 
@@ -30,32 +29,104 @@ namespace _02350Project.ViewModel
 
         private PointCollection pointyArrow = new PointCollection();
         private PointCollection rhombusArrow = new PointCollection();
+        private PointCollection actualArrow = new PointCollection();
+        #endregion
 
-        public PointCollection actualArrow = new PointCollection();
+        #region Public Fields
+        public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
+        #endregion
 
-
-
-
+        #region Constructor
         public EdgeViewModel(Node fromNode, Node toNode, NodeViewModel fromVM, NodeViewModel toVM, string type)
         {
+            /*
+             * The EdgeViewModel Constructor takes both Node and NodeViewModel.
+             * Because as it is not the Edge Models need to know directly which
+             * Nodes it is connecting. As we cannot give the Edge Model the 
+             * ViewModels to not break the MVVM pattern.
+             */
+
             edge = new Edge();
             EndA = fromNode;
             EndB = toNode;
             VMEndA = fromVM;
             VMEndB = toVM;
-            Other.ConsolePrinter.Write("Edge VM");
             AX = AY = 200;
             BX = BY = 300;
-            Other.ConsolePrinter.Write(fromNode.Name + " + " + toNode.Name);
 
             Type = typeConverter(type);
-
             initPointyArrowTemplate();
             initRhombusArrowTemplate();
 
             setFlags();
         }
+        #endregion
 
+        #region Arrow Templates
+        /// <summary>
+        /// Initializes the PointCollection template used for Association 
+        /// and Dependency type edges.
+        /// </summary>
+        private void initPointyArrowTemplate()
+        {
+            Point p1 = new Point(10.0, 5.0);
+            Point p2 = new Point(10.0, -5.0);
+            pointyArrow.Add(p1);
+            pointyArrow.Add(p2);
+
+            if (Edge.typeEnum.GEN == Type)
+                pointyArrow.Add(p1);
+        }
+
+        /// <summary>
+        /// Initializes the PointCollection template used for Aggregation 
+        /// and Composition type edges.
+        /// </summary>
+        private void initRhombusArrowTemplate()
+        {
+            Point p1 = new Point(10.0, 5.0);
+            Point p2 = new Point(10.0, -5.0);
+            Point p3 = new Point(20.0, 0.0);
+            Point p4 = new Point(10.0, 5.0);
+            rhombusArrow.Add(p1);
+            rhombusArrow.Add(p2);
+            rhombusArrow.Add(p3);
+            rhombusArrow.Add(p4);
+        }
+        #endregion
+
+        #region Properties
+        public NodeViewModel VMEndA { get { return vMEndA; } set { vMEndA = value; RaisePropertyChanged("VMEndA"); RaisePropertyChanged("AnchorA"); } }
+        public NodeViewModel VMEndB { get { return vMEndB; } set { vMEndB = value; RaisePropertyChanged("VMEndB"); RaisePropertyChanged("AnchorB"); } }
+        public Node EndA { get { return edge.EndA; } set { edge.EndA = value; RaisePropertyChanged("EndA"); RaisePropertyChanged("AnchorA"); } }
+        public Node EndB { get { return edge.EndB; } set { edge.EndB = value; RaisePropertyChanged("EndB"); RaisePropertyChanged("AnchorB"); } }
+
+        public Edge.typeEnum Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
+        public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
+        public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
+
+        public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
+
+        public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; RaisePropertyChanged("AnchorA"); RaisePropertyChanged("AX"); RaisePropertyChanged("AY"); } }
+        public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; RaisePropertyChanged("AnchorB"); RaisePropertyChanged("BX"); RaisePropertyChanged("BY"); } }
+
+        public double AX { get { return aX; } set { aX = value; RaisePropertyChanged("AX"); } }
+        public double AY { get { return aY; } set { aY = value; RaisePropertyChanged("AY"); } }
+        public double BX { get { return bX; } set { bX = value; RaisePropertyChanged("BX"); } }
+        public double BY { get { return bY; } set { bY = value; RaisePropertyChanged("BY"); } }
+
+        public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
+        #endregion
+
+        #region Private Helpers
+        private PointCollection PointyArrow { get { return pointyArrow; } }
+        private PointCollection RhombusArrow { get { return rhombusArrow; } }
+
+        /// <summary>
+        /// Converts the type given from the EdgeViewModel invoker
+        /// to the enum that is used to represent the edge type in 
+        /// the EdgeViewModel and model.
+        /// </summary>
         private Edge.typeEnum typeConverter(string type)
         {
             switch (type)
@@ -75,6 +146,10 @@ namespace _02350Project.ViewModel
             }
         }
 
+        /// <summary>
+        /// Sets the flags that define the properties of an edge.
+        /// The visual representation; fill, color, dash.
+        /// </summary>
         private void setFlags()
         {
             switch (Type)
@@ -107,54 +182,10 @@ namespace _02350Project.ViewModel
             }
         }
 
-        private void initPointyArrowTemplate()
-        {
-            Point p1 = new Point(10.0, 5.0);
-            Point p2 = new Point(10.0, -5.0);
-            pointyArrow.Add(p1);
-            pointyArrow.Add(p2);
-
-            if (Edge.typeEnum.GEN == Type)
-                pointyArrow.Add(p1);
-        }
-
-        private void initRhombusArrowTemplate()
-        {
-            Point p1 = new Point(10.0, 5.0);
-            Point p2 = new Point(10.0, -5.0);
-            Point p3 = new Point(20.0, 0.0);
-            Point p4 = new Point(10.0, 5.0);
-            rhombusArrow.Add(p1);
-            rhombusArrow.Add(p2);
-            rhombusArrow.Add(p3);
-            rhombusArrow.Add(p4);
-        }
-
-        public NodeViewModel VMEndA { get { return vMEndA; } set { vMEndA = value; RaisePropertyChanged("VMEndA"); RaisePropertyChanged("AnchorA"); } }
-        public NodeViewModel VMEndB { get { return vMEndB; } set { vMEndB = value; RaisePropertyChanged("VMEndB"); RaisePropertyChanged("AnchorB"); } }
-        public Node EndA { get { return edge.EndA; } set { edge.EndA = value; RaisePropertyChanged("EndA"); RaisePropertyChanged("AnchorA"); } }
-        public Node EndB { get { return edge.EndB; } set { edge.EndB = value; RaisePropertyChanged("EndB"); RaisePropertyChanged("AnchorB"); } }
-
-        public Edge.typeEnum Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
-        public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
-        public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
-
-        public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
-
-        public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; RaisePropertyChanged("AnchorA"); RaisePropertyChanged("AX"); RaisePropertyChanged("AY"); } }
-        public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; RaisePropertyChanged("AnchorB"); RaisePropertyChanged("BX"); RaisePropertyChanged("BY"); } }
-
-        public double AX { get { return aX; } set { aX = value; RaisePropertyChanged("AX"); } }
-        public double AY { get { return aY; } set { aY = value; RaisePropertyChanged("AY"); } }
-        public double BX { get { return bX; } set { bX = value; RaisePropertyChanged("BX"); } }
-        public double BY { get { return bY; } set { bY = value; RaisePropertyChanged("BY"); } }
-
-        public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
-
-
-        private PointCollection PointyArrow { get { return pointyArrow; } }
-        private PointCollection RhombusArrow { get { return rhombusArrow; } }
-
+        /// <summary>
+        /// Calculates the angle, in radians, between an the edge's start and end nodes.
+        /// </summary>
+        /// <returns></returns>
         private double calculateAngle()
         {
             double deltaX = BX - AX;
@@ -163,6 +194,13 @@ namespace _02350Project.ViewModel
             return Math.Atan2(deltaY, deltaX);
         }
 
+        /// <summary>
+        /// Rotates a PointCollection from a centerpoint/reference point.
+        /// </summary>
+        /// <param name="centerPoint"></param>
+        /// <param name="points"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
         public PointCollection rotatePoint(Point centerPoint, PointCollection points, double angle)
         {
             double cosTheta = Math.Cos(angle + (180 * (Math.PI / 180)));
@@ -181,6 +219,12 @@ namespace _02350Project.ViewModel
             return newPoints;
         }
 
+        /// <summary>
+        /// Calculates the positional offset given a Reference Point and an Arrow Template.
+        /// </summary>
+        /// <param name="centerPoint"></param>
+        /// <param name="pc"></param>
+        /// <returns></returns>
         public PointCollection OffsetTemplate(Point centerPoint, PointCollection pc)
         {
             PointCollection temp = new PointCollection();
@@ -191,6 +235,9 @@ namespace _02350Project.ViewModel
             return temp;
         }
 
+        /// <summary>
+        /// Determines the type of arrow head should be set for the edge.
+        /// </summary>
         public void ArrowControl()
         {
             if (Edge.typeEnum.ASS != Type)
@@ -224,11 +271,7 @@ namespace _02350Project.ViewModel
                 ActualArrow = temp2;
             }
 
-
-
-
-
-
+        #endregion
         }
 
     }
