@@ -24,8 +24,8 @@ namespace _02350Project.ViewModel
         public double Height { get { return height; } set { height = value; RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
         public double Width { get { return width; } set { width = value; RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
 
-        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); } }
-        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); } }
+        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
 
         /*
          * Edge anchor points
@@ -35,10 +35,10 @@ namespace _02350Project.ViewModel
         private Point east;
         private Point west;
 
-        public Point North { get { north.X = node.X + Width / 2; north.Y = node.Y; return north; } set { north.X = node.X + Width / 2; north.Y = node.Y; } }
-        public Point South { get { south.X = node.X + Width / 2; south.Y = node.Y + Height; return south; } set { south.X = node.X + Width / 2; south.Y = node.Y + Height; } }
-        public Point East { get { east.X = node.X + Width; east.Y = node.Y + Height / 2; return east; } set { east.X = node.X + Width; east.Y = node.Y + Height / 2; } }
-        public Point West { get { west.X = node.X; west.Y = node.Y + Height / 2; return west; } set { west.X = node.X; west.Y = node.Y + Height / 2; } }
+        public Point North { get { north.X = node.X + Width / 2; north.Y = node.Y; return north; } set { north.X = node.X + Width / 2; north.Y = node.Y; RaisePropertyChanged("North"); } }
+        public Point South { get { south.X = node.X + Width / 2; south.Y = node.Y + Height; return south; } set { south.X = node.X + Width / 2; south.Y = node.Y + Height; RaisePropertyChanged("South"); } }
+        public Point East { get { east.X = node.X + Width; east.Y = node.Y + Height / 2; return east; } set { east.X = node.X + Width; east.Y = node.Y + Height / 2; RaisePropertyChanged("East"); } }
+        public Point West { get { west.X = node.X; west.Y = node.Y + Height / 2; return west; } set { west.X = node.X; west.Y = node.Y + Height / 2; RaisePropertyChanged("West"); } }
 
         /*
          * Usercontrol contents
@@ -102,8 +102,118 @@ namespace _02350Project.ViewModel
             AttCollapsed = true;
             MetCollapsed = true;
             Name = "placeholder";
-            
+
         }
+
+        public void Resize(double h, double w)
+        {
+            Height = h;
+            Width = w;
+        }
+
+        #region Dynamic Anchorpoint Calculations
+        public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
+        private double northEast = -1.0 * Math.PI / 4.0;
+        private double northWest = -3.0 * Math.PI / 4.0;
+        private double southEast = Math.PI / 4.0;
+        private double southWest = 3.0 * Math.PI / 4.0;
+
+        //public void CalculateAnchor(NodeViewModel node)
+        //{
+        //    foreach (EdgeViewModel e in Edges)
+        //    {
+        //        if (e.VMEndA.Equals(node))
+        //        {
+        //            setEnds(e);
+
+        //        }
+        //        else if (e.VMEndB.Equals(node))
+        //        {
+        //            setEnds(e);
+        //        }
+        //    }
+        //}
+
+        public void setEnds(EdgeViewModel e)
+        {
+            ANCHOR A = findAnchor(e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY, e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY);
+            ANCHOR B = findAnchor(e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY, e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY);
+            switch (A)
+            {
+                case ANCHOR.NORTH:
+                    e.AX = e.VMEndA.North.X;
+                    e.AY = e.VMEndA.North.Y;
+                    break;
+                case ANCHOR.EAST:
+                    e.AX = e.VMEndA.East.X;
+                    e.AY = e.VMEndA.East.Y;
+
+                    break;
+                case ANCHOR.SOUTH:
+                    e.AX = e.VMEndA.South.X;
+                    e.AY = e.VMEndA.South.Y;
+                    break;
+                case ANCHOR.WEST:
+                    e.AX = e.VMEndA.West.X;
+                    e.AY = e.VMEndA.West.Y;
+                    break;
+            }
+            switch (B)
+            {
+                case ANCHOR.NORTH:
+                    e.BX = e.VMEndB.North.X;
+                    e.BY = e.VMEndB.North.Y;
+                    break;
+                case ANCHOR.EAST:
+                    e.BX = e.VMEndB.East.X;
+                    e.BY = e.VMEndB.East.Y;
+
+                    break;
+                case ANCHOR.SOUTH:
+                    e.BX = e.VMEndB.South.X;
+                    e.BY = e.VMEndB.South.Y;
+
+                    break;
+                case ANCHOR.WEST:
+                    e.BX = e.VMEndB.West.X;
+                    e.BY = e.VMEndB.West.Y;
+                    break;
+            }
+        }
+
+        private ANCHOR findAnchor(double x1, double y1, double x2, double y2)
+        {
+            double deltaX = x2 - x1;
+            double deltaY = y2 - y1;
+
+
+            double angle = Math.Atan2(deltaY, deltaX);
+
+
+            if (northEast > angle && angle >= northWest)
+            {
+                return ANCHOR.NORTH;
+
+            }
+            else if (southWest > angle && angle >= southEast)
+            {
+                return ANCHOR.SOUTH;
+
+            }
+            else if (southEast > angle && angle >= northEast)
+            {
+                return ANCHOR.EAST;
+
+            }
+            else if (northWest > angle || angle >= southWest)
+            {
+                return ANCHOR.WEST;
+
+            }
+            return ANCHOR.NORTH;
+        }
+
+        #endregion
 
     }
 }

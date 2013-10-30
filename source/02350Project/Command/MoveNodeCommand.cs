@@ -36,5 +36,7 @@ namespace _02350Project.Command
             node.CanvasCenterY = y;
         }
 
+        public NodeViewModel Node { get { return node; } }
+
     }
 }

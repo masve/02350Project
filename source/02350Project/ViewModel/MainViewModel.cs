@@ -38,6 +38,7 @@ namespace _02350Project.ViewModel
 
         private bool isAddingEdge = false;
         private bool isRemovingNode = false;
+        private bool isMovingNode = false;
         private NodeViewModel firstSelectedEdgeEnd;
 
         public ICommand AddNodeCommand { get; private set; }
@@ -60,13 +61,6 @@ namespace _02350Project.ViewModel
         public ICommand UndoRedoCheckCommand { get; private set; }
 
         public ICommand TestCommand { get; private set; }
-
-
-        public enum ANCHOR { NORTH, SOUTH, EAST, WEST };
-        private double northEast = -1.0 * Math.PI / 4.0;
-        private double northWest = -3.0 * Math.PI / 4.0;
-        private double southEast = Math.PI / 4.0;
-        private double southWest = 3.0 * Math.PI / 4.0;
 
         public MainViewModel()
         {
@@ -111,12 +105,12 @@ namespace _02350Project.ViewModel
             OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
             ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
-            UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
-            RedoCommand = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
+            UndoCommand = new RelayCommand(undo, canUndo);
+            RedoCommand = new RelayCommand(redo, canRedo);
 
             TestCommand = new RelayCommand(test);
 
-
+            #region About Messaging
             /*
              * We use messages throughout the application to communicate between viewmodels.
              * And between viewmodels and views (for requesting open and close actions).
@@ -133,14 +127,56 @@ namespace _02350Project.ViewModel
              * NOTE: Find better alternative to string keys. Suggestion: Some enum
              */
             // MessengerInstance.Register<Node>(this, "key1", (n) => AddNode(n));
+            #endregion
 
         }
 
         public void test()
         {
-            Other.ConsolePrinter.Write("123123");
+            //Point p = new Point(2.0, 3.0);
+            //PointCollection pc = new PointCollection();
+            //pc.Add(new Point(4.0, 1.0));
+            //pc.Add(new Point(4.0, 5.0));
+            //double angle = 90.0 * (Math.PI / 180.0);
+            //Other.ConsolePrinter.Write(rotatePoint(p, pc, angle).ToString());
+        }
+
+
+
+        #region Undo/Redo Command Implementation
+        public void undo()
+        {
+            IUndoRedoCommand command = undoRedoController.getHeadOfUndo();
+
+            undoRedoController.Undo();
+            if (command is MoveNodeCommand)
+            {
+                CalculateAnchor(((MoveNodeCommand)command).Node);
+            }
 
         }
+        public bool canUndo()
+        {
+            return undoRedoController.CanUndo();
+        }
+
+        public void redo()
+        {
+            IUndoRedoCommand command = undoRedoController.getHeadOfRedo();
+
+            undoRedoController.Redo();
+            if (command is MoveNodeCommand)
+            {
+                CalculateAnchor(((MoveNodeCommand)command).Node);
+            }
+        }
+
+        public bool canRedo()
+        {
+            return undoRedoController.CanRedo();
+        }
+        #endregion
+
 
         public void AddNode(NodeViewModel node)
         {
@@ -165,9 +201,7 @@ namespace _02350Project.ViewModel
             FrameworkElement rect = (FrameworkElement)e.Source;
             NodeViewModel node = (NodeViewModel)rect.DataContext;
 
-            node.Height = e.NewSize.Height;
-            node.Width = e.NewSize.Width;
-
+            node.Resize(e.NewSize.Height, e.NewSize.Width);
             CalculateAnchor(node);
         }
 
@@ -175,6 +209,7 @@ namespace _02350Project.ViewModel
 
         public void MouseDownNode(MouseButtonEventArgs e)
         {
+            isMovingNode = false;
             if (!isAddingEdge && !isRemovingNode)
             {
                 e.MouseDevice.Target.CaptureMouse();
@@ -188,13 +223,13 @@ namespace _02350Project.ViewModel
                 posY = movingNode.Y;
 
             }
-
         }
 
         public void MouseMoveNode(MouseEventArgs e)
         {
             if (Mouse.Captured != null && !isAddingEdge && !isRemovingNode)
             {
+                isMovingNode = true;
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
@@ -214,6 +249,7 @@ namespace _02350Project.ViewModel
                     movingNode.CanvasCenterY = movingNode.Height / 2;
 
                 CalculateAnchor(movingNode);
+
 
                 posX = movingNode.CanvasCenterX;
                 posY = movingNode.CanvasCenterY;
@@ -252,7 +288,7 @@ namespace _02350Project.ViewModel
                 undoRedoController.AddAndExecute(m);
                 isRemovingNode = false;
             }
-            else
+            else if (isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
@@ -264,112 +300,32 @@ namespace _02350Project.ViewModel
                 undoRedoController.AddAndExecute(m);
 
                 moveNodePoint = new Point();
-                e.MouseDevice.Target.ReleaseMouseCapture();
+
+                isMovingNode = false;
             }
+
+            if (Mouse.Captured != null)
+                e.MouseDevice.Target.ReleaseMouseCapture();
         }
         #endregion
 
-        #region Dynamic Anchorpoint Calculations
-        public void CalculateAnchor(NodeViewModel node)
+        public void CalculateAnchor(NodeViewModel nodeVM)
         {
             foreach (EdgeViewModel e in Edges)
             {
-                if (e.VMEndA.Equals(node))
+                if (e.VMEndA.Equals(nodeVM))
                 {
-                    setEnds(e);
+                    nodeVM.setEnds(e);
+                    e.ArrowControl();
 
                 }
-                else if (e.VMEndB.Equals(node))
+                else if (e.VMEndB.Equals(nodeVM))
                 {
-                    setEnds(e);
+                    nodeVM.setEnds(e);
+                    e.ArrowControl();
                 }
             }
         }
-
-        public void setEnds(EdgeViewModel e)
-        {
-            ANCHOR A = findAnchor(e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY, e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY);
-            ANCHOR B = findAnchor(e.VMEndB.CanvasCenterX, e.VMEndB.CanvasCenterY, e.VMEndA.CanvasCenterX, e.VMEndA.CanvasCenterY);
-            switch (A)
-            {
-                case ANCHOR.NORTH:
-                    e.AX = e.VMEndA.North.X;
-                    e.AY = e.VMEndA.North.Y;
-                    break;
-                case ANCHOR.EAST:
-                    e.AX = e.VMEndA.East.X;
-                    e.AY = e.VMEndA.East.Y;
-
-                    break;
-                case ANCHOR.SOUTH:
-                    e.AX = e.VMEndA.South.X;
-                    e.AY = e.VMEndA.South.Y;
-                    break;
-                case ANCHOR.WEST:
-                    e.AX = e.VMEndA.West.X;
-                    e.AY = e.VMEndA.West.Y;
-                    break;
-            }
-            switch (B)
-            {
-                case ANCHOR.NORTH:
-                    e.BX = e.VMEndB.North.X;
-                    e.BY = e.VMEndB.North.Y;
-                    break;
-                case ANCHOR.EAST:
-                    e.BX = e.VMEndB.East.X;
-                    e.BY = e.VMEndB.East.Y;
-
-                    break;
-                case ANCHOR.SOUTH:
-                    e.BX = e.VMEndB.South.X;
-                    e.BY = e.VMEndB.South.Y;
-
-                    break;
-                case ANCHOR.WEST:
-                    e.BX = e.VMEndB.West.X;
-                    e.BY = e.VMEndB.West.Y;
-                    break;
-            }
-        }
-
-        private ANCHOR findAnchor(double x1, double y1, double x2, double y2)
-        {
-            double deltaX = x2 - x1;
-            double deltaY = y2 - y1;
-
-
-            double angle = Math.Atan2(deltaY, deltaX);
-
-
-            if (northEast > angle && angle >= northWest)
-            {
-                return ANCHOR.NORTH;
-
-            }
-            else if (southWest > angle && angle >= southEast)
-            {
-                return ANCHOR.SOUTH;
-
-            }
-            else if (southEast > angle && angle >= northEast)
-            {
-                return ANCHOR.EAST;
-
-            }
-            else if (northWest > angle || angle >= southWest)
-            {
-                return ANCHOR.WEST;
-
-            }
-            return ANCHOR.NORTH;
-        }
-
-        #endregion
-
-        /*
-         * Handling open and close for views and view models http://stackoverflow.com/questions/18435173/open-close-view-from-viewmodel 
-         */
 
         /*
          * Opens the Create Class Dialog

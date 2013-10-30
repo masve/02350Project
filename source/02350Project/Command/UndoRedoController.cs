@@ -41,5 +41,15 @@ namespace _02350Project.Command
 
         public bool CanUndo() { return undoStack.Any(); }
         public bool CanRedo() { return redoStack.Any(); }
+
+        public IUndoRedoCommand getHeadOfUndo()
+        {
+            return undoStack.Peek();
+        }
+
+        internal IUndoRedoCommand getHeadOfRedo()
+        {
+            return redoStack.Peek();
+        }
     }
 }
