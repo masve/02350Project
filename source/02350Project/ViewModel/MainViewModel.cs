@@ -210,14 +210,13 @@ namespace _02350Project.ViewModel
             {
                 e.MouseDevice.Target.CaptureMouse();
 
-                FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                FrameworkElement mouseTarget = (FrameworkElement)e.MouseDevice.Target;
+                NodeViewModel movingNode = (NodeViewModel)mouseTarget.DataContext;
+                Canvas canvas = FindParentOfType<Canvas>(mouseTarget);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
                 posX = movingNode.X;
                 posY = movingNode.Y;
-
             }
         }
 

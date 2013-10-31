@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:View="clr-namespace:_02350Project.View"
         xmlns:VM="clr-namespace:_02350Project.ViewModel"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="RibbonTest" Height="600" Width="800">
@@ -35,7 +36,7 @@
             <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
             <Border Margin="5,5,6,6">
 
-                <Canvas ClipToBounds="True">
+                <Canvas x:Name="MainCanvas" ClipToBounds="True">
                     <ItemsControl ItemsSource="{Binding Nodes}"/>
                     <ItemsControl ItemsSource="{Binding Edges}"/>
 
@@ -57,9 +58,7 @@
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
                 </Border.Effect>
             </Border>
-            <!--</ScrollViewer>-->
         </Grid>
-        <!--</DockPanel>-->
     </DockPanel>
 
 </Window>
