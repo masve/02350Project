@@ -104,7 +104,6 @@ namespace _02350Project.ViewModel
         public Edge.typeEnum Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
         public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
         public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
-
         public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
 
         public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; RaisePropertyChanged("AnchorA"); RaisePropertyChanged("AX"); RaisePropertyChanged("AY"); } }
@@ -123,7 +122,7 @@ namespace _02350Project.ViewModel
         private PointCollection RhombusArrow { get { return rhombusArrow; } }
 
         /// <summary>
-        /// Converts the type given from the EdgeViewModel invoker
+        /// Converts the type given from the constructor
         /// to the enum that is used to represent the edge type in 
         /// the EdgeViewModel and model.
         /// </summary>
@@ -147,7 +146,7 @@ namespace _02350Project.ViewModel
         }
 
         /// <summary>
-        /// Sets the flags that define the properties of an edge.
+        /// Sets the flags that define the properties of an edge and its head.
         /// The visual representation; fill, color, dash.
         /// </summary>
         private void setFlags()
@@ -171,13 +170,13 @@ namespace _02350Project.ViewModel
                     break;
                 case Edge.typeEnum.DEP:
                     Filled = false;
-                    Dash = true;
                     Color = Brushes.Transparent;
+                    Dash = true;
                     break;
                 case Edge.typeEnum.ASS:
                     Filled = false;
-                    Dash = false;
                     Color = Brushes.Transparent;
+                    Dash = false;
                     break;
             }
         }
@@ -195,13 +194,13 @@ namespace _02350Project.ViewModel
         }
 
         /// <summary>
-        /// Rotates a PointCollection from a centerpoint/reference point.
+        /// Rotates a PointCollection from a reference point.
         /// </summary>
-        /// <param name="centerPoint"></param>
+        /// <param name="refPoint"></param>
         /// <param name="points"></param>
         /// <param name="angle"></param>
         /// <returns></returns>
-        public PointCollection rotatePoint(Point centerPoint, PointCollection points, double angle)
+        public PointCollection rotatePoint(Point refPoint, PointCollection points, double angle)
         {
             double cosTheta = Math.Cos(angle + (180 * (Math.PI / 180)));
             double sinTheta = Math.Sin(angle + (180 * (Math.PI / 180)));
@@ -210,8 +209,8 @@ namespace _02350Project.ViewModel
 
             foreach (Point p in points)
             {
-                double x = (int)(cosTheta * (p.X - centerPoint.X) - sinTheta * (p.Y - centerPoint.Y) + centerPoint.X);
-                double y = (int)(sinTheta * (p.X - centerPoint.X) + cosTheta * (p.Y - centerPoint.Y) + centerPoint.Y);
+                double x = (int)(cosTheta * (p.X - refPoint.X) - sinTheta * (p.Y - refPoint.Y) + refPoint.X);
+                double y = (int)(sinTheta * (p.X - refPoint.X) + cosTheta * (p.Y - refPoint.Y) + refPoint.Y);
 
                 newPoints.Add(new Point(x, y));
             }
@@ -220,19 +219,19 @@ namespace _02350Project.ViewModel
         }
 
         /// <summary>
-        /// Calculates the positional offset given a Reference Point and an Arrow Template.
+        /// Calculates the positional offset given a reference point and an arrow template.
         /// </summary>
         /// <param name="centerPoint"></param>
         /// <param name="pc"></param>
         /// <returns></returns>
-        public PointCollection OffsetTemplate(Point centerPoint, PointCollection pc)
+        public PointCollection OffsetTemplate(Point refPoint, PointCollection arrowTemplate)
         {
-            PointCollection temp = new PointCollection();
-            foreach (Point p in pc)
+            PointCollection offsetCollection = new PointCollection();
+            foreach (Point p in arrowTemplate)
             {
-                temp.Add(new Point(p.X + centerPoint.X, p.Y + centerPoint.Y));
+                offsetCollection.Add(new Point(p.X + refPoint.X, p.Y + refPoint.Y));
             }
-            return temp;
+            return offsetCollection;
         }
 
         /// <summary>
@@ -261,16 +260,19 @@ namespace _02350Project.ViewModel
                         break;
                 }
                 PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle());
+
+                /*
+                 * Adds the reference point to as index[1] in the temp2 PointCollection
+                 */
                 for (int i = 0; i < temp.Count(); i++)
                 {
                     if (i == 1)
-                        temp2.Add(new Point(BX, BY));
+                        temp2.Add(refPoint);
 
                     temp2.Add(temp[i]);
                 }
                 ActualArrow = temp2;
             }
-
         #endregion
         }
 
