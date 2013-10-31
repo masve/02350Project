@@ -26,7 +26,7 @@ namespace _02350Project.ViewModel
         public ObservableCollection<NodeViewModel> Nodes { get; set; }
         public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
-        private Point moveNodePoint;
+        //private Point moveNodePoint; // No longer in use
         private double posX;
         private double posY;
 
@@ -203,6 +203,11 @@ namespace _02350Project.ViewModel
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
         /// </summary>
         /// <param name="e"></param>
+
+
+        Point offsetPosition;
+        private double oldPosX;
+        private double oldPosY;
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             isMovingNode = false;
@@ -214,9 +219,9 @@ namespace _02350Project.ViewModel
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
-                Point mousePosition = Mouse.GetPosition(canvas);
-                posX = movingNode.X;
-                posY = movingNode.Y;
+                offsetPosition = Mouse.GetPosition(canvas);
+                oldPosX = movingNode.X;
+                oldPosY = movingNode.Y;
 
             }
         }
@@ -236,23 +241,19 @@ namespace _02350Project.ViewModel
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
-                if (moveNodePoint == default(Point))
-                    moveNodePoint = mousePosition;
+                mousePosition.X -= offsetPosition.X;
+                mousePosition.Y -= offsetPosition.Y;
 
-                if (mousePosition.X - (movingNode.Width / 2) > 0)
-                    movingNode.CanvasCenterX = mousePosition.X;
-                else
-                    movingNode.CanvasCenterX = movingNode.Width / 2;
-                if (mousePosition.Y - (movingNode.Height / 2) > 0)
-                    movingNode.CanvasCenterY = mousePosition.Y;
-                else
-                    movingNode.CanvasCenterY = movingNode.Height / 2;
+                movingNode.X = oldPosX + mousePosition.X;
+                movingNode.Y = oldPosY + mousePosition.Y;
+            
+                posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
+                posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
                 CalculateAnchor(movingNode);
 
 
-                posX = movingNode.CanvasCenterX;
-                posY = movingNode.CanvasCenterY;
+          
             }
         }
 
@@ -294,14 +295,13 @@ namespace _02350Project.ViewModel
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
-                Point mousePosition = Mouse.GetPosition(canvas);
+                //Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                //Point mousePosition = Mouse.GetPosition(canvas);
 
-
-                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
+                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, oldPosX, oldPosY);
                 undoRedoController.AddAndExecute(m);
 
-                moveNodePoint = new Point();
+                //moveNodePoint = new Point();
 
                 isMovingNode = false;
             }

@@ -26,14 +26,14 @@ namespace _02350Project.Command
 
         public void Execute()
         {
-            node.CanvasCenterX = newX;
-            node.CanvasCenterY = newY;
+            node.X = newX;
+            node.Y = newY;
         }
 
         public void UnExecute()
         {
-            node.CanvasCenterX = x;
-            node.CanvasCenterY = y;
+            node.X = x;
+            node.Y = y;
         }
 
         public NodeViewModel Node { get { return node; } }
