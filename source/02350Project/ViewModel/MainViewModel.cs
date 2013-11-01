@@ -52,6 +52,7 @@ namespace _02350Project.ViewModel
         public ICommand OpenCreateDialogCommand { get; private set; }
 
         public ICommand ExpandResizeCommand { get; private set; }
+        public ICommand CancelActionCommand { get; private set; }
 
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
@@ -65,7 +66,9 @@ namespace _02350Project.ViewModel
         public ICommand AddGENCommand { get; private set; }
         #endregion
 
-        public ICommand TestCommand { get; private set; }
+
+
+        // public ICommand TestCommand { get; private set; }
 
         #region Constructor
         public MainViewModel()
@@ -98,7 +101,9 @@ namespace _02350Project.ViewModel
             AddCOMCommand = new RelayCommand(AddCom);
             AddGENCommand = new RelayCommand(AddGen);
 
-            TestCommand = new RelayCommand(test);
+            CancelActionCommand = new RelayCommand(CancelAction);
+
+            //TestCommand = new RelayCommand(test);
 
             #region About Messaging
             /*
@@ -121,6 +126,18 @@ namespace _02350Project.ViewModel
 
         }
         #endregion
+
+        private void CancelAction()
+        {
+            foreach (NodeViewModel vm in Nodes)
+            {
+                vm.IsSelected = false;
+            }
+            isAddingEdge = false;
+            isRemovingNode = false;
+            isMovingNode = false;
+            firstSelectedEdgeEnd = null;
+        }
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
@@ -146,7 +163,29 @@ namespace _02350Project.ViewModel
         {
             isAddingEdge = false;
             isRemovingNode = true;
+            NodeViewModel nodeToRemove = null;
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.IsSelected)
+                {
+                    nodeToRemove = vm;
+                }
+
+            }
+            if (nodeToRemove != null)
+            {
+                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
+                undoRedoController.AddAndExecute(m);
+            }
         }
+
+        //public bool CanRemove()
+        //{
+        //    foreach (NodeViewModel vm in Nodes)
+        //        if (vm.IsSelected)
+        //            return true;
+        //    return false;
+        //}
 
         /// <summary>
         /// Catches an SizeChangedEvent. Used to get the height and width of a NodeUserControl.
@@ -217,6 +256,7 @@ namespace _02350Project.ViewModel
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                 offsetPosition = Mouse.GetPosition(canvas);
@@ -246,14 +286,14 @@ namespace _02350Project.ViewModel
 
                 movingNode.X = oldPosX + mousePosition.X;
                 movingNode.Y = oldPosY + mousePosition.Y;
-            
+
                 posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
                 CalculateAnchor(movingNode);
 
 
-          
+
             }
         }
 
@@ -285,11 +325,11 @@ namespace _02350Project.ViewModel
             }
             else if (isRemovingNode)
             {
-                FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
-                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-                undoRedoController.AddAndExecute(m);
-                isRemovingNode = false;
+                //FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
+                //NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
+                //RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
+                //undoRedoController.AddAndExecute(m);
+                //isRemovingNode = false;
             }
             else if (isMovingNode)
             {
@@ -304,6 +344,15 @@ namespace _02350Project.ViewModel
                 //moveNodePoint = new Point();
 
                 isMovingNode = false;
+            }
+            else
+            {
+                FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
+                NodeViewModel rectNode = (NodeViewModel)rect.DataContext;
+
+                foreach (NodeViewModel vm in Nodes)
+                    vm.IsSelected = false;
+                rectNode.IsSelected = true;
             }
 
             if (Mouse.Captured != null)

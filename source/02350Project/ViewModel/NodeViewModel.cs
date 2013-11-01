@@ -79,7 +79,8 @@ namespace _02350Project.ViewModel
         public bool NodeCollapsed { get { return nodeCollapsed; } set { nodeCollapsed = value; RaisePropertyChanged("NodeCollapsed"); } }
         public bool AttCollapsed { get { return attCollapsed; } set { attCollapsed = value; RaisePropertyChanged("AttCollapsed"); } }
         public bool MetCollapsed { get { return metCollapsed; } set { metCollapsed = value; RaisePropertyChanged("MetCollapsed"); } }
-        public bool IsSelected { get { return isSelected; } set { isSelected = value; RaisePropertyChanged("IsSelected"); } }
+        public bool IsSelected { get { return isSelected; } set { isSelected = value; RaisePropertyChanged("IsSelected"); RaisePropertyChanged("Opacity"); } }
+        public double Opacity { get { return IsSelected ? 0.7 : 1; } }
         #endregion
 
         /// <summary>
