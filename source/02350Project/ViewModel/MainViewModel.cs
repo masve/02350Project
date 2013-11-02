@@ -258,9 +258,9 @@ namespace _02350Project.ViewModel
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
-                Point mousePosition = Mouse.GetPosition(canvas);
-                posX = movingNode.X;
-                posY = movingNode.Y;
+                offsetPosition = Mouse.GetPosition(canvas);
+                oldPosX = movingNode.X;
+                oldPosY = movingNode.Y;
 
             }
         }
@@ -290,8 +290,6 @@ namespace _02350Project.ViewModel
                 posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
                 CalculateAnchor(movingNode);
-
-
 
             }
         }

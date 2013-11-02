@@ -1,15 +1,14 @@
 ﻿<Window x:Class="_02350Project.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:View="clr-namespace:_02350Project.View"
-        xmlns:VM="clr-namespace:_02350Project.ViewModel"
+        xmlns:view="clr-namespace:_02350Project.View"
+        xmlns:vm="clr-namespace:_02350Project.ViewModel"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="RibbonTest" Height="600" Width="800">
 
     <Window.InputBindings>
-        <KeyBinding Key="C" Modifiers="CTRL" Command="{Binding AddNodeCommand}"/>
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}"/>
         <KeyBinding Key="Escape" Command="{Binding CancelActionCommand}"/>
@@ -17,28 +16,28 @@
     </Window.InputBindings>
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
+        <DataTemplate DataType="{x:Type vm:NodeViewModel}">
             <Canvas>
-                <View:NodeUserControl/>
+                <view:NodeUserControl/>
             </Canvas>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
+        <DataTemplate DataType="{x:Type vm:EdgeViewModel}">
             <Canvas>
-                <View:EdgeUserControl/>
+                <view:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
     </Window.Resources>
 
     <DockPanel LastChildFill="True">
-        <View:RibbonUserControl DockPanel.Dock="Top"/>
-        <Slider Height="23" Name="slider" Minimum="-4" Maximum="4" Value="0" ValueChanged="slider_ValueChanged" DockPanel.Dock="Bottom" RenderTransformOrigin="1.29,0.217" Margin="582,0,10,0"  />
+        <view:RibbonUserControl DockPanel.Dock="Top"/>
+        <Slider Height="23" Name="Slider" Minimum="-4" Maximum="4" Value="0" ValueChanged="slider_ValueChanged" DockPanel.Dock="Bottom" RenderTransformOrigin="1.29,0.217" Margin="582,0,10,0"  />
         <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
         <Grid Name="MyGrid" Background="LightSteelBlue">
 
             <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
             <Border Margin="5,5,6,6">
 
-                <Canvas ClipToBounds="True">
+                <Canvas ClipToBounds="True" Name="MainCanvas">
                     <ItemsControl ItemsSource="{Binding Nodes}"/>
                     <ItemsControl ItemsSource="{Binding Edges}"/>
 
