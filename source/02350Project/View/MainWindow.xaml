@@ -12,6 +12,7 @@
         <KeyBinding Key="C" Modifiers="CTRL" Command="{Binding AddNodeCommand}"/>
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CancelActionCommand}"/>
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
 
@@ -30,13 +31,14 @@
 
     <DockPanel LastChildFill="True">
         <View:RibbonUserControl DockPanel.Dock="Top"/>
+        <Slider Height="23" Name="slider" Minimum="-4" Maximum="4" Value="0" ValueChanged="slider_ValueChanged" DockPanel.Dock="Bottom" RenderTransformOrigin="1.29,0.217" Margin="582,0,10,0"  />
         <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
         <Grid Name="MyGrid" Background="LightSteelBlue">
 
             <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"> -->
             <Border Margin="5,5,6,6">
 
-                <Canvas x:Name="MainCanvas" ClipToBounds="True">
+                <Canvas ClipToBounds="True">
                     <ItemsControl ItemsSource="{Binding Nodes}"/>
                     <ItemsControl ItemsSource="{Binding Edges}"/>
 

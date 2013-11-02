@@ -38,5 +38,10 @@ namespace _02350Project.Command
         {
             throw new NotImplementedException();
         }
+
+        public void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -12,10 +12,10 @@
 
     </Window.InputBindings>
 
-    <DockPanel LastChildFill="True" Background="WhiteSmoke">
+    <DockPanel LastChildFill="True" Background="WhiteSmoke" FocusManager.FocusedElement="{Binding ElementName=nodename}">
         <DockPanel DockPanel.Dock="Top" Margin="10,10,10,0" LastChildFill="True">
             <Label DockPanel.Dock="Left" Width="100" FontWeight="Bold" Content="Class Name"/>
-            <TextBox DockPanel.Dock="Right" Text="{Binding NodeName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" VerticalAlignment="Center"/>
+            <TextBox Name="nodename" DockPanel.Dock="Right" Text="{Binding NodeName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" VerticalAlignment="Center"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Top" Margin="10,5,10,0">
             <Label DockPanel.Dock="Left" Width="100" FontWeight="Bold" Content="Class Type"/>
@@ -33,7 +33,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                    <RadioButton Content="{TemplateBinding Content}"
+                                    <RadioButton Content="{TemplateBinding Content}" KeyboardNavigation.IsTabStop="False"
                                      IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}"/>
                                 </ControlTemplate>
                             </Setter.Value>

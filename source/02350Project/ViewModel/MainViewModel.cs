@@ -26,7 +26,7 @@ namespace _02350Project.ViewModel
         public ObservableCollection<NodeViewModel> Nodes { get; set; }
         public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
-        private Point moveNodePoint;
+        //private Point moveNodePoint; // No longer in use
         private double posX;
         private double posY;
 
@@ -52,6 +52,7 @@ namespace _02350Project.ViewModel
         public ICommand OpenCreateDialogCommand { get; private set; }
 
         public ICommand ExpandResizeCommand { get; private set; }
+        public ICommand CancelActionCommand { get; private set; }
 
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
@@ -65,7 +66,9 @@ namespace _02350Project.ViewModel
         public ICommand AddGENCommand { get; private set; }
         #endregion
 
-        public ICommand TestCommand { get; private set; }
+
+
+        // public ICommand TestCommand { get; private set; }
 
         #region Constructor
         public MainViewModel()
@@ -98,7 +101,9 @@ namespace _02350Project.ViewModel
             AddCOMCommand = new RelayCommand(AddCom);
             AddGENCommand = new RelayCommand(AddGen);
 
-            TestCommand = new RelayCommand(test);
+            CancelActionCommand = new RelayCommand(CancelAction);
+
+            //TestCommand = new RelayCommand(test);
 
             #region About Messaging
             /*
@@ -121,6 +126,18 @@ namespace _02350Project.ViewModel
 
         }
         #endregion
+
+        private void CancelAction()
+        {
+            foreach (NodeViewModel vm in Nodes)
+            {
+                vm.IsSelected = false;
+            }
+            isAddingEdge = false;
+            isRemovingNode = false;
+            isMovingNode = false;
+            firstSelectedEdgeEnd = null;
+        }
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
@@ -146,7 +163,29 @@ namespace _02350Project.ViewModel
         {
             isAddingEdge = false;
             isRemovingNode = true;
+            NodeViewModel nodeToRemove = null;
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.IsSelected)
+                {
+                    nodeToRemove = vm;
         }
+
+            }
+            if (nodeToRemove != null)
+            {
+                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
+                undoRedoController.AddAndExecute(m);
+            }
+        }
+
+        //public bool CanRemove()
+        //{
+        //    foreach (NodeViewModel vm in Nodes)
+        //        if (vm.IsSelected)
+        //            return true;
+        //    return false;
+        //}
 
         /// <summary>
         /// Catches an SizeChangedEvent. Used to get the height and width of a NodeUserControl.
@@ -203,6 +242,11 @@ namespace _02350Project.ViewModel
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
         /// </summary>
         /// <param name="e"></param>
+
+
+        Point offsetPosition;
+        private double oldPosX;
+        private double oldPosY;
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             isMovingNode = false;
@@ -210,13 +254,14 @@ namespace _02350Project.ViewModel
             {
                 e.MouseDevice.Target.CaptureMouse();
 
-                FrameworkElement mouseTarget = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel movingNode = (NodeViewModel)mouseTarget.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(mouseTarget);
+                FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
+                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+                Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
                 posX = movingNode.X;
                 posY = movingNode.Y;
+
             }
         }
 
@@ -235,23 +280,19 @@ namespace _02350Project.ViewModel
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
-                if (moveNodePoint == default(Point))
-                    moveNodePoint = mousePosition;
+                mousePosition.X -= offsetPosition.X;
+                mousePosition.Y -= offsetPosition.Y;
 
-                if (mousePosition.X - (movingNode.Width / 2) > 0)
-                    movingNode.CanvasCenterX = mousePosition.X;
-                else
-                    movingNode.CanvasCenterX = movingNode.Width / 2;
-                if (mousePosition.Y - (movingNode.Height / 2) > 0)
-                    movingNode.CanvasCenterY = mousePosition.Y;
-                else
-                    movingNode.CanvasCenterY = movingNode.Height / 2;
+                movingNode.X = oldPosX + mousePosition.X;
+                movingNode.Y = oldPosY + mousePosition.Y;
+
+                posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
+                posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
                 CalculateAnchor(movingNode);
 
 
-                posX = movingNode.CanvasCenterX;
-                posY = movingNode.CanvasCenterY;
+
             }
         }
 
@@ -283,26 +324,34 @@ namespace _02350Project.ViewModel
             }
             else if (isRemovingNode)
             {
-                FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
-                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-                undoRedoController.AddAndExecute(m);
-                isRemovingNode = false;
+                //FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
+                //NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
+                //RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
+                //undoRedoController.AddAndExecute(m);
+                //isRemovingNode = false;
             }
             else if (isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
-                Point mousePosition = Mouse.GetPosition(canvas);
+                //Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                //Point mousePosition = Mouse.GetPosition(canvas);
 
-
-                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, (int)moveNodePoint.X, (int)moveNodePoint.Y);
+                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, oldPosX, oldPosY);
                 undoRedoController.AddAndExecute(m);
 
-                moveNodePoint = new Point();
+                //moveNodePoint = new Point();
 
                 isMovingNode = false;
+            }
+            else
+            {
+                FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
+                NodeViewModel rectNode = (NodeViewModel)rect.DataContext;
+
+                foreach (NodeViewModel vm in Nodes)
+                    vm.IsSelected = false;
+                rectNode.IsSelected = true;
             }
 
             if (Mouse.Captured != null)

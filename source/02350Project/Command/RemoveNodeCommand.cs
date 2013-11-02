@@ -24,9 +24,9 @@ namespace _02350Project.Command
 
             /* Find all edges who are connected to the node-to-be-removed */
             foreach (EdgeViewModel e in edges)
-                if (e.EndA.Equals(removeNode))
+                if (e.VMEndA.Equals(removeNode))
                     removeEdges.Add(e);
-                else if (e.EndB.Equals(removeNode))
+                else if (e.VMEndB.Equals(removeNode))
                     removeEdges.Add(e);
         }
 

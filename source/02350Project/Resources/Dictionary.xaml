@@ -17,6 +17,9 @@
 
     <system:String x:Key="redoTooltipTitle">Redo (Ctrl+Y)</system:String>
     <system:String x:Key="redoTooltipDesc">Redo last action.</system:String>
+    
+    <system:String x:Key="cancelTooltipTitle">Cancel (Esc)</system:String>
+    <system:String x:Key="cancelTooltipDesc">Cancels all ongoing actions. Like class select and line add.</system:String>
 
     <!--TOOLTIPS APPLICATIONMENU CONTENT-->
     <system:String x:Key="newTooltipTitle">New (Ctrl+N)</system:String>
