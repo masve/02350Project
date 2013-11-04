@@ -177,6 +177,7 @@ namespace _02350Project.ViewModel
                 RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
                 undoRedoController.AddAndExecute(m);
             }
+            isRemovingNode = false;
         }
 
         //public bool CanRemove()

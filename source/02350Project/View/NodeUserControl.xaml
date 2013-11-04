@@ -36,7 +36,7 @@
                  Value="True">
                     <Setter Property="Data"
                   TargetName="ExpandPath"
-                  Value="M 0 4 L 8 4 L 4 8 Z"/>
+                  Value="M 0 4 L 8 4 L 4 8 Z"/> 
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -44,6 +44,138 @@
             <Setter Property="Template" Value="{StaticResource toggleButtonTemplate}" />
         </Style>
 
+        <!-- http://stackoverflow.com/questions/1013817/wpf-fade-animation/1015635#1015635 -->
+        <Style x:Key="nodeShrink" TargetType="{x:Type Grid}">
+            <Style.Resources>
+                <Storyboard x:Key="FadeInMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="FadeOutMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </Style.Resources>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NodeCollapsed}" Value="true">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeInMenu}"/>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeOutMenu}"/>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <Style x:Key="attributeShrink" TargetType="{x:Type ListBox}">
+            <Style.Resources>
+                <Storyboard x:Key="FadeInMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="FadeOutMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </Style.Resources>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AttCollapsed}" Value="true">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeInMenu}"/>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeOutMenu}"/>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <Style x:Key="methodShrink" TargetType="{x:Type ListBox}">
+            <Style.Resources>
+                <Storyboard x:Key="FadeInMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="FadeOutMenu">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="{x:Null}">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="{x:Null}">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Visible}"/>
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </Style.Resources>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding MetCollapsed}" Value="true">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeInMenu}"/>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard Storyboard="{StaticResource FadeOutMenu}"/>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <!-- old and sucky expander -->
+        <Style x:Key="shrinkExpand" TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <Trigger Property="Visibility" Value="Visible">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0.5"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0.5"
+                                                         To="0"
+                                                         Storyboard.TargetProperty="(LayoutTransform).(ScaleTransform.ScaleY)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+            
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <c:BooleanToItalicConverter x:Key="BoolToItalic"/>
     </UserControl.Resources>
@@ -79,8 +211,11 @@
             <!--NODE HEADER END-->
 
             <!--NODE CONTENT START-->
-            <Grid Visibility="{Binding NodeCollapsed, Converter={StaticResource BoolToVis}}" Margin="0,7,0,0">
-                <Grid.RowDefinitions>
+                <Grid Style="{StaticResource nodeShrink}" Visibility="Visible" Margin="0,7,0,0">
+                    <Grid.LayoutTransform>
+                        <ScaleTransform ScaleY="1"/>
+                    </Grid.LayoutTransform>
+                    <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -96,12 +231,15 @@
                 <!--ATTRIBUTE HEADER END-->
 
                 <!--ATTRIBUTE CONTENT START-->
-                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding Attributes}" Margin="10,2,10,2" Visibility="{Binding AttCollapsed, Converter={StaticResource BoolToVis}}">
-                    <ListBox.Template>
+                    <ListBox Style="{StaticResource attributeShrink}" Grid.Row="1" IsEnabled="False" ItemsSource="{Binding Attributes}" Margin="10,2,10,2" Visibility="Visible">
+                        <ListBox.LayoutTransform>
+                            <ScaleTransform ScaleY="1"/>
+                        </ListBox.LayoutTransform>
+                        <ListBox.Template>
                         <ControlTemplate TargetType="{x:Type ListBox}">
                             <Grid>
                                 <Border BorderThickness="0"/>
-                                <ScrollViewer Margin="1" Focusable="false" Background="WhiteSmoke" Padding="-1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="Black">
+                                <ScrollViewer Margin="1" Focusable="true" Background="WhiteSmoke" Padding="-1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="Black">
                                     <ItemsPresenter/>
                                 </ScrollViewer>
                             </Grid>
@@ -131,8 +269,11 @@
                 <!--METHOD HEADER END-->
 
                 <!--METHOD CONTENT START-->
-                <ListBox Name="MethodListBox" Grid.Row="3" IsEnabled="False" ItemsSource="{Binding Methods}" Margin="10,2,10,2" Visibility="{Binding MetCollapsed, Converter={StaticResource BoolToVis}}">
-                    <ListBox.Template>
+                    <ListBox Name="MethodListBox" Style="{StaticResource methodShrink}" Grid.Row="3" IsEnabled="False" ItemsSource="{Binding Methods}" Margin="10,2,10,2" Visibility="Visible">
+                        <ListBox.LayoutTransform>
+                            <ScaleTransform ScaleY="1"/>
+                        </ListBox.LayoutTransform>
+                        <ListBox.Template>
                         <ControlTemplate TargetType="{x:Type ListBox}">
                             <Grid>
                                 <Border BorderThickness="0"/>
