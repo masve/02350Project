@@ -28,6 +28,7 @@ namespace _02350Project.Other
      *                                  ObservedHeight OneWayToSource to a viewmodel because those are not 
      *                                  read-only.
      * Source: http://stackoverflow.com/questions/1083224/pushing-read-only-gui-properties-back-into-viewmodel
+     * Author: Kent Boogaart
      */
     public class SizeObserver
     {
