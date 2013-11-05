@@ -48,8 +48,8 @@
                              ViewboxUnits="Absolute">
                             <VisualBrush.Visual>
                                 <Grid Background="White">
-                                    <Rectangle Width="1" Height="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="1"/>
-                                    <Rectangle Height="1" Width="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="1"/>
+                                    <Rectangle Width="1" Height="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding ShowGrid}"/>
+                                    <Rectangle Height="1" Width="0.03" Fill="LightSteelBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="{Binding ShowGrid}"/>
                                 </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>

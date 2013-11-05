@@ -72,7 +72,7 @@
                     <RibbonButton Label="100%" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Show and hide">
-                    <RibbonCheckBox Label="Gridlines"/>
+                    <RibbonCheckBox Label="Gridlines" IsChecked="{Binding GridCheck}"/>
                     
                 </RibbonGroup>
             </RibbonTab>

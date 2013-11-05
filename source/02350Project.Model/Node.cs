@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Xml.Serialization;
 
 namespace _02350Project.Model
 {
-    public class Node : NotifyBase
+    public class Node /*: NotifyBase*/
     {
         private int id;
 
@@ -39,15 +33,5 @@ namespace _02350Project.Model
         public string NodeSubText { get { return nodeSubText; } set { nodeSubText = value; } }
         public List<string> Attributes { get { return attributes; } set { attributes = value; } }
         public List<string> Methods { get { return methods; } set { methods = value; } }
-
-        #region ConsoleDebugger
-        public static void WriteToConsole(string message)
-        {
-            AttachConsole(-1);
-            Console.WriteLine(message);
-        }
-        [DllImport("Kernel32.dll")]
-        public static extern bool AttachConsole(int processId);
-        #endregion
     }
 }

@@ -1,18 +1,15 @@
+using System;
+using System.Collections.Generic;
 using _02350Project.Command;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Diagnostics;
-using System;
-using System.Runtime.InteropServices;
+using _02350Project.Model;
 using _02350Project.View;
 using _02350Project.Other;
 using Microsoft.Win32;
@@ -23,29 +20,29 @@ namespace _02350Project.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private UndoRedoController undoRedoController = UndoRedoController.GetInstance();
+        private readonly UndoRedoController _undoRedoController = UndoRedoController.GetInstance();
 
         public ObservableCollection<NodeViewModel> Nodes { get; set; }
         public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
         //private Point moveNodePoint; // No longer in use
-        private double posX;
-        private double posY;
+        private double _posX;
+        private double _posY;
 
-        private string edgeType;
-        private string path;
+        private string _edgeType;
+        private string _path;
 
-        private int nodeIdCounter;
+        #region Can Bools
+        private bool _canRemove;
+        private bool _canCancel;
+        #endregion
 
-        private PointCollection points = new PointCollection();
+        private int _nodeIdCounter;
 
-        private bool isAddingEdge = false;
-        private bool isRemovingNode = false;
-        private bool isMovingNode = false;
-        private NodeViewModel firstSelectedEdgeEnd;
-
-        //public ICommand AddNodeCommand { get; private set; }
-        //public ICommand AddEdgeCommand { get; private set; }
+        private bool _isAddingEdge;
+        private bool _isRemovingNode;
+        private bool _isMovingNode;
+        private NodeViewModel _firstSelectedEdgeEnd;
 
         public ICommand RemoveNodeCommand { get; private set; }
         public ICommand RemoveEdgeCommand { get; private set; }
@@ -84,41 +81,49 @@ namespace _02350Project.ViewModel
         #region Constructor
         public MainViewModel()
         {
-            nodeIdCounter = 0;
+            _nodeIdCounter = 0;
 
-            Nodes = new ObservableCollection<NodeViewModel>()
+            Nodes = new ObservableCollection<NodeViewModel>();
+
+            Edges = new ObservableCollection<EdgeViewModel>();
+
+            #region Test Data
+            NodeViewModel testNode = new NodeViewModel(_nodeIdCounter++)
             {
+                Name = "Calculator",
+                NoneFlag = true,
+                Attributes = new List<string> {"+ a : int", "+ b : int", "+ sum : int"},
+                Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
             };
 
-            AddNode(new NodeViewModel(nodeIdCounter++));
+            AddNode(testNode);
+            #endregion
 
-            Edges = new ObservableCollection<EdgeViewModel>()
-            {
-            };
-
-            RemoveNodeCommand = new RelayCommand(RemoveNode);
+            RemoveNodeCommand = new RelayCommand(RemoveNode, CanRemove);
 
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
-            ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
+            //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
-            UndoCommand = new RelayCommand(undo, canUndo);
-            RedoCommand = new RelayCommand(redo, canRedo);
+            UndoCommand = new RelayCommand(Undo, CanUndo);
+            RedoCommand = new RelayCommand(Redo, CanRedo);
 
+            #region Line RelayCommands
             AddAGGCommand = new RelayCommand(AddAgg);
             AddASSCommand = new RelayCommand(AddAss);
             AddDEPCommand = new RelayCommand(AddDep);
             AddCOMCommand = new RelayCommand(AddCom);
             AddGENCommand = new RelayCommand(AddGen);
+            #endregion
 
-            CancelActionCommand = new RelayCommand(CancelAction);
+            CancelActionCommand = new RelayCommand(CancelAction, CanCancel);
 
-            TestCommand = new RelayCommand(test);
+            TestCommand = new RelayCommand(Test);
 
-            #region Save / Save As / Open
+            #region Save / Save As / Open RelayCommands
             SaveCommand = new RelayCommand(Save);
             SaveAsCommand = new RelayCommand(SaveAs);
             OpenCommand = new RelayCommand(Open);
@@ -152,18 +157,24 @@ namespace _02350Project.ViewModel
             {
                 vm.IsSelected = false;
             }
-            isAddingEdge = false;
-            isRemovingNode = false;
-            isMovingNode = false;
-            firstSelectedEdgeEnd = null;
+            _isAddingEdge = false;
+            _isRemovingNode = false;
+            _isMovingNode = false;
+            _firstSelectedEdgeEnd = null;
+            _canRemove = false;
+            _canCancel = false;
         }
+
+        
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
         /// </summary>
-        public void test()
+        public void Test()
         {
-
+            PrintDialog printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+                ConsolePrinter.Write("Printing...");
         }
 
         /// <summary>
@@ -171,14 +182,16 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void SaveAs()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = "save";
-            sfd.DefaultExt = ".xml";
-            sfd.Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*";
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                FileName = "save",
+                DefaultExt = ".xml",
+                Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*"
+            };
 
             if (sfd.ShowDialog() == true)
             {
-                path = sfd.FileName;
+                _path = sfd.FileName;
                 DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), sfd.FileName);
             }
         }
@@ -188,12 +201,18 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void Save()
         {
-            DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), path);
+            DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
         }
 
         public void Open()
         {
-            //Data.Load
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            if (ofd.ShowDialog() == true)
+            {
+                _path = ofd.FileName;
+                ConsolePrinter.Write("path : " + _path);
+            }
         }
 
         /// <summary>
@@ -203,7 +222,7 @@ namespace _02350Project.ViewModel
         /// <param name="node"></param>
         public void AddNode(NodeViewModel node)
         {
-            undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
+            _undoRedoController.AddAndExecute(new AddNodeCommand(Nodes, node));
         }
 
         /// <summary>
@@ -211,8 +230,8 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void RemoveNode()
         {
-            isAddingEdge = false;
-            isRemovingNode = true;
+            _isAddingEdge = false;
+            _isRemovingNode = true;
             NodeViewModel nodeToRemove = null;
             foreach (NodeViewModel vm in Nodes)
             {
@@ -225,9 +244,11 @@ namespace _02350Project.ViewModel
             if (nodeToRemove != null)
             {
                 RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
-                undoRedoController.AddAndExecute(m);
+                _undoRedoController.AddAndExecute(m);
             }
-            isRemovingNode = false;
+            _isRemovingNode = false;
+            _canRemove = false;
+            _canCancel = false;
         }
 
         //public bool CanRemove()
@@ -242,15 +263,15 @@ namespace _02350Project.ViewModel
         /// Catches an SizeChangedEvent. Used to get the height and width of a NodeUserControl.
         /// </summary>
         /// <param name="e"></param>
-        public void ExpandResize(SizeChangedEventArgs e)
-        {
-            FrameworkElement rect = (FrameworkElement)e.Source;
-            NodeViewModel node = (NodeViewModel)rect.DataContext;
+        //public void ExpandResize(SizeChangedEventArgs e)
+        //{
+        //    FrameworkElement rect = (FrameworkElement)e.Source;
+        //    NodeViewModel node = (NodeViewModel)rect.DataContext;
 
-            node.Height = e.NewSize.Height;
-            node.Width = e.NewSize.Width;
-            CalculateAnchor(node);
-        }
+        //    node.Height = e.NewSize.Height;
+        //    node.Width = e.NewSize.Width;
+        //    CalculateAnchor(node);
+        //}
 
         #region Edge Adding
         /// <summary>
@@ -258,50 +279,50 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void AddEdge()
         {
-            isRemovingNode = false;
-            isAddingEdge = true;
+            _isRemovingNode = false;
+            _isAddingEdge = true;
+            _canCancel = true;
         }
 
         /// <summary>
         /// Invoked by a command, through a binding, corresponding to the edge type (Generalization) to be added.
         /// </summary>
-        public void AddGen() { AddEdge(); edgeType = "GEN"; }
+        public void AddGen() { AddEdge(); _edgeType = "GEN"; }
 
         /// <summary>
         /// Invoked by a command, through a binding, corresponding to the edge type (Association) to be added.
         /// </summary>
-        public void AddAss() { AddEdge(); edgeType = "ASS"; }
+        public void AddAss() { AddEdge(); _edgeType = "ASS"; }
 
         /// <summary>
         /// Invoked by a command, through a binding, corresponding to the edge type (Aggregation) to be added.
         /// </summary>
-        public void AddAgg() { AddEdge(); edgeType = "AGG"; }
+        public void AddAgg() { AddEdge(); _edgeType = "AGG"; }
 
         /// <summary>
         /// Invoked by a command, through a binding, corresponding to the edge type (Dependency) to be added.
         /// </summary>
-        public void AddDep() { AddEdge(); edgeType = "DEP"; }
+        public void AddDep() { AddEdge(); _edgeType = "DEP"; }
 
         /// <summary>
         /// Invoked by a command, through a binding, corresponding to the edge type (Composition) to be added.
         /// </summary>
-        public void AddCom() { AddEdge(); edgeType = "COM"; }
+        public void AddCom() { AddEdge(); _edgeType = "COM"; }
         #endregion
 
         #region Mouse UP DOWN MOVE
+        private Point _offsetPosition;
+        private double _oldPosX;
+        private double _oldPosY;
+
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
         /// </summary>
         /// <param name="e"></param>
-
-
-        Point offsetPosition;
-        private double oldPosX;
-        private double oldPosY;
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-            isMovingNode = false;
-            if (!isAddingEdge && !isRemovingNode)
+            _isMovingNode = false;
+            if (!_isAddingEdge && !_isRemovingNode)
             {
                 e.MouseDevice.Target.CaptureMouse();
 
@@ -309,9 +330,9 @@ namespace _02350Project.ViewModel
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
-                offsetPosition = Mouse.GetPosition(canvas);
-                oldPosX = movingNode.X;
-                oldPosY = movingNode.Y;
+                _offsetPosition = Mouse.GetPosition(canvas);
+                _oldPosX = movingNode.X;
+                _oldPosY = movingNode.Y;
 
             }
         }
@@ -322,26 +343,25 @@ namespace _02350Project.ViewModel
         /// <param name="e"></param>
         public void MouseMoveNode(MouseEventArgs e)
         {
-            if (Mouse.Captured != null && !isAddingEdge && !isRemovingNode)
+            if (Mouse.Captured != null && !_isAddingEdge && !_isRemovingNode)
             {
-                isMovingNode = true;
+                _isMovingNode = true;
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
-                mousePosition.X -= offsetPosition.X;
-                mousePosition.Y -= offsetPosition.Y;
-
-                movingNode.X = oldPosX + mousePosition.X;
-                movingNode.Y = oldPosY + mousePosition.Y;
-
-                posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
-                posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
+                mousePosition.X -= _offsetPosition.X;
+                mousePosition.Y -= _offsetPosition.Y;
+                
+                movingNode.X = _oldPosX + mousePosition.X;
+                movingNode.Y = _oldPosY + mousePosition.Y;
+                
+                _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
+                _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
                 CalculateAnchor(movingNode);
-
             }
         }
 
@@ -351,27 +371,27 @@ namespace _02350Project.ViewModel
         /// <param name="e"></param>
         public void MouseUpNode(MouseButtonEventArgs e)
         {
-            if (isAddingEdge)
+            if (_isAddingEdge)
             {
                 FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
 
-                if (firstSelectedEdgeEnd == null)
+                if (_firstSelectedEdgeEnd == null)
                 {
-                    firstSelectedEdgeEnd = rectNode;
-                    Other.ConsolePrinter.Write("first edge");
+                    _firstSelectedEdgeEnd = rectNode;
+                    ConsolePrinter.Write("first edge");
                 }
-                else if (firstSelectedEdgeEnd != rectNode)
+                else if (_firstSelectedEdgeEnd != rectNode)
                 {
-                    AddEdgeCommand m = new AddEdgeCommand(Edges, firstSelectedEdgeEnd, rectNode, edgeType);
-                    undoRedoController.AddAndExecute(m);
+                    AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
+                    _undoRedoController.AddAndExecute(m);
 
                     CalculateAnchor(rectNode);
-                    isAddingEdge = false;
-                    firstSelectedEdgeEnd = null;
+                    _isAddingEdge = false;
+                    _firstSelectedEdgeEnd = null;
                 }
             }
-            else if (isRemovingNode)
+            else if (_isRemovingNode)
             {
                 //FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
                 //NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
@@ -379,19 +399,19 @@ namespace _02350Project.ViewModel
                 //undoRedoController.AddAndExecute(m);
                 //isRemovingNode = false;
             }
-            else if (isMovingNode)
+            else if (_isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 //Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 //Point mousePosition = Mouse.GetPosition(canvas);
 
-                MoveNodeCommand m = new MoveNodeCommand(movingNode, posX, posY, oldPosX, oldPosY);
-                undoRedoController.AddAndExecute(m);
+                MoveNodeCommand m = new MoveNodeCommand(movingNode, _posX, _posY, _oldPosX, _oldPosY);
+                _undoRedoController.AddAndExecute(m);
 
                 //moveNodePoint = new Point();
 
-                isMovingNode = false;
+                _isMovingNode = false;
             }
             else
             {
@@ -401,6 +421,8 @@ namespace _02350Project.ViewModel
                 foreach (NodeViewModel vm in Nodes)
                     vm.IsSelected = false;
                 rectNode.IsSelected = true;
+                _canRemove = true;
+                _canCancel = true;
             }
 
             if (Mouse.Captured != null)
@@ -436,7 +458,7 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void OpenCreateClassDialog()
         {
-            NodeViewModel newNode = new NodeViewModel(nodeIdCounter++);
+            NodeViewModel newNode = new NodeViewModel(_nodeIdCounter++);
 
             var dialog = new CreateNodeWindow();
             //newnode gives med som reference, derfor kan vi bare redigere den direkte i vores dialog
@@ -456,38 +478,63 @@ namespace _02350Project.ViewModel
          * RedoCommand = new RelayCommand(redo, canRedo);
          * which allows us to call CalculateAnchor right after a Node has been added to canvas.
          */
-        public void undo()
+        public void Undo()
         {
-            IUndoRedoCommand command = undoRedoController.getHeadOfUndo();
+            IUndoRedoCommand command = _undoRedoController.getHeadOfUndo();
 
-            undoRedoController.Undo();
+            _undoRedoController.Undo();
             if (command is MoveNodeCommand)
             {
                 CalculateAnchor(((MoveNodeCommand)command).Node);
             }
 
         }
-        public bool canUndo()
+        public bool CanUndo()
         {
-            return undoRedoController.CanUndo();
+            return _undoRedoController.CanUndo();
         }
 
-        public void redo()
+        public void Redo()
         {
-            IUndoRedoCommand command = undoRedoController.getHeadOfRedo();
+            IUndoRedoCommand command = _undoRedoController.getHeadOfRedo();
 
-            undoRedoController.Redo();
+            _undoRedoController.Redo();
             if (command is MoveNodeCommand)
             {
                 CalculateAnchor(((MoveNodeCommand)command).Node);
             }
         }
 
-        public bool canRedo()
+        public bool CanRedo()
         {
-            return undoRedoController.CanRedo();
+            return _undoRedoController.CanRedo();
         }
         #endregion
+
+        public bool CanRemove()
+        {
+            return _canRemove; 
+            
+        }
+
+        public bool CanCancel()
+        {
+            return _canCancel;
+        }
+
+        private double _showGrid;
+        private bool _gridCheck;
+
+        public double ShowGrid { get
+        {
+            if (GridCheck) 
+                _showGrid = 1.0;
+            else 
+                _showGrid = 0.0;
+            return _showGrid;
+        }}
+        
+        public bool GridCheck { get { return _gridCheck; } set { _gridCheck = value; RaisePropertyChanged("ShowGrid"); } }
 
         /// <summary>
         /// Finds parent of an element recursively.
