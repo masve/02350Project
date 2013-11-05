@@ -74,7 +74,7 @@ namespace _02350Project.ViewModel
             pointyArrow.Add(p1);
             pointyArrow.Add(p2);
 
-            if (Edge.typeEnum.GEN == Type)
+            if (EdgeType.GEN == Type)
                 pointyArrow.Add(p1);
         }
 
@@ -101,7 +101,7 @@ namespace _02350Project.ViewModel
         public Node EndA { get { return edge.EndA; } set { edge.EndA = value; RaisePropertyChanged("EndA"); RaisePropertyChanged("AnchorA"); } }
         public Node EndB { get { return edge.EndB; } set { edge.EndB = value; RaisePropertyChanged("EndB"); RaisePropertyChanged("AnchorB"); } }
 
-        public Edge.typeEnum Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
+        public EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
         public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
         public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
         public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
@@ -126,22 +126,22 @@ namespace _02350Project.ViewModel
         /// to the enum that is used to represent the edge type in 
         /// the EdgeViewModel and model.
         /// </summary>
-        private Edge.typeEnum typeConverter(string type)
+        private EdgeType typeConverter(string type)
         {
             switch (type)
             {
                 case "ASS":
-                    return Edge.typeEnum.ASS;
+                    return EdgeType.ASS;
                 case "AGG":
-                    return Edge.typeEnum.AGG;
+                    return EdgeType.AGG;
                 case "COM":
-                    return Edge.typeEnum.COM;
+                    return EdgeType.COM;
                 case "GEN":
-                    return Edge.typeEnum.GEN;
+                    return EdgeType.GEN;
                 case "DEP":
-                    return Edge.typeEnum.DEP;
+                    return EdgeType.DEP;
                 default:
-                    return Edge.typeEnum.ASS;
+                    return EdgeType.ASS;
             }
         }
 
@@ -153,27 +153,27 @@ namespace _02350Project.ViewModel
         {
             switch (Type)
             {
-                case Edge.typeEnum.GEN:
+                case EdgeType.GEN:
                     Filled = true;
                     Color = Brushes.White;
                     Dash = false;
                     break;
-                case Edge.typeEnum.COM:
+                case EdgeType.COM:
                     Filled = true;
                     Color = Brushes.Black;
                     Dash = false;
                     break;
-                case Edge.typeEnum.AGG:
+                case EdgeType.AGG:
                     Filled = true;
                     Color = Brushes.White;
                     Dash = false;
                     break;
-                case Edge.typeEnum.DEP:
+                case EdgeType.DEP:
                     Filled = false;
                     Color = Brushes.Transparent;
                     Dash = true;
                     break;
-                case Edge.typeEnum.ASS:
+                case EdgeType.ASS:
                     Filled = false;
                     Color = Brushes.Transparent;
                     Dash = false;
@@ -239,23 +239,23 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void ArrowControl()
         {
-            if (Edge.typeEnum.ASS != Type)
+            if (EdgeType.ASS != Type)
             {
                 Point refPoint = new Point(BX, BY);
                 PointCollection temp2 = new PointCollection();
                 PointCollection temp3 = new PointCollection();
                 switch (Type)
                 {
-                    case Edge.typeEnum.DEP:
+                    case EdgeType.DEP:
                         temp3 = OffsetTemplate(refPoint, PointyArrow);
                         break;
-                    case Edge.typeEnum.GEN:
+                    case EdgeType.GEN:
                         temp3 = OffsetTemplate(refPoint, PointyArrow);
                         break;
-                    case Edge.typeEnum.AGG:
+                    case EdgeType.AGG:
                         temp3 = OffsetTemplate(refPoint, RhombusArrow);
                         break;
-                    case Edge.typeEnum.COM:
+                    case EdgeType.COM:
                         temp3 = OffsetTemplate(refPoint, RhombusArrow);
                         break;
                 }
@@ -275,6 +275,11 @@ namespace _02350Project.ViewModel
             }
         #endregion
         }
+        /// <summary>
+        /// Gets the Edge for the ViewModel. Should only be used for serializing.
+        /// </summary>
+        /// <returns></returns>
+        public Edge getEdge() { return edge; }
 
     }
 }

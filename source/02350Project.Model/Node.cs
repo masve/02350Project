@@ -7,11 +7,17 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace _02350Project.Model
 {
     public class Node : NotifyBase
     {
+        private int id;
+
+        [XmlAttribute]
+        public int Id { get { return id; } set { id = value; } }
+
         /*
          * Coordinates
          */

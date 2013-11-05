@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System;
 using System.Runtime.InteropServices;
 using _02350Project.View;
+using _02350Project.Other;
 
 // Test F# er godt
 
@@ -31,6 +32,8 @@ namespace _02350Project.ViewModel
         private double posY;
 
         private string edgeType;
+
+        private int nodeIdCounter;
 
         private PointCollection points = new PointCollection();
 
@@ -68,16 +71,18 @@ namespace _02350Project.ViewModel
 
 
 
-        // public ICommand TestCommand { get; private set; }
+        public ICommand TestCommand { get; private set; }
 
         #region Constructor
         public MainViewModel()
         {
+            nodeIdCounter = 0;
+
             Nodes = new ObservableCollection<NodeViewModel>()
             {
             };
 
-            AddNode(new NodeViewModel());
+            AddNode(new NodeViewModel(nodeIdCounter++));
 
             Edges = new ObservableCollection<EdgeViewModel>()
             {
@@ -103,7 +108,7 @@ namespace _02350Project.ViewModel
 
             CancelActionCommand = new RelayCommand(CancelAction);
 
-            //TestCommand = new RelayCommand(test);
+            TestCommand = new RelayCommand(test);
 
             #region About Messaging
             /*
@@ -144,6 +149,8 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void test()
         {
+            Data d = new Data();
+            d.save(Nodes.ToList(), Edges.ToList(), "C:\\hest.xml");
         }
 
         /// <summary>
@@ -169,7 +176,7 @@ namespace _02350Project.ViewModel
                 if (vm.IsSelected)
                 {
                     nodeToRemove = vm;
-        }
+                }
 
             }
             if (nodeToRemove != null)
@@ -386,7 +393,7 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void OpenCreateClassDialog()
         {
-            NodeViewModel newNode = new NodeViewModel();
+            NodeViewModel newNode = new NodeViewModel(nodeIdCounter++);
 
             var dialog = new CreateNodeWindow();
             //newnode gives med som reference, derfor kan vi bare redigere den direkte i vores dialog
@@ -446,10 +453,11 @@ namespace _02350Project.ViewModel
         /// <param name="o"></param>
         /// <returns></returns>
         private static T FindParentOfType<T>(DependencyObject o)
+            where T : class
         {
-            dynamic parent = VisualTreeHelper.GetParent(o);
-            if (parent.GetType().IsAssignableFrom(typeof(T)))
-                return parent;
+            DependencyObject parent = VisualTreeHelper.GetParent(o);
+            if (typeof(T).IsAssignableFrom(parent.GetType()))
+                return parent is T ? parent as T : null;
             else
                 return FindParentOfType<T>(parent);
         }

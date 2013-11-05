@@ -14,6 +14,8 @@ namespace _02350Project.ViewModel
         #region Fields and Properties
         private Node node;
 
+        public int Id { get { return node.Id; } set { node.Id = value; RaisePropertyChanged("Id"); } }
+
         /*
          * Coordinates and Dimensions
          */
@@ -97,9 +99,10 @@ namespace _02350Project.ViewModel
         }
 
         #region Constructor
-        public NodeViewModel()
+        public NodeViewModel(int id)
         {
             node = new Node();
+            Id = id;
             NodeCollapsed = true;
             AttCollapsed = true;
             MetCollapsed = true;
@@ -208,6 +211,12 @@ namespace _02350Project.ViewModel
             }
             return ANCHOR.NORTH;
         }
+
+        /// <summary>
+        /// Gets the Node for the ViewModel. Should only be used for serializing.
+        /// </summary>
+        /// <returns></returns>
+        public Node getNode() { return node; }
 
         #endregion
 
