@@ -79,7 +79,7 @@
     <Compile Include="Other\BooleanToItalicConverter.cs" />
     <Compile Include="Other\BooleanToStrokeArrayDashConverter.cs" />
     <Compile Include="Other\ConsolePrinter.cs" />
-    <Compile Include="Other\Data.cs" />
+    <Compile Include="Other\DiagramSerializer.cs" />
     <Compile Include="Other\SizeObserver.cs" />
     <Compile Include="ViewModel\CreateNodeViewModel.cs" />
     <Compile Include="ViewModel\EdgeViewModel.cs" />

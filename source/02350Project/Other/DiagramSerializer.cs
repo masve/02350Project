@@ -11,7 +11,7 @@ using System.IO;
 
 namespace _02350Project.Other
 {
-    public class Data
+    public class DiagramSerializer
     {
         //private static Data instance;
 
@@ -35,7 +35,13 @@ namespace _02350Project.Other
             public List<Edge> Edges = new List<Edge>();
         }
 
-        public void save(List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs, string filename)
+        /// <summary>
+        /// Saves the program state to a file.
+        /// </summary>
+        /// <param name="nodeVMs"></param>
+        /// <param name="edgeVMs"></param>
+        /// <param name="path"></param>
+        public static void Save(List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs, string path)
         {
             Diagram diagram = new Diagram();
 
@@ -45,12 +51,24 @@ namespace _02350Project.Other
                 diagram.Edges.Add(e.getEdge());
 
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
-            TextWriter writer = new StreamWriter(filename);
+            TextWriter writer = new StreamWriter(path);
 
             serializer.Serialize(writer, diagram);
             writer.Close();
         }
 
-        public void load() { }
+        /// <summary>
+        /// Loads the program state from a file.
+        /// </summary>
+        /// <param name="path"></param>
+        public static void Load(string path)
+        {
+            Diagram diagram = new Diagram();
+            XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
+            TextReader reader = new StreamReader(path);
+            diagram = (Diagram)serializer.Deserialize(reader);
+            reader.Close();
+
+        }
     }
 }

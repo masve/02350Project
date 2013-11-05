@@ -15,6 +15,7 @@ using System;
 using System.Runtime.InteropServices;
 using _02350Project.View;
 using _02350Project.Other;
+using Microsoft.Win32;
 
 // Test F# er godt
 
@@ -32,6 +33,7 @@ namespace _02350Project.ViewModel
         private double posY;
 
         private string edgeType;
+        private string path;
 
         private int nodeIdCounter;
 
@@ -67,6 +69,12 @@ namespace _02350Project.ViewModel
         public ICommand AddCOMCommand { get; private set; }
         public ICommand AddASSCommand { get; private set; }
         public ICommand AddGENCommand { get; private set; }
+        #endregion
+
+        #region Save / Save As / Open
+        public ICommand SaveCommand { get; private set; }
+        public ICommand SaveAsCommand { get; private set; }
+        public ICommand OpenCommand { get; private set; }
         #endregion
 
 
@@ -110,6 +118,12 @@ namespace _02350Project.ViewModel
 
             TestCommand = new RelayCommand(test);
 
+            #region Save / Save As / Open
+            SaveCommand = new RelayCommand(Save);
+            SaveAsCommand = new RelayCommand(SaveAs);
+            OpenCommand = new RelayCommand(Open);
+            #endregion
+
             #region About Messaging
             /*
              * We use messages throughout the application to communicate between viewmodels.
@@ -149,8 +163,37 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void test()
         {
-            Data d = new Data();
-            d.save(Nodes.ToList(), Edges.ToList(), "C:\\hest.xml");
+
+        }
+
+        /// <summary>
+        /// Opens a Save File Dialog and calls the save function in Data with the returned path.
+        /// </summary>
+        public void SaveAs()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = "save";
+            sfd.DefaultExt = ".xml";
+            sfd.Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*";
+
+            if (sfd.ShowDialog() == true)
+            {
+                path = sfd.FileName;
+                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), sfd.FileName);
+            }
+        }
+
+        /// <summary>
+        /// Saves the current program state to the default path.
+        /// </summary>
+        public void Save()
+        {
+            DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), path);
+        }
+
+        public void Open()
+        {
+            //Data.Load
         }
 
         /// <summary>
