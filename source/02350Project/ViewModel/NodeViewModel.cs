@@ -99,9 +99,9 @@ namespace _02350Project.ViewModel
         }
 
         #region Constructor
-        public NodeViewModel(int id)
+        public NodeViewModel(int id, Node node)
         {
-            node = new Node();
+            this.node = node;
             Id = id;
             NodeCollapsed = true;
             AttCollapsed = true;

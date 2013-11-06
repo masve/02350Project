@@ -18,7 +18,7 @@
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="../Resources/Images/appmenu/menuicon.png">
                     <RibbonApplicationMenu.Items>
-                        <RibbonApplicationMenuItem Header="New                      " ToolTipTitle="{StaticResource newTooltipTitle}" ToolTipDescription="{StaticResource newTooltipDesc}" ImageSource="../Resources/Images/appmenu/new.png"/>
+                        <RibbonApplicationMenuItem Header="New                      " Command="{Binding NewCommand}" ToolTipTitle="{StaticResource newTooltipTitle}" ToolTipDescription="{StaticResource newTooltipDesc}" ImageSource="../Resources/Images/appmenu/new.png"/>
                         <RibbonApplicationMenuItem Header="Open"  Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
                         <RibbonApplicationMenuItem Header="Save" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
                         <RibbonApplicationMenuItem Header="Save as" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />

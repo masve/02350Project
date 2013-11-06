@@ -13,6 +13,8 @@ using _02350Project.Model;
 using _02350Project.View;
 using _02350Project.Other;
 using Microsoft.Win32;
+using System.Threading.Tasks;
+using System.Threading;
 
 // Test F# er godt
 
@@ -68,10 +70,11 @@ namespace _02350Project.ViewModel
         public ICommand AddGENCommand { get; private set; }
         #endregion
 
-        #region Save / Save As / Open
+        #region Save / Save As / Open / New
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
+        public ICommand NewCommand { get; private set; }
         #endregion
 
 
@@ -88,7 +91,7 @@ namespace _02350Project.ViewModel
             Edges = new ObservableCollection<EdgeViewModel>();
 
             #region Test Data
-            NodeViewModel testNode = new NodeViewModel(_nodeIdCounter++)
+            NodeViewModel testNode = new NodeViewModel(_nodeIdCounter++, new Node())
             {
                 Name = "Calculator",
                 NoneFlag = true,
@@ -123,10 +126,11 @@ namespace _02350Project.ViewModel
 
             TestCommand = new RelayCommand(Test);
 
-            #region Save / Save As / Open RelayCommands
+            #region Save / Save As / Open / New RelayCommands
             SaveCommand = new RelayCommand(Save);
             SaveAsCommand = new RelayCommand(SaveAs);
             OpenCommand = new RelayCommand(Open);
+            NewCommand = new RelayCommand(New);
             #endregion
 
             #region About Messaging
@@ -177,6 +181,50 @@ namespace _02350Project.ViewModel
                 ConsolePrinter.Write("Printing...");
         }
 
+        public void New()
+        {
+            ClearDiagram();
+            _path = null;            
+        }
+
+        private bool ClearDiagram()
+        {
+            if (Nodes.Any())
+            {
+                string message = "Do you want to save changes to save.xml?";
+                MessageBoxButton b = MessageBoxButton.YesNoCancel;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+
+                MessageBoxResult result = MessageBox.Show(message, "placeholder", b, icon);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        Other.ConsolePrinter.Write("Yes");
+                        Save();
+                        Nodes.Clear();
+                        Edges.Clear();
+                        return true;
+                        break;
+                    case MessageBoxResult.No:
+                        Other.ConsolePrinter.Write("No");
+                        Nodes.Clear();
+                        Edges.Clear();
+                        return true;
+                        break;
+                    default:
+                        Other.ConsolePrinter.Write("Cancel");
+                        return false;
+                        break;
+                }
+
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
         /// <summary>
         /// Opens a Save File Dialog and calls the save function in Data with the returned path.
         /// </summary>
@@ -192,7 +240,13 @@ namespace _02350Project.ViewModel
             if (sfd.ShowDialog() == true)
             {
                 _path = sfd.FileName;
-                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), sfd.FileName);
+                //Task t = new Task(DiagramSerializer.j);
+                //;
+                //new Thread(() =>
+                //{
+                //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                //}).Start();
+                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
             }
         }
 
@@ -201,17 +255,40 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void Save()
         {
-            DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+            if (String.IsNullOrWhiteSpace(_path))
+            {
+                SaveAs();
+            }
+            else
+                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
         }
 
         public void Open()
         {
+            
             OpenFileDialog ofd = new OpenFileDialog();
 
-            if (ofd.ShowDialog() == true)
+
+            if (ofd.ShowDialog() == false)
             {
-                _path = ofd.FileName;
+                
                 ConsolePrinter.Write("path : " + _path);
+                return;
+            }
+            if (!ClearDiagram())
+                return;
+            _path = ofd.FileName;
+            DiagramSerializer.Diagram diagram = DiagramSerializer.Load(_path);
+            RestoreDiagram(diagram);
+
+        }
+
+        private void RestoreDiagram(DiagramSerializer.Diagram diagram)
+        {
+            foreach (Node n in diagram.Nodes)
+            {
+                NodeViewModel nvm = new NodeViewModel(n.Id, n);
+                Nodes.Add(nvm);
             }
         }
 
@@ -458,14 +535,14 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void OpenCreateClassDialog()
         {
-            NodeViewModel newNode = new NodeViewModel(_nodeIdCounter++);
+            NodeViewModel newNodeVM = new NodeViewModel(_nodeIdCounter++, new Node());
 
             var dialog = new CreateNodeWindow();
             //newnode gives med som reference, derfor kan vi bare redigere den direkte i vores dialog
-            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(newNode, dialog);
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(newNodeVM, dialog);
             dialog.DataContext = dialogViewModel;
             if (dialog.ShowDialog() == true)
-                AddNode(newNode);
+                AddNode(newNodeVM);
         }
 
         #region Undo/Redo Command Implementation

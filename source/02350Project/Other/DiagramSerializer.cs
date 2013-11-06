@@ -41,34 +41,75 @@ namespace _02350Project.Other
         /// <param name="nodeVMs"></param>
         /// <param name="edgeVMs"></param>
         /// <param name="path"></param>
-        public static void Save(List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs, string path)
+        public static async Task<bool> Save(List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs, string path)
         {
             Diagram diagram = new Diagram();
+            
+            diagram = await GetDiagramAsync(diagram, nodeVMs, edgeVMs);
+            var b = await StoreDiagramAsync(diagram, path);
 
+            return true;
+        }
+        public static Task<Diagram> GetDiagramAsync(Diagram diagram, List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs)
+        {
+            return Task.Run<Diagram>(() => GetDiagram(diagram, nodeVMs, edgeVMs));
+        }
+
+        public static Diagram GetDiagram(Diagram diagram, List<NodeViewModel> nodeVMs, List<EdgeViewModel> edgeVMs)
+        {
             foreach (NodeViewModel n in nodeVMs)
                 diagram.Nodes.Add(n.getNode());
             foreach (EdgeViewModel e in edgeVMs)
                 diagram.Edges.Add(e.getEdge());
 
+            return diagram;
+        }
+
+        private static Task<bool> StoreDiagramAsync(Diagram diagram, string path)
+        {
+            return Task.Run<bool>(() => StoreDiagram(diagram, path));
+        }
+
+        private static bool StoreDiagram(Diagram diagram, string path)
+        {
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
             TextWriter writer = new StreamWriter(path);
-
-            serializer.Serialize(writer, diagram);
-            writer.Close();
+            try
+            {
+                serializer.Serialize(writer, diagram);
+            }
+            catch (IOException e)
+            {
+                return false;
+            }
+            finally
+            {
+                writer.Close();
+            }
+            return true;
+            
         }
 
         /// <summary>
         /// Loads the program state from a file.
         /// </summary>
         /// <param name="path"></param>
-        public static void Load(string path)
+        public static Diagram Load(string path)
         {
             Diagram diagram = new Diagram();
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
             TextReader reader = new StreamReader(path);
             diagram = (Diagram)serializer.Deserialize(reader);
             reader.Close();
+            return diagram;
 
+        }
+        public static void j()
+        {
+            while (true)
+            {
+
+            }
         }
     }
 }
