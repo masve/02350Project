@@ -56,7 +56,7 @@ namespace _02350Project.ViewModel
             }
         }
 
-        //public CreateNodeViewModel CreateNodeDialog
+        //public CreateNodeViewModel CreateNode
         //{
         //    get
         //    {

@@ -7,31 +7,25 @@ namespace _02350Project.Model
 {
     public class Node /*: NotifyBase*/
     {
-        private int id;
-
         [XmlAttribute]
-        public int Id { get { return id; } set { id = value; } }
+        public int Id { get; set; }
 
         /*
          * Coordinates
          */
-        private int x;
-        private int y;
 
-        public int X { get { return x; } set { x = value; } }
-        public int Y { get { return y; } set { y = value; } }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         /*
          * Node Content
          */
-        private string name;
-        private string nodeSubText;
-        private List<string> attributes;
-        private List<string> methods;
+        //private string nodeSubText;
 
-        public string Name { get { return name; } set { name = value; } }
-        public string NodeSubText { get { return nodeSubText; } set { nodeSubText = value; } }
-        public List<string> Attributes { get { return attributes; } set { attributes = value; } }
-        public List<string> Methods { get { return methods; } set { methods = value; } }
+        public string Name { get; set; }
+        //public string NodeSubText { get { return nodeSubText; } set { nodeSubText = value; } }
+        public NodeType NodeType { get; set; }
+        public List<string> Attributes { get; set; }
+        public List<string> Methods { get; set; }
     }
 }

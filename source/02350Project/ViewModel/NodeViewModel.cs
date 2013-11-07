@@ -49,6 +49,7 @@ namespace _02350Project.ViewModel
         private bool noneFlag;
         private bool abstractFlag;
         private bool interfaceFlag;
+        private string nodeSubText;
 
         public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); RaisePropertyChanged("NodeSubText"); } }
         public bool NoneFlag { get { return noneFlag; } set { noneFlag = value; RaisePropertyChanged("NoneFlag"); RaisePropertyChanged("NodeSubText"); } }
@@ -58,15 +59,22 @@ namespace _02350Project.ViewModel
         {
             get
             {
-                if (AbstractFlag == true)
-                    node.NodeSubText = "Abstract class";
-                else if (InterfaceFlag == true)
-                    node.NodeSubText = "Interface";
-                else
-                    node.NodeSubText = "Class";
-                return node.NodeSubText;
+                switch (NodeType)
+                {
+                    case NodeType.ABSTRACT:
+                        nodeSubText = "Abstract class";
+                        break;
+                    case NodeType.INTERFACE:
+                        nodeSubText = "Interface";
+                        break;
+                    case NodeType.CLASS:
+                        nodeSubText = "Class";
+                        break;
+                }
+                return nodeSubText;
             }
         }
+        public NodeType NodeType { get { return node.NodeType; } set { node.NodeType = value; RaisePropertyChanged("NodeType"); } }
         public List<string> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged("Attributes"); } }
         public List<string> Methods { get { return node.Methods; } set { node.Methods = value; RaisePropertyChanged("Methods"); } }
 
@@ -106,7 +114,6 @@ namespace _02350Project.ViewModel
             NodeCollapsed = true;
             AttCollapsed = true;
             MetCollapsed = true;
-            Name = "placeholder";
         }
         #endregion
 

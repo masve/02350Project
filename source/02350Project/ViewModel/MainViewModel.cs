@@ -53,7 +53,8 @@ namespace _02350Project.ViewModel
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
 
-        public ICommand OpenCreateDialogCommand { get; private set; }
+        public ICommand CreateNodeCommand { get; private set; }
+        public ICommand EditNodeCommand { get; private set; }
 
         public ICommand ExpandResizeCommand { get; private set; }
         public ICommand CancelActionCommand { get; private set; }
@@ -94,7 +95,7 @@ namespace _02350Project.ViewModel
             NodeViewModel testNode = new NodeViewModel(_nodeIdCounter++, new Node())
             {
                 Name = "Calculator",
-                NoneFlag = true,
+                NodeType = NodeType.INTERFACE,
                 Attributes = new List<string> {"+ a : int", "+ b : int", "+ sum : int"},
                 Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
             };
@@ -108,7 +109,8 @@ namespace _02350Project.ViewModel
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
-            OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
+            CreateNodeCommand = new RelayCommand(CreateNode);
+            EditNodeCommand = new RelayCommand(EditNode);
             //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
@@ -199,29 +201,23 @@ namespace _02350Project.ViewModel
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        Other.ConsolePrinter.Write("Yes");
+                        ConsolePrinter.Write("Yes");
                         Save();
                         Nodes.Clear();
                         Edges.Clear();
                         return true;
-                        break;
                     case MessageBoxResult.No:
-                        Other.ConsolePrinter.Write("No");
+                        ConsolePrinter.Write("No");
                         Nodes.Clear();
                         Edges.Clear();
                         return true;
-                        break;
                     default:
-                        Other.ConsolePrinter.Write("Cancel");
+                        ConsolePrinter.Write("Cancel");
                         return false;
-                        break;
                 }
 
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
 
@@ -322,6 +318,7 @@ namespace _02350Project.ViewModel
             {
                 RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
                 _undoRedoController.AddAndExecute(m);
+                nodeToRemove.IsSelected = false;
             }
             _isRemovingNode = false;
             _canRemove = false;
@@ -533,7 +530,7 @@ namespace _02350Project.ViewModel
         /// Creates a CreateNodeViewModel, opens a CreateNodeWindow (dialog) and sets the datacontext.
         /// If the dialog returns true a the NodeViewModel given to the CreateNodeViewModel should be added.
         /// </summary>
-        public void OpenCreateClassDialog()
+        public void CreateNode()
         {
             NodeViewModel newNodeVM = new NodeViewModel(_nodeIdCounter++, new Node());
 
@@ -543,6 +540,35 @@ namespace _02350Project.ViewModel
             dialog.DataContext = dialogViewModel;
             if (dialog.ShowDialog() == true)
                 AddNode(newNodeVM);
+        }
+
+        public void EditNode()
+        {
+            string name = null;
+            NodeType type = NodeType.ABSTRACT;
+            ObservableCollection<string> attributes = null;
+            ObservableCollection<string> methods = null;
+            NodeViewModel node = null;
+            foreach (NodeViewModel n in Nodes)
+            {
+                if (n.IsSelected)
+                {
+                    node = n;
+                    name = n.Name;
+                    type = n.NodeType;
+                    attributes = new ObservableCollection<string>(n.Attributes);
+                    methods = new ObservableCollection<string>(n.Methods);
+                    break;
+                }
+            }
+            var dialog = new CreateNodeWindow();
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(ref name, ref type, ref attributes, ref methods, dialog);
+            dialog.DataContext = dialogViewModel;
+            if (dialog.ShowDialog() == true)
+            {
+                _undoRedoController.AddAndExecute(new EditNodeCommand(node, Nodes, name, type, attributes.ToList(), methods.ToList()));
+            }
+                
         }
 
         #region Undo/Redo Command Implementation

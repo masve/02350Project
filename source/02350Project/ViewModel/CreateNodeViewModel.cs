@@ -1,132 +1,169 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Ioc;
+using _02350Project.Model;
 
 namespace _02350Project.ViewModel
 {
     public class CreateNodeViewModel : ViewModelBase, IDataErrorInfo
     {
-        private Window window;
+        private readonly Window _window;
 
-        private ObservableCollection<String> attributes;
-        private ObservableCollection<String> methods;
+        private ObservableCollection<String> _attributes;
+        private ObservableCollection<String> _methods;
         
-        private string nodeName;
-        private string attribute;
-        private string method;
-        private string selectedAttribute;
-        private bool noneCheck;
-        private bool abstractCheck;
-        private bool interfaceCheck;
-        private enum entryType { ATTRIBUTE, METHOD };
-        private string nodeType;
-        private ObservableCollection<string> nodeTypes;
-        private bool canCreate;
-        private bool canAddAttribute;
-        private bool canAddMethod;
+        private string _nodeName;
+        private string _attribute;
+        private string _method;
+        private string _selectedAttribute;
+        private bool _noneCheck;
+        private bool _abstractCheck;
+        private bool _interfaceCheck;
+        private enum EntryType { ATTRIBUTE, METHOD };
+        private string _nodeType;
+        private ObservableCollection<string> _nodeTypes;
+        private bool _canCreate;
+        private bool _canAddAttribute;
+        private bool _canAddMethod;
 
-        private NodeViewModel node;
+        private readonly NodeViewModel _node;
+        private enum State { CREATE, EDIT };
+
+        private State _state;
 
         public ICommand AddAttributeCommand { get; private set; }
         public ICommand AddMethodCommand { get; private set; }
         public ICommand RemoveItemCommand { get; private set; }
         public ICommand CreateNodeCommand { get; private set; }
+        public ICommand EditNodeCommand { get; private set; }
         public ICommand CancelNodeCommand { get; private set; }
 
         #region Constructor
-        public CreateNodeViewModel(NodeViewModel _node, Window _window)
+        [PreferredConstructor]
+        public CreateNodeViewModel(NodeViewModel node, Window window)
         {
+            _state = State.CREATE;
             Other.ConsolePrinter.Write("hello");
-            window = _window;
-            node = _node;
+            _window = window;
+            _node = node;
 
-            attributes = new ObservableCollection<string>();
-            methods = new ObservableCollection<string>();
-            nodeTypes = new ObservableCollection<string>();
+            _attributes = new ObservableCollection<string>();
+            _methods = new ObservableCollection<string>();
+            
+
 
             NoneCheck = true;
+            ConstructorInit();
+            SelectedChoice = "Default";
+        }
 
+        public void ConstructorInit()
+        {
+            _nodeTypes = new ObservableCollection<string>();
             RadioChoices.Add("Default");
             RadioChoices.Add("Interface");
             RadioChoices.Add("Abstract");
-            SelectedChoice = "Default";
+            AddAttributeCommand = new RelayCommand(AddAttribute);
+            AddMethodCommand = new RelayCommand(AddMethod);
+            RemoveItemCommand = new RelayCommand(RemoveItem);
+            CreateNodeCommand = new RelayCommand(CreateNode);
+            EditNodeCommand = new RelayCommand(EditNode);
+            CancelNodeCommand = new RelayCommand(Cancel);
+        }
 
-            AddAttributeCommand = new RelayCommand(addAttribute);
-            AddMethodCommand = new RelayCommand(addMethod);
-            RemoveItemCommand = new RelayCommand(removeItem);
-            CreateNodeCommand = new RelayCommand(createNode);
-            CancelNodeCommand = new RelayCommand(cancel);
+        private string _editNodeName;
+        private NodeType _editNodeType;
+        private ObservableCollection<string> _editNodeAttributes;
+        private ObservableCollection<string> _editNodeMethods;
+
+        public CreateNodeViewModel(ref string nodeName, ref NodeType nodeType, ref ObservableCollection<string> nodeAttributes,
+            ref ObservableCollection<string> nodeMethods, Window window)
+        {
+            _window = window;
+            ConstructorInit();
+            _state = State.EDIT;
+            _editNodeName = nodeName;
+            _editNodeType = nodeType;
+            _editNodeAttributes = nodeAttributes;
+            _editNodeMethods = nodeMethods;
+
+            //NodeName = nodeName;
+            //EnumToListboxRadioConverter(nodeType);
+            //Attributes = new ObservableCollection<string>(nodeAttributes);
+            //Methods = new ObservableCollection<string>(nodeMethods);
+            FillFields();                
         }
         #endregion
 
         #region Properties
         public string ActualAttribute 
         { 
-            get { return attribute; } 
+            get { return _attribute; } 
             set 
             { 
-                attribute = value; 
-                if (String.IsNullOrWhiteSpace(ActualAttribute))
-                    CanAddAttribute = false; 
-                else 
-                    CanAddAttribute = true;
+                _attribute = value; 
+                CanAddAttribute = !String.IsNullOrWhiteSpace(ActualAttribute);
                 RaisePropertyChanged("ActualAttribute"); 
             } 
         }
         public string ActualMethod 
         {
-            get { return method; } 
+            get { return _method; } 
             set 
             { 
-                method = value;
-                if (String.IsNullOrWhiteSpace(ActualMethod))
-                    CanAddMethod = false;
-                else
-                    CanAddMethod = true;
+                _method = value;
+                CanAddMethod = !String.IsNullOrWhiteSpace(ActualMethod);
                 RaisePropertyChanged("ActualMethod"); 
             } 
         }
-        public ObservableCollection<string> Attributes { get { return attributes; } set { attributes = value; RaisePropertyChanged("Attributes"); } }
-        public ObservableCollection<string> Methods { get { return methods; } set { methods = value; RaisePropertyChanged("Methods"); } }
-        public string SelectedItem { get { return selectedAttribute; } set { selectedAttribute = value; } }
-        public string NodeName { get { return nodeName; } set { nodeName = value; RaisePropertyChanged("NodeName"); } }
-        public bool NoneCheck { get { return noneCheck; } set { noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
-        public bool AbstractCheck { get { return abstractCheck; } set { abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
-        public bool InterfaceCheck { get { return interfaceCheck; } set { interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
-        public string SelectedChoice { get { return nodeType; } set { nodeType = value; RaisePropertyChanged("selectedradio"); } }
-        public ObservableCollection<string> RadioChoices { get { return nodeTypes; } set { nodeTypes = value; RaisePropertyChanged("Choices"); } }
-        public bool CanCreate { get { return canCreate; } set { canCreate = value; RaisePropertyChanged("CanCreate"); } }
-        public bool CanAddAttribute { get { return canAddAttribute; } set { canAddAttribute = value; RaisePropertyChanged("CanAddAttribute"); } }
-        public bool CanAddMethod { get { return canAddMethod; } set { canAddMethod = value; RaisePropertyChanged("CanAddMethod"); } }
+        public ObservableCollection<string> Attributes { get { return _attributes; } set { _attributes = value; RaisePropertyChanged("Attributes"); } }
+        public ObservableCollection<string> Methods { get { return _methods; } set { _methods = value; RaisePropertyChanged("Methods"); } }
+        public string SelectedItem { get { return _selectedAttribute; } set { _selectedAttribute = value; } }
+        public string NodeName { get { return _nodeName; } set { _nodeName = value; RaisePropertyChanged("NodeName"); } }
+        public bool NoneCheck { get { return _noneCheck; } set { _noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
+        public bool AbstractCheck { get { return _abstractCheck; } set { _abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
+        public bool InterfaceCheck { get { return _interfaceCheck; } set { _interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
+        public string SelectedChoice { get { return _nodeType; } set { _nodeType = value; RaisePropertyChanged("selectedradio"); } }
+        public ObservableCollection<string> RadioChoices { get { return _nodeTypes; } set { _nodeTypes = value; RaisePropertyChanged("Choices"); } }
+        public bool CanCreate { get { return _canCreate; } set { _canCreate = value; RaisePropertyChanged("CanCreate"); } }
+        public bool CanAddAttribute { get { return _canAddAttribute; } set { _canAddAttribute = value; RaisePropertyChanged("CanAddAttribute"); } }
+        public bool CanAddMethod { get { return _canAddMethod; } set { _canAddMethod = value; RaisePropertyChanged("CanAddMethod"); } }
+        public NodeType NodeType { get; set; }
+        public Visibility CreateVisibility { get {if(_state == State.CREATE) return Visibility.Visible; return Visibility.Collapsed;} }
+        public Visibility EditVisibility { get { if (_state == State.EDIT) return Visibility.Visible; return Visibility.Collapsed; } }
         #endregion
+
+        public void FillFields()
+        {
+            NodeName = _editNodeName;
+            EnumToListboxRadioConverter(_editNodeType);
+            Attributes = new ObservableCollection<string>(_editNodeAttributes);
+            Methods = new ObservableCollection<string>(_editNodeMethods);
+        }
         
         /// <summary>
         /// Adds the content of ActualAttribute to Attributes
         /// </summary>
-        public void addAttribute()
+        public void AddAttribute()
         {
             if (!String.IsNullOrWhiteSpace(ActualAttribute))
-                addEntry(ActualAttribute, entryType.ATTRIBUTE);
+                AddEntry(ActualAttribute, EntryType.ATTRIBUTE);
             ActualAttribute = "";
         }
 
         /// <summary>
         /// Adds the content of ActualMethod to Methods
         /// </summary>
-        public void addMethod()
+        public void AddMethod()
         {
             if (!String.IsNullOrWhiteSpace(ActualMethod))
-                addEntry(ActualMethod, entryType.METHOD);
+                AddEntry(ActualMethod, EntryType.METHOD);
             ActualMethod = "";
         }
 
@@ -137,16 +174,16 @@ namespace _02350Project.ViewModel
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="type"></param>
-        private void addEntry(string entry, entryType type)
+        private void AddEntry(string entry, EntryType type)
         {
             switch (type)
             {
-                case entryType.ATTRIBUTE:
+                case EntryType.ATTRIBUTE:
                     if (entry[0].Equals('-')) Attributes.Add(entry);
                     else if (entry[0].Equals('+')) Attributes.Add(entry);
                     else Attributes.Add("- " + entry);
                     break;
-                case entryType.METHOD:
+                case EntryType.METHOD:
                     if (entry[0].Equals('-')) Methods.Add(entry);
                     else if (entry[0].Equals('+')) Methods.Add(entry);
                     else Methods.Add("+ " + entry);
@@ -155,40 +192,41 @@ namespace _02350Project.ViewModel
         }
 
         /// <summary>
-        /// Converts the Selected Listbox Choice to the bool properties.
+        /// Converts the Selected Listbox Choice to the node type enum.
         /// </summary>
-        public void listboxToBoolRadioConverter()
+        public void ListboxToEnumRadioConverter()
         {
-            if (SelectedChoice.Equals("Default"))
-            {
-                NoneCheck = true;
-                AbstractCheck = false;
-                InterfaceCheck = false;
-            }
-            else if (SelectedChoice.Equals("Abstract"))
-            {
-                NoneCheck = false;
-                AbstractCheck = true;
-                InterfaceCheck = false;
-            }
+            if (SelectedChoice.Equals("Abstract"))
+                NodeType = NodeType.ABSTRACT;
             else if (SelectedChoice.Equals("Interface"))
-            {
-                NoneCheck = false;
-                AbstractCheck = false;
-                InterfaceCheck = true;
-            }
+                NodeType = NodeType.INTERFACE;
             else
+                NodeType = NodeType.CLASS;
+        }
+
+        /// <summary>
+        /// Converts the given enum to Selected Listbox Choice.
+        /// </summary>
+        public void EnumToListboxRadioConverter(NodeType type)
+        {
+            switch (type)
             {
-                NoneCheck = false;
-                AbstractCheck = false;
-                interfaceCheck = false;
+                case NodeType.ABSTRACT:
+                    SelectedChoice = "Abstract";
+                    break;
+                case NodeType.INTERFACE:
+                    SelectedChoice = "Interface";
+                    break;
+                case NodeType.CLASS:
+                    SelectedChoice = "Default";
+                    break;
             }
         }
 
         /// <summary>
         /// Removes the selected item in either the attribute listbox or method listbox
         /// </summary>
-        public void removeItem()
+        public void RemoveItem()
         {
             if (SelectedItem == "") return;
             Attributes.Remove(SelectedItem);
@@ -198,26 +236,33 @@ namespace _02350Project.ViewModel
         /// <summary>
         /// Closes the window and returns false to the dialog invoker.
         /// </summary>
-        public void cancel()
+        public void Cancel()
         {
-            window.DialogResult = false;
+            _window.DialogResult = false;
         }
 
         /// <summary>
         /// Sets the node properties and returns true to the dialog invoker.
         /// </summary>
-        public void createNode()
+        public void CreateNode()
         {
-            listboxToBoolRadioConverter();
+            ListboxToEnumRadioConverter();
 
-            node.Name = NodeName;
-            node.NoneFlag = NoneCheck;
-            node.AbstractFlag = AbstractCheck;
-            node.InterfaceFlag = InterfaceCheck;
-            node.Methods = this.Methods.ToList<string>();
-            node.Attributes = this.Attributes.ToList<string>();
+            _node.Name = NodeName;
+            //_node.NoneFlag = NoneCheck;
+            //_node.AbstractFlag = AbstractCheck;
+            //_node.InterfaceFlag = InterfaceCheck;
+            _node.NodeType = NodeType;
+            _node.Methods = Methods.ToList();
+            _node.Attributes = Attributes.ToList();
 
-            window.DialogResult = true;
+            _window.DialogResult = true;
+        }
+
+        public void EditNode()
+        {
+            _editNodeName = NodeName;
+            _window.DialogResult = true;
         }
 
         #region IDataErrorInfo Members
@@ -244,19 +289,5 @@ namespace _02350Project.ViewModel
             }
         }
         #endregion
-
-         //if (columnName == "ActualAttribute")
-         //       {
-         //           if (String.IsNullOrWhiteSpace(ActualAttribute))
-         //           {
-         //               Error = "Attribute field cannot be empty.";
-         //               CanAddAttribute = false;
-         //           }
-         //           else 
-         //           {
-         //               Error = null;
-         //               Can
-         //           }
-         //       }
     }
 }

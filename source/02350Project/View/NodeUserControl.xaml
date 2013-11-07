@@ -11,12 +11,12 @@
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="135"
              d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged" 
              c:SizeObserver.Observe="true" c:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"
-             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}">
+             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}"
+             Focusable="True" IsTabStop="True">
     <!--
         ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
     -->
-
-        <UserControl.Resources>
+    <UserControl.Resources>
         <!--http://stackoverflow.com/questions/1499016/reusing-a-treeviews-expand-and-collapse-buttons-in-wpf-->
         <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
         <ControlTemplate x:Key="toggleButtonTemplate" TargetType="ToggleButton">

@@ -9,7 +9,6 @@
 
     <Window.InputBindings>
         <KeyBinding Key="Delete" Command="{Binding RemoveItemCommand}"/>
-
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True" Background="WhiteSmoke" FocusManager.FocusedElement="{Binding ElementName=nodename}">
@@ -80,7 +79,8 @@
             </DockPanel>
         </DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10,10,10" HorizontalAlignment="Right">
-            <Button Content="Create" Width="79" Height="23" Margin="0,0,4,0" Command="{Binding CreateNodeCommand}" IsEnabled="{Binding CanCreate}"/>
+            <Button Content="Edit" Width="79" Height="23" Margin="0,0,4,0" Command="{Binding EditNodeCommand}" IsEnabled="{Binding CanCreate}" Visibility="{Binding EditVisibility}"/>
+            <Button Content="Create" Width="79" Height="23" Margin="0,0,4,0" Command="{Binding CreateNodeCommand}" IsEnabled="{Binding CanCreate}" Visibility="{Binding CreateVisibility}"/>
             <Button Content="Cancel" Width="79" Height="23" Command="{Binding CancelNodeCommand}"/>
 
         </StackPanel>
