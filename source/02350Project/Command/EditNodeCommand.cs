@@ -9,7 +9,6 @@ namespace _02350Project.Command
     class EditNodeCommand : IUndoRedoCommand
     {
         private readonly NodeViewModel _node;
-        private readonly ObservableCollection<NodeViewModel> _nodes;
         private readonly string _name;
         private readonly NodeType _type;
         private readonly List<string> _attributes;
@@ -20,10 +19,9 @@ namespace _02350Project.Command
         private readonly List<string> _oldAttributes;
         private readonly List<string> _oldMethods;
 
-        public EditNodeCommand(NodeViewModel node, ObservableCollection<NodeViewModel> nodes, string name, NodeType type, List<string> attributes, List<string> methods)
+        public EditNodeCommand(NodeViewModel node,  string name, NodeType type, List<string> attributes, List<string> methods)
         {
             _node = node;
-            _nodes = nodes;
             _name = name;
             _type = type;
             _attributes = new List<string>(attributes);

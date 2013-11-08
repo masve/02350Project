@@ -545,10 +545,16 @@ namespace _02350Project.ViewModel
         public void EditNode()
         {
             string oldName = null;
+            // DEFAULTING TO ABSTRACT HERE
             NodeType oldType = NodeType.ABSTRACT;
             ObservableCollection<string> oldAttributes = null;
             ObservableCollection<string> oldMethods = null;
             NodeViewModel node = null;
+            
+           /*
+            * Gets the first selected node in Nodes and saves that node's
+            * relevant properties.
+            */
             foreach (NodeViewModel n in Nodes)
             {
                 if (n.IsSelected)
@@ -561,11 +567,23 @@ namespace _02350Project.ViewModel
                     break;
                 }
             }
+
+            if (node == null)
+                return;
+
+            /*
+             * Initializes and opens the edit dialog
+             */
             var dialog = new CreateNodeWindow();
             CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(dialog, node);
             dialog.DataContext = dialogViewModel;
             var dialogReturn = dialog.ShowDialog();
 
+            
+            /*
+             * After the dialog returns, saves the new property values for the edited node. Then
+             * it is assigned its properties old values, in case the dialog returns false.
+             */
             var newName = node.Name;
             var newType = node.NodeType;
             var newAttributes = new ObservableCollection<string>(node.Attributes);
@@ -574,15 +592,21 @@ namespace _02350Project.ViewModel
             node.NodeType = oldType;
             node.Attributes = new List<string>(oldAttributes.ToList());
             node.Methods = new List<string>(oldMethods.ToList());
+            
+            /*
+             * Because we assign the node its old values after the dialog return
+             * we don't need to do anything if the dialog returns false.
+             * It goes to say that we could also do it the other way around.
+             * In this case this means that if the dialog returns true we execute
+             * the EditNodeCommand which takes the node to update and the new 
+             * property values.
+             */
             if (dialogReturn == true)
             {
                 ConsolePrinter.Write("editnode" + newName);
-                _undoRedoController.AddAndExecute(new EditNodeCommand(node, Nodes, newName, newType, newAttributes.ToList(), newMethods.ToList()));
+                _undoRedoController.AddAndExecute(new EditNodeCommand(node, newName, newType, newAttributes.ToList(),
+                    newMethods.ToList()));
             }
-            else
-                ConsolePrinter.Write("No editnode");
-
-
         }
 
         #region Undo/Redo Command Implementation
