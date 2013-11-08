@@ -96,7 +96,7 @@ namespace _02350Project.ViewModel
             {
                 Name = "Calculator",
                 NodeType = NodeType.INTERFACE,
-                Attributes = new List<string> {"+ a : int", "+ b : int", "+ sum : int"},
+                Attributes = new List<string> { "+ a : int", "+ b : int", "+ sum : int" },
                 Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
             };
 
@@ -171,7 +171,7 @@ namespace _02350Project.ViewModel
             _canCancel = false;
         }
 
-        
+
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
@@ -186,7 +186,7 @@ namespace _02350Project.ViewModel
         public void New()
         {
             ClearDiagram();
-            _path = null;            
+            _path = null;
         }
 
         private bool ClearDiagram()
@@ -261,13 +261,13 @@ namespace _02350Project.ViewModel
 
         public void Open()
         {
-            
+
             OpenFileDialog ofd = new OpenFileDialog();
 
 
             if (ofd.ShowDialog() == false)
             {
-                
+
                 ConsolePrinter.Write("path : " + _path);
                 return;
             }
@@ -428,10 +428,10 @@ namespace _02350Project.ViewModel
 
                 mousePosition.X -= _offsetPosition.X;
                 mousePosition.Y -= _offsetPosition.Y;
-                
+
                 movingNode.X = _oldPosX + mousePosition.X;
                 movingNode.Y = _oldPosY + mousePosition.Y;
-                
+
                 _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
@@ -544,31 +544,45 @@ namespace _02350Project.ViewModel
 
         public void EditNode()
         {
-            string name = null;
-            NodeType type = NodeType.ABSTRACT;
-            ObservableCollection<string> attributes = null;
-            ObservableCollection<string> methods = null;
+            string oldName = null;
+            NodeType oldType = NodeType.ABSTRACT;
+            ObservableCollection<string> oldAttributes = null;
+            ObservableCollection<string> oldMethods = null;
             NodeViewModel node = null;
             foreach (NodeViewModel n in Nodes)
             {
                 if (n.IsSelected)
                 {
                     node = n;
-                    name = n.Name;
-                    type = n.NodeType;
-                    attributes = new ObservableCollection<string>(n.Attributes);
-                    methods = new ObservableCollection<string>(n.Methods);
+                    oldName = n.Name;
+                    oldType = n.NodeType;
+                    oldAttributes = new ObservableCollection<string>(n.Attributes);
+                    oldMethods = new ObservableCollection<string>(n.Methods);
                     break;
                 }
             }
             var dialog = new CreateNodeWindow();
-            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(ref name, ref type, ref attributes, ref methods, dialog);
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(dialog, node);
             dialog.DataContext = dialogViewModel;
-            if (dialog.ShowDialog() == true)
+            var dialogReturn = dialog.ShowDialog();
+
+            var newName = node.Name;
+            var newType = node.NodeType;
+            var newAttributes = new ObservableCollection<string>(node.Attributes);
+            var newMethods = new ObservableCollection<string>(node.Methods);
+            node.Name = oldName;
+            node.NodeType = oldType;
+            node.Attributes = new List<string>(oldAttributes.ToList());
+            node.Methods = new List<string>(oldMethods.ToList());
+            if (dialogReturn == true)
             {
-                _undoRedoController.AddAndExecute(new EditNodeCommand(node, Nodes, name, type, attributes.ToList(), methods.ToList()));
+                ConsolePrinter.Write("editnode" + newName);
+                _undoRedoController.AddAndExecute(new EditNodeCommand(node, Nodes, newName, newType, newAttributes.ToList(), newMethods.ToList()));
             }
-                
+            else
+                ConsolePrinter.Write("No editnode");
+
+
         }
 
         #region Undo/Redo Command Implementation
@@ -616,8 +630,8 @@ namespace _02350Project.ViewModel
 
         public bool CanRemove()
         {
-            return _canRemove; 
-            
+            return _canRemove;
+
         }
 
         public bool CanCancel()
@@ -628,15 +642,18 @@ namespace _02350Project.ViewModel
         private double _showGrid;
         private bool _gridCheck;
 
-        public double ShowGrid { get
+        public double ShowGrid
         {
-            if (GridCheck) 
-                _showGrid = 1.0;
-            else 
-                _showGrid = 0.0;
-            return _showGrid;
-        }}
-        
+            get
+            {
+                if (GridCheck)
+                    _showGrid = 1.0;
+                else
+                    _showGrid = 0.0;
+                return _showGrid;
+            }
+        }
+
         public bool GridCheck { get { return _gridCheck; } set { _gridCheck = value; RaisePropertyChanged("ShowGrid"); } }
 
         /// <summary>
