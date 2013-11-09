@@ -9,10 +9,8 @@
              xmlns:c="clr-namespace:_02350Project.Other"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="135"
-             d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged" 
              c:SizeObserver.Observe="true" c:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"
-             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}"
-             Focusable="True" IsTabStop="True">
+             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}">
     <!--
         ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
     -->

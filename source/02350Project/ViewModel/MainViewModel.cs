@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Media.Imaging;
 using _02350Project.Command;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -96,8 +98,8 @@ namespace _02350Project.ViewModel
             {
                 Name = "Calculator",
                 NodeType = NodeType.INTERFACE,
-                Attributes = new List<string> { "+ a : int", "+ b : int", "+ sum : int" },
-                Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
+                Attributes = new List<string> { "- a : int", "- b : int", "- sum : int" },
+                Methods = new List<string> { "+ add ( val1 : int, val2 : int )", "+ sub ( val1 : int, val2 : int )" }
             };
 
             AddNode(testNode);
@@ -178,9 +180,57 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void Test()
         {
-            PrintDialog printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() == true)
-                ConsolePrinter.Write("Printing...");
+            //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
+            //printDialog.PrintVisual(canvas, "IFMS Print Screen");
+            //PrintDialog printDialog = new PrintDialog();
+            //if (printDialog.ShowDialog() != true)
+            //    return;
+            ConsolePrinter.Write("Printing...");
+            ExportToPng("C:\\Downloads", canvas);
+            //foreach(NodeViewModel v in Nodes)
+            //    if(v.IsSelected)
+            //        ConsolePrinter.Write("Height: " + v.Height);
+        }
+
+        public void ExportToPng(string path, Canvas surface)
+        {
+            if (path == null) return;
+
+            // Save current canvas transform
+            Transform transform = surface.LayoutTransform;
+            // reset current transform (in case it is scaled or rotated)
+            surface.LayoutTransform = null;
+
+            // Get the size of canvas
+            Size size = new Size(surface.Width, surface.Height);
+            // Measure and arrange the surface
+            // VERY IMPORTANT
+            surface.Measure(size);
+            surface.Arrange(new Rect(size));
+
+            // Create a render bitmap and push the surface to it
+            RenderTargetBitmap renderBitmap =
+              new RenderTargetBitmap(
+                (int)size.Width,
+                (int)size.Height,
+                96d,
+                96d,
+                PixelFormats.Pbgra32);
+            renderBitmap.Render(surface);
+
+            // Create a file stream for saving image
+            using (FileStream outStream = new FileStream(path, FileMode.Create))
+            {
+                // Use png encoder for our data
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                // push the rendered bitmap to it
+                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                // save the data to the stream
+                encoder.Save(outStream);
+            }
+
+            // Restore previously saved layout
+            surface.LayoutTransform = transform;
         }
 
         public void New()
@@ -388,6 +438,7 @@ namespace _02350Project.ViewModel
         private Point _offsetPosition;
         private double _oldPosX;
         private double _oldPosY;
+        private Canvas canvas;
 
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
@@ -402,7 +453,7 @@ namespace _02350Project.ViewModel
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                canvas = FindParentOfType<Canvas>(movingRect);
 
                 _offsetPosition = Mouse.GetPosition(canvas);
                 _oldPosX = movingNode.X;
@@ -410,6 +461,7 @@ namespace _02350Project.ViewModel
 
             }
         }
+
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
