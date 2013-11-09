@@ -13,35 +13,27 @@ namespace _02350Project.Command
 {
     class RemoveEdgeCommand : IUndoRedoCommand
     {
-        //private ObservableCollection<EdgeViewModel> edges;
-        //private NodeViewModel node;
+        private ObservableCollection<EdgeViewModel> edges;
+        private EdgeViewModel edge;
 
-        //public RemoveEdgeCommand(ObservableCollection<EdgeViewModel> _edges, NodeViewModel _node)
-        //{
-        //    edges = _edges;
-        //    node = _node;
-        //}
-
-        //public void Execute()
-        //{
-        //    foreach (EdgeViewModel e in edges)
-        //    {
-        //        if (e.EndA.Equals(node))
-        //            edges.Remove(e);
-        //        else if (e.EndB.Equals(node))
-        //            edges.Remove(e);
-        //    }
-            
-        //}
-
-        public void UnExecute()
+        public RemoveEdgeCommand(ObservableCollection<EdgeViewModel> _edges, EdgeViewModel _edge)
         {
-            throw new NotImplementedException();
+            edges = _edges;
+            edge = _edge;
         }
 
         public void Execute()
         {
-            throw new NotImplementedException();
+
+            edge.IsSelected = false;
+            edges.Remove(edge);           
+            
         }
+
+        public void UnExecute()
+        {
+            edges.Add(edge);
+        }
+
     }
 }

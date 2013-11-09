@@ -46,7 +46,7 @@ namespace _02350Project.ViewModel
         private bool _isMovingNode;
         private NodeViewModel _firstSelectedEdgeEnd;
 
-        public ICommand RemoveNodeCommand { get; private set; }
+        public ICommand RemoveElementsCommand { get; private set; }
         public ICommand RemoveEdgeCommand { get; private set; }
 
         public ICommand MouseDownNodeCommand { get; private set; }
@@ -103,7 +103,7 @@ namespace _02350Project.ViewModel
             AddNode(testNode);
             #endregion
 
-            RemoveNodeCommand = new RelayCommand(RemoveNode, CanRemove);
+            RemoveElementsCommand = new RelayCommand(RemoveElements, CanRemove);
 
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
@@ -160,6 +160,10 @@ namespace _02350Project.ViewModel
         private void CancelAction()
         {
             foreach (NodeViewModel vm in Nodes)
+            {
+                vm.IsSelected = false;
+            }
+            foreach (EdgeViewModel vm in Edges)
             {
                 vm.IsSelected = false;
             }
@@ -301,25 +305,39 @@ namespace _02350Project.ViewModel
         /// <summary>
         /// Sets bools used in MouseUpNode to determine if the clicked node should be removed.
         /// </summary>
-        public void RemoveNode()
+        public void RemoveElements()
         {
             _isAddingEdge = false;
             _isRemovingNode = true;
+
+            List<RemoveEdgeCommand> edgeCommands = new List<RemoveEdgeCommand>();
+            List<RemoveNodeCommand> nodeCommands = new List<RemoveNodeCommand>();
+
             NodeViewModel nodeToRemove = null;
+            EdgeViewModel edgeToRemove = null;
+
             foreach (NodeViewModel vm in Nodes)
             {
                 if (vm.IsSelected)
                 {
-                    nodeToRemove = vm;
+                    nodeCommands.Add(new RemoveNodeCommand(Nodes, Edges, vm));
                 }
 
             }
-            if (nodeToRemove != null)
+            foreach (EdgeViewModel vm in Edges) 
             {
-                RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
+                if (vm.IsSelected)
+                {
+                    edgeCommands.Add(new RemoveEdgeCommand(Edges, vm));
+                }
+            }                     
+
+            if (edgeCommands.Count != 0 || nodeCommands.Count != 0)
+            {
+                RemoveElementsCommand m = new RemoveElementsCommand(edgeCommands, nodeCommands);
                 _undoRedoController.AddAndExecute(m);
-                nodeToRemove.IsSelected = false;
             }
+
             _isRemovingNode = false;
             _canRemove = false;
             _canCancel = false;
@@ -435,10 +453,9 @@ namespace _02350Project.ViewModel
                 _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
-                CalculateAnchor(movingNode);
             }
         }
-
+        
         /// <summary>
         /// MouseUpNode handles the implementation used when a MouseUp is triggered through an EventToCommand.
         /// </summary>
@@ -490,12 +507,30 @@ namespace _02350Project.ViewModel
             else
             {
                 FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel rectNode = (NodeViewModel)rect.DataContext;
 
-                foreach (NodeViewModel vm in Nodes)
-                    vm.IsSelected = false;
-                rectNode.IsSelected = true;
-                _canRemove = true;
+                if (Keyboard.Modifiers != ModifierKeys.Control)
+                {
+                    foreach (NodeViewModel vm in Nodes)
+                        vm.IsSelected = false;
+                    foreach (EdgeViewModel evm in Edges)
+                        evm.IsSelected = false;
+                    _canRemove = false;
+                }
+
+                if (rect.DataContext is NodeViewModel)
+                {
+                    NodeViewModel rectNode = (NodeViewModel)rect.DataContext;
+                    rectNode.IsSelected = true;
+                    _canRemove = true;
+                }
+
+                if (rect.DataContext is EdgeViewModel)
+                {
+                    EdgeViewModel rectEdge = (EdgeViewModel)rect.DataContext;
+                    rectEdge.IsSelected = true;
+                    _canRemove = true;
+                }
+
                 _canCancel = true;
             }
 

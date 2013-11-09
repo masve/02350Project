@@ -50,7 +50,7 @@
                 <RibbonGroup Header="Class">
                     <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}"/>
                     <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}"/>
-                    <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveNodeCommand}"/>
+                    <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">
                     <RibbonButton Label=" Dependency"     Command="{Binding AddDEPCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png"/>

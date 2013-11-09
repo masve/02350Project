@@ -28,7 +28,11 @@ namespace _02350Project.Command
         public void Execute()
         {
             foreach (EdgeViewModel e in _removeEdges)
+            {
+                e.IsSelected = false;
                 _edges.Remove(e);
+            }
+            _removeNode.IsSelected = false;
             _nodes.Remove(_removeNode);
         }
 

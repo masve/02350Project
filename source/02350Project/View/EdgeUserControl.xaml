@@ -4,6 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:c="clr-namespace:_02350Project.Other"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+            
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     
@@ -12,16 +15,23 @@
     </UserControl.Resources>
 
     <Grid>
-        
-        <Line Name="ActualLine" Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" 
-              X1="{Binding AX, FallbackValue=0}" Y1="{Binding AY, FallbackValue=0}" 
-              X2="{Binding BX,FallbackValue=300}" Y2="{Binding BY, FallbackValue=100}"/>
-        
-        <Line Name="InvisibleLine" Stroke="Transparent" StrokeThickness="5" 
-              X1="{Binding Path=X1, ElementName=ActualLine}" Y1="{Binding Path=Y1, ElementName=ActualLine}"
-              X2="{Binding Path=X2, ElementName=ActualLine}" Y2="{Binding Path=Y2, ElementName=ActualLine}"/>
-        
-        <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
-        
+
+        <Polyline Name="InvisibleLine" Stroke="LightSkyBlue" StrokeThickness="10"  Points="{Binding Path=Points, ElementName=ActualLine}" Opacity="{Binding Opacity}" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
+
+
+        <Polyline Name="ActualLine" Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" 
+              Points="{Binding LinePoints}" />
+
+
+             <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
+
+        <!--TRIGGERS START-->
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseUp">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <!--TRIGGERS END-->
+
     </Grid>
 </UserControl>

@@ -1,12 +1,15 @@
 ﻿using _02350Project.Model;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using _02350Project.Other;
 
 namespace _02350Project.ViewModel
 {
@@ -30,11 +33,34 @@ namespace _02350Project.ViewModel
         private PointCollection pointyArrow = new PointCollection();
         private PointCollection rhombusArrow = new PointCollection();
         private PointCollection actualArrow = new PointCollection();
+        private PointCollection arrowClingpoints = new PointCollection(2);
         #endregion
 
         #region Public Fields
         public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
         #endregion
+
+        PointCollection ArrowClingpoints {get {return arrowClingpoints;}
+            set {
+            PointCollection a = new PointCollection(2);
+            a.Add(new Point());
+            arrowClingpoints = a;
+        } }
+
+        public PointCollection LinePoints {
+            
+            get { 
+            PointCollection linepoints = new PointCollection(11);
+
+            linepoints.Insert(0,new Point(VMEndA.X, VMEndA.Y));
+            linepoints.Insert(1,new Point(VMEndB.X, VMEndB.Y));
+            
+           //     ArrowClingpoints = linepoints;
+
+            return linepoints;
+            }
+        
+        }
 
         #region Constructor
         public EdgeViewModel(Node fromNode, Node toNode, NodeViewModel fromVM, NodeViewModel toVM, string type)
@@ -54,11 +80,42 @@ namespace _02350Project.ViewModel
             AX = AY = 200;
             BX = BY = 300;
 
+            VMEndA.PropertyChanged += VMEndA_PropertyChanged;
+            VMEndB.PropertyChanged += VMEndA_PropertyChanged;
+
             Type = typeConverter(type);
             initPointyArrowTemplate();
             initRhombusArrowTemplate();
-
+//            MouseUpCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             setFlags();
+        }
+
+        void VMEndA_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "X":
+                case "Y":
+                case "Width":
+                case "Height":
+                    RaisePropertyChanged("LinePoints");
+                    break;
+            }
+        }
+
+        void VMEndB_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "X":
+                case "Y":
+                case "Width":
+                case "Height":
+                    RaisePropertyChanged("LinePoints");
+                    //VMEndB.setEnds(this);
+                    //ArrowControl();
+                    break;
+            }
         }
         #endregion
 
@@ -106,6 +163,7 @@ namespace _02350Project.ViewModel
         public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
         public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
 
+
         public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; RaisePropertyChanged("AnchorA"); RaisePropertyChanged("AX"); RaisePropertyChanged("AY"); } }
         public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; RaisePropertyChanged("AnchorB"); RaisePropertyChanged("BX"); RaisePropertyChanged("BY"); } }
 
@@ -113,6 +171,10 @@ namespace _02350Project.ViewModel
         public double AY { get { return aY; } set { aY = value; RaisePropertyChanged("AY"); } }
         public double BX { get { return bX; } set { bX = value; RaisePropertyChanged("BX"); } }
         public double BY { get { return bY; } set { bY = value; RaisePropertyChanged("BY"); } }
+
+        private bool isSelected;
+        public bool IsSelected { get { return isSelected; } set { isSelected = value; RaisePropertyChanged("Opacity"); } }
+        public double Opacity { get { return IsSelected ? 0.7 : 0.0; } }
 
         public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
         #endregion
@@ -202,8 +264,8 @@ namespace _02350Project.ViewModel
         /// <returns></returns>
         public PointCollection rotatePoint(Point refPoint, PointCollection points, double angle)
         {
-            double cosTheta = Math.Cos(angle + (180 * (Math.PI / 180)));
-            double sinTheta = Math.Sin(angle + (180 * (Math.PI / 180)));
+            double cosTheta = Math.Cos(angle + Math.PI );
+            double sinTheta = Math.Sin(angle + Math.PI );
 
             PointCollection newPoints = new PointCollection();
 
@@ -247,14 +309,10 @@ namespace _02350Project.ViewModel
                 switch (Type)
                 {
                     case EdgeType.DEP:
-                        temp3 = OffsetTemplate(refPoint, PointyArrow);
-                        break;
                     case EdgeType.GEN:
                         temp3 = OffsetTemplate(refPoint, PointyArrow);
                         break;
                     case EdgeType.AGG:
-                        temp3 = OffsetTemplate(refPoint, RhombusArrow);
-                        break;
                     case EdgeType.COM:
                         temp3 = OffsetTemplate(refPoint, RhombusArrow);
                         break;
@@ -280,6 +338,20 @@ namespace _02350Project.ViewModel
         /// </summary>
         /// <returns></returns>
         public Edge getEdge() { return edge; }
+
+        public ICommand MouseUpCommand { get; private set; }
+        
+
+        public void MouseUpNode(MouseButtonEventArgs e)
+        {
+            FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
+
+            if (isSelected)
+                IsSelected = false;
+            else
+                IsSelected = true;
+
+        }
 
     }
 }
