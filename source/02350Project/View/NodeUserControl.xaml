@@ -221,6 +221,9 @@
 
     <!--TRIGGERS START-->
     <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseDoubleClick">
+            <cmd:EventToCommand Command="{Binding DataContext.MouseDoubleClickNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="MouseDown">
             <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
