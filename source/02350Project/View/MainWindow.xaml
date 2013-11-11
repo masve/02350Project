@@ -32,6 +32,45 @@
             </Canvas>
         </DataTemplate>
     </Window.Resources>
+    
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="New Node" Command="{Binding TestCommand}" InputGestureText="???">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/classgroup/addclass.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Paste" InputGestureText="Ctrl+V">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/clipboardgroup/edit-paste-16.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Undo" InputGestureText="Ctrl+Z">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/editgroup/edit-undo-16.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Redo" InputGestureText="Ctrl+Y">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/editgroup/edit-redo-16.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Select All" InputGestureText="Ctrl+A">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/other/zone.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Cancel" InputGestureText="Esc">
+                <MenuItem.Icon>
+                    <Image Source="../Resources/Images/editgroup/edit-clear-16.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
 
     <DockPanel LastChildFill="True">
         <view:RibbonUserControl DockPanel.Dock="Top"/>

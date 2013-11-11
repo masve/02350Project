@@ -81,6 +81,7 @@
     <Compile Include="Other\BooleanToStrokeArrayDashConverter.cs" />
     <Compile Include="Other\ConsolePrinter.cs" />
     <Compile Include="Other\DiagramSerializer.cs" />
+    <Compile Include="Other\ExportDiagram.cs" />
     <Compile Include="Other\SizeObserver.cs" />
     <Compile Include="ViewModel\CreateNodeViewModel.cs" />
     <Compile Include="ViewModel\EdgeViewModel.cs" />
@@ -235,6 +236,23 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\other\cancelaction.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\editgroup\edit-clear-16.png" />
+    <Resource Include="Resources\Images\editgroup\edit-redo-16.png" />
+    <Resource Include="Resources\Images\editgroup\edit-undo-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\clipboardgroup\edit-paste-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\other\zone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\classgroup\editclass-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\classgroup\removeclass-16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

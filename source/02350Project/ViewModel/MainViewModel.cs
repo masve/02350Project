@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Windows.Media.Imaging;
 using _02350Project.Command;
@@ -185,53 +186,32 @@ namespace _02350Project.ViewModel
             //PrintDialog printDialog = new PrintDialog();
             //if (printDialog.ShowDialog() != true)
             //    return;
-            ConsolePrinter.Write("Printing...");
-            ExportToPng("C:\\Downloads", canvas);
+            //ConsolePrinter.Write("Printing...");
+            //int h = 0;
+            //int w = 0;
+            //double minX, minY, maxX, maxY;
+            //minX = minY = maxX = maxY = 0;
+            //foreach (NodeViewModel n in Nodes)
+            //{
+            //    if (n.X < minX)
+            //        minX = n.X;
+            //    if (n.Y < minY)
+            //        minY = n.Y;
+            //    if (n.X + n.Width > maxX)
+            //        maxX = n.X + n.Width;
+            //    if (n.Y + n.Height > maxY)
+            //        maxY = n.Y + n.Height;
+            //}
+            //ConsolePrinter.Write("minX: "+minX+", minY: "+minY+", maxX: "+maxX+", maxY: "+maxY);
+            ConsolePrinter.Write("hello");
+
+            //ExportDiagram.ExportToPng("E:\\1_downloads\\0_sabnzbd\\diagram.png", canvasTwo,600,600);
             //foreach(NodeViewModel v in Nodes)
             //    if(v.IsSelected)
             //        ConsolePrinter.Write("Height: " + v.Height);
         }
 
-        public void ExportToPng(string path, Canvas surface)
-        {
-            if (path == null) return;
-
-            // Save current canvas transform
-            Transform transform = surface.LayoutTransform;
-            // reset current transform (in case it is scaled or rotated)
-            surface.LayoutTransform = null;
-
-            // Get the size of canvas
-            Size size = new Size(surface.Width, surface.Height);
-            // Measure and arrange the surface
-            // VERY IMPORTANT
-            surface.Measure(size);
-            surface.Arrange(new Rect(size));
-
-            // Create a render bitmap and push the surface to it
-            RenderTargetBitmap renderBitmap =
-              new RenderTargetBitmap(
-                (int)size.Width,
-                (int)size.Height,
-                96d,
-                96d,
-                PixelFormats.Pbgra32);
-            renderBitmap.Render(surface);
-
-            // Create a file stream for saving image
-            using (FileStream outStream = new FileStream(path, FileMode.Create))
-            {
-                // Use png encoder for our data
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                // push the rendered bitmap to it
-                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-                // save the data to the stream
-                encoder.Save(outStream);
-            }
-
-            // Restore previously saved layout
-            surface.LayoutTransform = transform;
-        }
+        
 
         public void New()
         {
@@ -265,7 +245,6 @@ namespace _02350Project.ViewModel
                         ConsolePrinter.Write("Cancel");
                         return false;
                 }
-
             }
             return true;
         }
@@ -280,7 +259,7 @@ namespace _02350Project.ViewModel
             {
                 FileName = "save",
                 DefaultExt = ".xml",
-                Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*"
+                Filter = "Extensible Markup Language (*.xml)|*.xml|Portable Network Graphics (*.png)|*.png|All Files (*.*)|*.*"
             };
 
             if (sfd.ShowDialog() == true)
@@ -292,7 +271,15 @@ namespace _02350Project.ViewModel
                 //{
                 //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
                 //}).Start();
-                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                switch (sfd.FilterIndex)
+                {
+                    case 1:
+                        DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                        break;
+                    case 2:
+                        ConsolePrinter.Write("save as png");
+                        break;
+                }
             }
         }
 
@@ -312,17 +299,21 @@ namespace _02350Project.ViewModel
         public void Open()
         {
 
-            OpenFileDialog ofd = new OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Filter = "Extensible Markup Language|*.xml"
+            };
 
 
             if (ofd.ShowDialog() == false)
             {
-
                 ConsolePrinter.Write("path : " + _path);
                 return;
             }
+
             if (!ClearDiagram())
                 return;
+
             _path = ofd.FileName;
             DiagramSerializer.Diagram diagram = DiagramSerializer.Load(_path);
             RestoreDiagram(diagram);
@@ -462,6 +453,7 @@ namespace _02350Project.ViewModel
             }
         }
 
+        private Canvas canvasTwo;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -475,6 +467,7 @@ namespace _02350Project.ViewModel
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                canvasTwo = FindParentOfType<Canvas>(canvas);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
