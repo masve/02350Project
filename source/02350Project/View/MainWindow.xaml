@@ -17,6 +17,7 @@
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
         <KeyBinding Key="F12" Command="{Binding SaveAsCommand}"/>
         <KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>
+        <KeyBinding Key="E" Modifiers="Control+Shift" Command="{Binding ExportCommand}"/>
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
 
@@ -35,40 +36,16 @@
     
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="New Node" Command="{Binding TestCommand}" InputGestureText="???">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/classgroup/addclass.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <MenuItem Header="New Node" Command="{Binding TestCommand}" InputGestureText="???"/>
             <Separator/>
-            <MenuItem Header="Paste" InputGestureText="Ctrl+V">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/clipboardgroup/edit-paste-16.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <MenuItem Header="Paste" InputGestureText="Ctrl+V"/>
             <Separator/>
-            <MenuItem Header="Undo" InputGestureText="Ctrl+Z">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/editgroup/edit-undo-16.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Redo" InputGestureText="Ctrl+Y">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/editgroup/edit-redo-16.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <MenuItem Header="Undo" InputGestureText="Ctrl+Z"/>
+            <MenuItem Header="Redo" InputGestureText="Ctrl+Y"/>
             <Separator/>
-            <MenuItem Header="Select All" InputGestureText="Ctrl+A">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/other/zone.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <MenuItem Header="Select All" InputGestureText="Ctrl+A"/>
             <Separator/>
-            <MenuItem Header="Cancel" InputGestureText="Esc">
-                <MenuItem.Icon>
-                    <Image Source="../Resources/Images/editgroup/edit-clear-16.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
+            <MenuItem Header="Cancel" InputGestureText="Esc"/>
         </ContextMenu>
     </Window.ContextMenu>
 

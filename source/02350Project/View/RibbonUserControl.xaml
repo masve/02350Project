@@ -22,10 +22,11 @@
                         <RibbonApplicationMenuItem Header="Open"  Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
                         <RibbonApplicationMenuItem Header="Save" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
                         <RibbonApplicationMenuItem Header="Save as" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />
-                        <RibbonApplicationMenuItem Header="Export"  Command="{Binding ExportCommand}"     ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png"/>
+                        
                         
                         <RibbonSeparator/>
-                        <RibbonApplicationMenuItem Header="Print" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
+                        <RibbonApplicationMenuItem Header="Print" Command="{Binding TestCommand}" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
+                        <RibbonApplicationMenuItem Header="Export"  Command="{Binding ExportCommand}" ToolTipTitle="{StaticResource exportToolTipTitle}" ToolTipDescription="{StaticResource exportTooltipDesc}" ImageSource="../Resources/Images/appmenu/export.png"/>
                         <RibbonSeparator/>
                         <RibbonApplicationMenuItem Header="About" ImageSource="../Resources/Images/appmenu/about.png"/>
                         <RibbonSeparator/>

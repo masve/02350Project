@@ -99,33 +99,13 @@
             
             <Border.ContextMenu>
                 <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                    <MenuItem Header="Cut" InputGestureText="Ctrl+X">
-                        <MenuItem.Icon>
-                            <Image Source="../Resources/Images/clipboardgroup/edit-cut.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Copy" InputGestureText="Ctrl+C">
-                        <MenuItem.Icon>
-                            <Image Source="../Resources/Images/clipboardgroup/edit-copy.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
+                    <MenuItem Header="Cut" InputGestureText="Ctrl+X"/>
+                    <MenuItem Header="Copy" InputGestureText="Ctrl+C"/>
                     <Separator/>
-                    <MenuItem Header="Edit" Command="{Binding TestCommand}" InputGestureText="???">
-                        <MenuItem.Icon>
-                            <Image Source="../Resources/Images/classgroup/editclass-16.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Delete" Command="{Binding RemoveNodeCommand}" InputGestureText="Del">
-                        <MenuItem.Icon>
-                            <Image Source="../Resources/Images/classgroup/removeclass-16.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
+                    <MenuItem Header="Edit" Command="{Binding TestCommand}" InputGestureText="???"/>
+                    <MenuItem Header="Delete" Command="{Binding RemoveNodeCommand}" InputGestureText="Del"/>
                     <Separator/>
-                    <MenuItem Header="Cancel" InputGestureText="Esc">
-                        <MenuItem.Icon>
-                            <Image Source="../Resources/Images/editgroup/edit-clear-16.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
+                    <MenuItem Header="Cancel" InputGestureText="Esc"/>
                 </ContextMenu>
             </Border.ContextMenu>
 

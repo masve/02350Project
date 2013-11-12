@@ -171,8 +171,9 @@ namespace _02350Project.ViewModel
         {
             SaveFileDialog dialog = new SaveFileDialog()
             {
-                FileName = "*",
-                Filter = "PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
+                Title = "Export",
+                FileName = "Untitled",
+                Filter = " PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
             };
 
 
@@ -181,7 +182,7 @@ namespace _02350Project.ViewModel
 
             string path = dialog.FileName;
             Point p = getExportResolution();
-            ExportDiagram.ExportToPng(path, canvasTwo, (int)p.Y + 5, (int)p.X + 5);
+            ExportDiagram.ExportImage(path, canvasTwo, (int)p.Y + 5, (int)p.X + 5);
         }
         #endregion
 
@@ -218,11 +219,11 @@ namespace _02350Project.ViewModel
         {
             //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
 
-            //PrintDialog printDialog = new PrintDialog();
-            //if (printDialog.ShowDialog() == true)
-            //{
-            //    printDialog.PrintVisual(canvasTwo, "kwje");
-            //}
+            PrintDialog printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintVisual(canvasTwo, "kwje");
+            }
 
 
         }
@@ -372,7 +373,7 @@ namespace _02350Project.ViewModel
                 else
                     type = "GEN";
 
-                Edges.Add(endA.newEdge(endB, type));
+                Edges.Add(endB.newEdge(endA, type));
             }
         }
 
