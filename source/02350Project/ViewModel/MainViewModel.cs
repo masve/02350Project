@@ -432,6 +432,8 @@ namespace _02350Project.ViewModel
                 catch (NullReferenceException i) { return; }
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
+
+
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                     
                 if (Keyboard.Modifiers != ModifierKeys.Control && !movingNode.IsSelected)
@@ -546,7 +548,7 @@ namespace _02350Project.ViewModel
                         AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
                         _undoRedoController.AddAndExecute(m);
 
-                        CalculateAnchor(rectNode);
+                        //CalculateAnchor(rectNode);
                         _isAddingEdge = false;
                         _firstSelectedEdgeEnd = null;
                     }
@@ -633,23 +635,23 @@ namespace _02350Project.ViewModel
         /// Calculates anchor points for a given node. (The points on the node that edges snap)
         /// </summary>
         /// <param name="nodeVM"></param>
-        public void CalculateAnchor(NodeViewModel nodeVM)
-        {
-            foreach (EdgeViewModel e in Edges)
-            {
-                if (e.VMEndA.Equals(nodeVM))
-                {
-                    nodeVM.setEnds(e);
-                    e.ArrowControl();
+        //public void CalculateAnchor(NodeViewModel nodeVM)
+        //{
+        //    foreach (EdgeViewModel e in Edges)
+        //    {
+        //        if (e.VMEndA.Equals(nodeVM))
+        //        {
+        //            nodeVM.setEnds(e);
+        //            e.ArrowControl();
 
-                }
-                else if (e.VMEndB.Equals(nodeVM))
-                {
-                    nodeVM.setEnds(e);
-                    e.ArrowControl();
-                }
-            }
-        }
+        //        }
+        //        else if (e.VMEndB.Equals(nodeVM))
+        //        {
+        //            nodeVM.setEnds(e);
+        //            e.ArrowControl();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Creates a CreateNodeViewModel, opens a CreateNodeWindow (dialog) and sets the datacontext.

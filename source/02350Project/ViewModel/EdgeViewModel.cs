@@ -49,11 +49,14 @@ namespace _02350Project.ViewModel
 
         public PointCollection LinePoints {
             
-            get { 
-            PointCollection linepoints = new PointCollection(11);
+            get {
+                PointCollection linepoints;
 
-            linepoints.Insert(0,new Point(VMEndA.X, VMEndA.Y));
-            linepoints.Insert(1,new Point(VMEndB.X, VMEndB.Y));
+
+                linepoints = CalcPoly();
+
+            //linepoints.Insert(0,new Point(VMEndA.X, VMEndA.Y));
+            //linepoints.Insert(1,new Point(VMEndB.X, VMEndB.Y));
             
            //     ArrowClingpoints = linepoints;
 
@@ -177,6 +180,9 @@ namespace _02350Project.ViewModel
         public double Opacity { get { return IsSelected ? 0.7 : 0.0; } }
 
         public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
+
+        private PointCollection actualLine;
+        public PointCollection ActualLine { get { return actualLine; } set { actualLine = value; RaisePropertyChanged("ActualLine"); } }
         #endregion
 
         #region Private Helpers
@@ -247,10 +253,10 @@ namespace _02350Project.ViewModel
         /// Calculates the angle, in radians, between an the edge's start and end nodes.
         /// </summary>
         /// <returns></returns>
-        private double calculateAngle()
+        private double calculateAngle(double midX, double midY)
         {
-            double deltaX = BX - AX;
-            double deltaY = BY - AY;
+            double deltaX = BX - midX;
+            double deltaY = BY - midY;
 
             return Math.Atan2(deltaY, deltaX);
         }
@@ -299,7 +305,7 @@ namespace _02350Project.ViewModel
         /// <summary>
         /// Determines the type of arrow head should be set for the edge.
         /// </summary>
-        public void ArrowControl()
+        public void ArrowControl(double midX, double midY)
         {
             if (EdgeType.ASS != Type)
             {
@@ -317,7 +323,7 @@ namespace _02350Project.ViewModel
                         temp3 = OffsetTemplate(refPoint, RhombusArrow);
                         break;
                 }
-                PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle());
+                PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle(midX,midY));
 
                 /*
                  * Adds the reference point to as index[1] in the temp2 PointCollection
@@ -333,6 +339,62 @@ namespace _02350Project.ViewModel
             }
         #endregion
         }
+
+        private PointCollection CalcPoly()
+        {
+            VMEndA.setEnds(this);
+            Point pointEndA = new Point(AX, AY);
+            Point pointEndB = new Point(BX, BY);
+            Point mid1 = new Point();
+            Point mid2 = new Point();
+            PointCollection p = new PointCollection();
+            if (VMEndA.Orientation == 0)
+            {
+                mid2 = new Point(BX, Math.Abs((AY + BY) / 2));
+                mid1 = new Point(AX, Math.Abs((AY + BY) / 2));
+            }
+            else if (VMEndA.Orientation == 1) 
+            {
+                mid2 = new Point(Math.Abs((AX + BX)/2), BY);
+                mid1 = new Point(Math.Abs((AX + BX)/2), AY);
+            }
+            p.Add(pointEndA);
+            p.Add(mid1);
+            p.Add(mid2);
+            p.Add(pointEndB);
+            ArrowControl(mid2.X, mid2.Y);
+            return p;
+        }
+
+        private PointCollection CalcPolyTwo()
+        {
+            VMEndA.setEnds(this);
+            Point pointEndA = new Point(AX, AY);
+            Point pointEndB = new Point(BX, BY);
+            Point mid1 = new Point();
+            Point mid2 = new Point();
+            PointCollection p = new PointCollection();
+            ConsolePrinter.Write("Orientation: " + VMEndA.Orientation);
+
+            //Vector m 
+
+            if (VMEndA.Orientation == 0)
+            {
+                mid2 = new Point(Math.Abs((AX - BX) / 2), BY);
+                mid1 = new Point(Math.Abs((AX - BX) / 2), AY);
+            }
+            else if (VMEndA.Orientation == 1)
+            {
+                mid2 = new Point(Math.Abs((AX - BX) / 2), BY);
+                mid1 = new Point(Math.Abs((AX - BX) / 2), AY);
+            }
+            p.Add(pointEndA);
+            p.Add(mid1);
+            p.Add(mid2);
+            p.Add(pointEndB);
+            return p;
+        }
+
         /// <summary>
         /// Gets the Edge for the ViewModel. Should only be used for serializing.
         /// </summary>

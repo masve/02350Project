@@ -16,6 +16,9 @@ namespace _02350Project.ViewModel
 
         public int Id { get { return node.Id; } set { node.Id = value; RaisePropertyChanged("Id"); } }
 
+        private int orientation;
+        public int Orientation { get { return orientation; } set { orientation = value; RaisePropertyChanged("Orientation"); } }
+
         /*
          * Coordinates and Dimensions
          */
@@ -149,19 +152,22 @@ namespace _02350Project.ViewModel
                 case ANCHOR.NORTH:
                     e.AX = e.VMEndA.North.X;
                     e.AY = e.VMEndA.North.Y;
+                    Orientation = 0;
                     break;
                 case ANCHOR.EAST:
                     e.AX = e.VMEndA.East.X;
                     e.AY = e.VMEndA.East.Y;
-
+                    Orientation = 1;
                     break;
                 case ANCHOR.SOUTH:
                     e.AX = e.VMEndA.South.X;
                     e.AY = e.VMEndA.South.Y;
+                    Orientation = 0;
                     break;
                 case ANCHOR.WEST:
                     e.AX = e.VMEndA.West.X;
                     e.AY = e.VMEndA.West.Y;
+                    Orientation = 1;
                     break;
             }
             switch (B)
@@ -169,20 +175,24 @@ namespace _02350Project.ViewModel
                 case ANCHOR.NORTH:
                     e.BX = e.VMEndB.North.X;
                     e.BY = e.VMEndB.North.Y;
+                    Orientation = 0;
                     break;
                 case ANCHOR.EAST:
                     e.BX = e.VMEndB.East.X;
                     e.BY = e.VMEndB.East.Y;
+                    Orientation = 1;
 
                     break;
                 case ANCHOR.SOUTH:
                     e.BX = e.VMEndB.South.X;
                     e.BY = e.VMEndB.South.Y;
+                    Orientation = 0;
 
                     break;
                 case ANCHOR.WEST:
                     e.BX = e.VMEndB.West.X;
                     e.BY = e.VMEndB.West.Y;
+                    Orientation = 1;
                     break;
             }
         }

@@ -26,11 +26,11 @@
              <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
 
         <!--TRIGGERS START-->
-<!--        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseUp">
-                <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDown">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
-        </i:Interaction.Triggers>-->
+        </i:Interaction.Triggers>
         <!--TRIGGERS END-->
 
     </Grid>
