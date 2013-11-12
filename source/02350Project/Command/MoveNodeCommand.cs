@@ -4,39 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using _02350Project.ViewModel;
+using System.Windows;
 
 namespace _02350Project.Command
 {
     class MoveNodeCommand : IUndoRedoCommand
     {
-        private NodeViewModel node;
-        private double x;
+    
+        private List<NodeViewModel> nodes;
+        private Vector offset;
         private double y;
         private double newX;
         private double newY;
 
-        public MoveNodeCommand(NodeViewModel _node, double _newX, double _newY, double _x, double _y)
+        public MoveNodeCommand(List<NodeViewModel> _nodes, Vector _offset)
         {
-            node = _node;
-            x = _x;
-            y = _y;
-            newX = _newX;
-            newY = _newY;
+            nodes = _nodes;
+            offset = _offset;
         }
 
         public void Execute()
         {
-            node.X = newX;
-            node.Y = newY;
+            for (int i = 0; i < nodes.Count; ++i )
+                {
+                    nodes[i].X += offset.X;
+                    nodes[i].Y += offset.Y;
+                }
+
         }
 
         public void UnExecute()
         {
-            node.X = x;
-            node.Y = y;
+            for (int i = 0; i < nodes.Count; ++i)
+            {
+                nodes[i].X -= offset.X;
+                nodes[i].Y -= offset.Y;
+            }
         }
 
-        public NodeViewModel Node { get { return node; } }
+        //public NodeViewModel Node { get { return node; } }
 
     }
 }

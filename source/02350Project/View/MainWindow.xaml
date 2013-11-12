@@ -59,12 +59,13 @@
                         </VisualBrush>
                     </Canvas.Background>
                     <!--TRIGGERS START-->
-                    <i:Interaction.Triggers>
+<!--                    <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseUp">
                             <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
                     <!--TRIGGERS END-->
+
                 </Canvas>
                 <Border.Effect>
                     <DropShadowEffect Opacity="0.3" BlurRadius="10"/>
