@@ -233,6 +233,7 @@ namespace _02350Project.ViewModel
         public void New()
         {
             ClearDiagram();
+            _undoRedoController.Reset();
             _path = null;
         }
 
@@ -276,7 +277,7 @@ namespace _02350Project.ViewModel
             {
                 FileName = "save",
                 DefaultExt = ".xml",
-                Filter = "Extensible Markup Language (*.xml)|*.xml|Portable Network Graphics (*.png)|*.png|All Files (*.*)|*.*"
+                Filter = "Extensible Markup Language (*.xml)|*.xml|"
             };
 
             if (sfd.ShowDialog() == true)
@@ -498,10 +499,17 @@ namespace _02350Project.ViewModel
                 _oldPosX = movingNode.X;
                 _oldPosY = movingNode.Y;
 
+                oldMovePosX = (int)_oldPosX;
+                oldMovePosY = (int) _oldPosY;
             }
         }
 
         private Canvas canvasTwo;
+        private int counterX;
+        private int counterY;
+        private double oldMovePosX;
+        private double oldMovePosY;
+        private const int snapValue = 20;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -522,8 +530,18 @@ namespace _02350Project.ViewModel
                 mousePosition.X -= _offsetPosition.X;
                 mousePosition.Y -= _offsetPosition.Y;
 
-                movingNode.X = _oldPosX + mousePosition.X;
-                movingNode.Y = _oldPosY + mousePosition.Y;
+                if ((int)mousePosition.X >= (int)(oldMovePosX + snapValue) || (int)mousePosition.X <= (int)(oldMovePosX - snapValue))
+                {
+                    movingNode.X = _oldPosX + mousePosition.X;
+                    oldMovePosX = mousePosition.X;
+                }
+
+                if ((int)mousePosition.Y >= (int)(oldMovePosY + snapValue) || (int)mousePosition.Y <= (int)(oldMovePosY - snapValue))
+                {
+                    movingNode.Y = _oldPosY + mousePosition.Y;
+                    oldMovePosY = mousePosition.Y;
+                }
+                
 
                 _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;

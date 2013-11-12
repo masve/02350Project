@@ -91,7 +91,6 @@
         <c:BooleanToItalicConverter x:Key="BoolToItalic"/>
     </UserControl.Resources>
 
-
     <!--http://www.codeproject.com/Tips/286211/All-purpose-Boolean-to-Visibility-Converter
             Convert VisibilityToBoolean so true:Visible, false:Hidden and not true:Visible, false:Collapsed-->
     <Border Name="selectBorder" BorderThickness="0" CornerRadius="3" BorderBrush="Blue" Background="LightSkyBlue">
