@@ -45,11 +45,11 @@ namespace _02350Project.Other
                 encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
                 // save the data to the stream
                 encoder.Save(outStream);
-
             }
 
             // Restore previously saved layout
             surface.LayoutTransform = transform;
         }
+
     }
 }

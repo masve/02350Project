@@ -66,6 +66,8 @@ namespace _02350Project.ViewModel
         public ICommand RedoCommand { get; private set; }
         public ICommand UndoRedoCheckCommand { get; private set; }
 
+        public ICommand ExportCommand { get; private set; }
+
         #region Edge type commands
         public ICommand AddAGGCommand { get; private set; }
         public ICommand AddDEPCommand { get; private set; }
@@ -127,6 +129,10 @@ namespace _02350Project.ViewModel
             AddGENCommand = new RelayCommand(AddGen);
             #endregion
 
+            #region ExportCommands
+            ExportCommand = new RelayCommand(Export);
+            #endregion
+
             CancelActionCommand = new RelayCommand(CancelAction, CanCancel);
 
             TestCommand = new RelayCommand(Test);
@@ -160,6 +166,27 @@ namespace _02350Project.ViewModel
         }
         #endregion
 
+        #region Export Methods
+        public void Export()
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                FileName = "*",
+                DefaultExt = ".png",
+                Filter = "PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
+            };
+
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            string path = dialog.FileName;
+            Point p = getExportResolution();
+            ExportDiagram.ExportToPng(path, canvasTwo, (int)p.Y + 5, (int)p.X + 5);
+        }
+        #endregion
+
+
         private void CancelAction()
         {
             foreach (NodeViewModel vm in Nodes)
@@ -183,14 +210,13 @@ namespace _02350Project.ViewModel
         {
             //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
 
-            PrintDialog printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() != true)
-            {
-                printDialog.PrintVisual(canvasTwo, "kwje");
-            }
+            //PrintDialog printDialog = new PrintDialog();
+            //if (printDialog.ShowDialog() == true)
+            //{
+            //    printDialog.PrintVisual(canvasTwo, "kwje");
+            //}
 
-            Point p = getExportResolution();
-            ExportDiagram.ExportToPng("C:\\test\\save01.png", canvasTwo, (int)p.Y + 5, (int)p.X + 5);
+
         }
 
 
