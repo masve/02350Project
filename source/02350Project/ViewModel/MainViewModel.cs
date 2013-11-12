@@ -472,7 +472,7 @@ namespace _02350Project.ViewModel
                     Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                     _startMovePosition = Mouse.GetPosition(canvas);
-
+                    _moveOffsetVector = new Vector();
                 }
 
             }
@@ -493,10 +493,29 @@ namespace _02350Project.ViewModel
 
                 Point moveOffsetPosition = Mouse.GetPosition(canvas);
 
+                Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
+
+                for (int i = 0; i < nodesToMove.Count; ++i)
+                {
+                    if (minValue.X > nodesToMove[i].X)
+                        minValue.X = nodesToMove[i].X;
+                    if (minValue.Y > nodesToMove[i].Y)
+                        minValue.Y = nodesToMove[i].Y;
+
+                }
+
+                Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
+
+                if (minValue.X + move.X <= 0)
+                    move.X -= minValue.X;
+                if (minValue.Y + move.Y <= 0)
+                    move.Y -= minValue.Y;
+                
+
                 for(int i = 0; i < nodesToMove.Count; ++i)
                 {
-                        nodesToMove[i].X += (moveOffsetPosition.X - _startMovePosition.X) - _moveOffsetVector.X;
-                        nodesToMove[i].Y += (moveOffsetPosition.Y - _startMovePosition.Y) - _moveOffsetVector.Y;
+                        nodesToMove[i].X += move.X;
+                        nodesToMove[i].Y += move.Y;
                 }
 
                 _moveOffsetVector = moveOffsetPosition - _startMovePosition;
@@ -545,15 +564,7 @@ namespace _02350Project.ViewModel
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                //Canvas canvas = FindParentOfType<Canvas>(movingRect);
-                //Point mousePosition = Mouse.GetPosition(canvas);
 
-                //if (-_moveOffsetVector.X < leastX)
-                //    _moveOffsetVector.X = -leastX;
-                //if (-_moveOffsetVector.Y < leastY)
-                //    _moveOffsetVector.Y = -leastY;
-
-                //leastX = leastX + _moveOffsetVector.X;
 
                 for (int i = 0; i < nodesToMove.Count; ++i)
                 {
@@ -563,8 +574,6 @@ namespace _02350Project.ViewModel
 
                 MoveNodeCommand m = new MoveNodeCommand(nodesToMove, _moveOffsetVector);
                 _undoRedoController.AddAndExecute(m);
-
-                //moveNodePoint = new Point();
 
                 _isMovingNode = false;
             }
