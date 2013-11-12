@@ -47,12 +47,12 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem Header="Undo" InputGestureText="Ctrl+Z">
+            <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}">
                 <MenuItem.Icon>
                     <Image Source="../Resources/Images/editgroup/edit-undo-16.png"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Redo" InputGestureText="Ctrl+Y">
+            <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}">
                 <MenuItem.Icon>
                     <Image Source="../Resources/Images/editgroup/edit-redo-16.png"/>
                 </MenuItem.Icon>
@@ -64,7 +64,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem Header="Cancel" InputGestureText="Esc">
+            <MenuItem Header="Cancel" InputGestureText="Esc" Command="{Binding CancelCommand}">
                 <MenuItem.Icon>
                     <Image Source="../Resources/Images/editgroup/edit-clear-16.png"/>
                 </MenuItem.Icon>

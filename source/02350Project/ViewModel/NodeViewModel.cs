@@ -46,9 +46,9 @@ namespace _02350Project.ViewModel
         /*
          * Content
          */
-        private bool noneFlag;
-        private bool abstractFlag;
-        private bool interfaceFlag;
+        //private bool noneFlag;
+        //private bool abstractFlag;
+        //private bool interfaceFlag;
         private string nodeSubText;
 
         public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); } }

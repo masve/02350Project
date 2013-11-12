@@ -182,11 +182,11 @@ namespace _02350Project.ViewModel
         public void Test()
         {
             //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
+            PrintDialog printDialog = new PrintDialog();
             //printDialog.PrintVisual(canvas, "IFMS Print Screen");
-            //PrintDialog printDialog = new PrintDialog();
-            //if (printDialog.ShowDialog() != true)
-            //    return;
-            //ConsolePrinter.Write("Printing...");
+            if (printDialog.ShowDialog() != true)
+                return;
+            ConsolePrinter.Write("Printing...");
             //int h = 0;
             //int w = 0;
             //double minX, minY, maxX, maxY;
@@ -203,7 +203,7 @@ namespace _02350Project.ViewModel
             //        maxY = n.Y + n.Height;
             //}
             //ConsolePrinter.Write("minX: "+minX+", minY: "+minY+", maxX: "+maxX+", maxY: "+maxY);
-            ConsolePrinter.Write("hello");
+            //ConsolePrinter.Write("hello");
 
             //ExportDiagram.ExportToPng("E:\\1_downloads\\0_sabnzbd\\diagram.png", canvasTwo,600,600);
             //foreach(NodeViewModel v in Nodes)
@@ -211,7 +211,7 @@ namespace _02350Project.ViewModel
             //        ConsolePrinter.Write("Height: " + v.Height);
         }
 
-        
+
 
         public void New()
         {
@@ -595,11 +595,11 @@ namespace _02350Project.ViewModel
             ObservableCollection<string> oldAttributes = null;
             ObservableCollection<string> oldMethods = null;
             NodeViewModel node = null;
-            
-           /*
-            * Gets the first selected node in Nodes and saves that node's
-            * relevant properties.
-            */
+
+            /*
+             * Gets the first selected node in Nodes and saves that node's
+             * relevant properties.
+             */
             foreach (NodeViewModel n in Nodes)
             {
                 if (n.IsSelected)
@@ -624,7 +624,7 @@ namespace _02350Project.ViewModel
             dialog.DataContext = dialogViewModel;
             var dialogReturn = dialog.ShowDialog();
 
-            
+
             /*
              * After the dialog returns, saves the new property values for the edited node. Then
              * it is assigned its properties old values, in case the dialog returns false.
@@ -637,7 +637,7 @@ namespace _02350Project.ViewModel
             node.NodeType = oldType;
             node.Attributes = new List<string>(oldAttributes.ToList());
             node.Methods = new List<string>(oldMethods.ToList());
-            
+
             /*
              * Because we assign the node its old values after the dialog return
              * we don't need to do anything if the dialog returns false.

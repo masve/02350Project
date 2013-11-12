@@ -110,7 +110,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Edit" Command="{Binding TestCommand}" InputGestureText="???">
+                    <MenuItem Header="Edit" Command="{Binding EditNodeCommand}" InputGestureText="???">
                         <MenuItem.Icon>
                             <Image Source="../Resources/Images/classgroup/editclass-16.png"/>
                         </MenuItem.Icon>

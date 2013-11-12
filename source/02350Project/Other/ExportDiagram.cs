@@ -16,13 +16,6 @@ namespace _02350Project.Other
             Transform transform = surface.LayoutTransform;
             // reset current transform (in case it is scaled or rotated)
             surface.LayoutTransform = null;
-            
-            //// Get the size of canvas
-            //Size size = new Size(surface.Width, surface.Height);
-            //// Measure and arrange the surface
-            //// VERY IMPORTANT
-            //surface.Measure(size);
-            //surface.Arrange(new Rect(size));
 
             // Create a render bitmap and push the surface to it
             RenderTargetBitmap renderBitmap =
