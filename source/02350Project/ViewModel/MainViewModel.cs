@@ -115,7 +115,7 @@ namespace _02350Project.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             CreateNodeCommand = new RelayCommand(CreateNode);
-            EditNodeCommand = new RelayCommand(EditNode);
+            EditNodeCommand = new RelayCommand(EditNode, CanEdit);
             //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
@@ -199,6 +199,15 @@ namespace _02350Project.ViewModel
             _firstSelectedEdgeEnd = null;
             _canRemove = false;
             _canCancel = false;
+        }
+        private bool CanEdit()
+        {
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.IsSelected)
+                    return true;
+            }
+            return false;
         }
 
 
@@ -334,6 +343,37 @@ namespace _02350Project.ViewModel
             {
                 NodeViewModel nvm = new NodeViewModel(n.Id, n);
                 Nodes.Add(nvm);
+            }
+            foreach (Edge e in diagram.Edges)
+            {
+                NodeViewModel endA = null;
+                NodeViewModel endB = null;
+                foreach (NodeViewModel vm in Nodes)
+                {
+                    if (e.NodeIdA == vm.Id)
+                    {
+                        endA = vm;
+                    }
+                    if (e.NodeIdB == vm.Id)
+                    {
+                        endB = vm;
+                    }
+                }
+               string type = "";
+               if (e.Type == EdgeType.AGG)
+               {
+                   type = "AGG";
+               }
+               else if (e.Type == EdgeType.ASS)
+                   type = "ASS";
+               else if (e.Type == EdgeType.COM)
+                   type = "COM";
+               else if (e.Type == EdgeType.DEP)
+                   type = "DEP";
+               else
+                   type = "GEN";
+
+                    Edges.Add(endA.newEdge(endB, type));
             }
         }
 
