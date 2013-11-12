@@ -29,6 +29,8 @@ namespace _02350Project.ViewModel
 
         public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
         public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double MaxX { get { return node.X + Width; } }
+        public double MaxY { get { return node.Y + Height; } }
 
         /*
          * Edge Anchor Points

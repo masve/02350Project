@@ -182,36 +182,18 @@ namespace _02350Project.ViewModel
         public void Test()
         {
             //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
-            //printDialog.PrintVisual(canvas, "IFMS Print Screen");
-            //PrintDialog printDialog = new PrintDialog();
-            //if (printDialog.ShowDialog() != true)
-            //    return;
-            //ConsolePrinter.Write("Printing...");
-            //int h = 0;
-            //int w = 0;
-            //double minX, minY, maxX, maxY;
-            //minX = minY = maxX = maxY = 0;
-            //foreach (NodeViewModel n in Nodes)
-            //{
-            //    if (n.X < minX)
-            //        minX = n.X;
-            //    if (n.Y < minY)
-            //        minY = n.Y;
-            //    if (n.X + n.Width > maxX)
-            //        maxX = n.X + n.Width;
-            //    if (n.Y + n.Height > maxY)
-            //        maxY = n.Y + n.Height;
-            //}
-            //ConsolePrinter.Write("minX: "+minX+", minY: "+minY+", maxX: "+maxX+", maxY: "+maxY);
-            ConsolePrinter.Write("hello");
 
-            //ExportDiagram.ExportToPng("E:\\1_downloads\\0_sabnzbd\\diagram.png", canvasTwo,600,600);
-            //foreach(NodeViewModel v in Nodes)
-            //    if(v.IsSelected)
-            //        ConsolePrinter.Write("Height: " + v.Height);
+            PrintDialog printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() != true)
+            {
+                printDialog.PrintVisual(canvasTwo, "kwje");
+            }
+
+            Point p = getExportResolution();
+            ExportDiagram.ExportToPng("C:\\test\\save01.png", canvasTwo, (int)p.Y + 5, (int)p.X + 5);
         }
 
-        
+
 
         public void New()
         {
@@ -595,11 +577,11 @@ namespace _02350Project.ViewModel
             ObservableCollection<string> oldAttributes = null;
             ObservableCollection<string> oldMethods = null;
             NodeViewModel node = null;
-            
-           /*
-            * Gets the first selected node in Nodes and saves that node's
-            * relevant properties.
-            */
+
+            /*
+             * Gets the first selected node in Nodes and saves that node's
+             * relevant properties.
+             */
             foreach (NodeViewModel n in Nodes)
             {
                 if (n.IsSelected)
@@ -624,7 +606,7 @@ namespace _02350Project.ViewModel
             dialog.DataContext = dialogViewModel;
             var dialogReturn = dialog.ShowDialog();
 
-            
+
             /*
              * After the dialog returns, saves the new property values for the edited node. Then
              * it is assigned its properties old values, in case the dialog returns false.
@@ -637,7 +619,7 @@ namespace _02350Project.ViewModel
             node.NodeType = oldType;
             node.Attributes = new List<string>(oldAttributes.ToList());
             node.Methods = new List<string>(oldMethods.ToList());
-            
+
             /*
              * Because we assign the node its old values after the dialog return
              * we don't need to do anything if the dialog returns false.
@@ -746,13 +728,13 @@ namespace _02350Project.ViewModel
             double maxX = 0, maxY = 0;
             foreach (NodeViewModel vm in Nodes)
             {
-                if (vm.X+vm.Width > maxX)
+                if (vm.MaxX > maxX)
                 {
-                    maxX = vm.X;
+                    maxX = vm.MaxX;
                 }
-                else if (vm.Y+vm.Height > maxY)
+                if (vm.MaxY > maxY)
                 {
-                    maxY = vm.Y;
+                    maxY = vm.MaxY;
                 }
             }
             return new Point(maxX, maxY);

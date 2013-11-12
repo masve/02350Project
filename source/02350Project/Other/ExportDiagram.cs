@@ -16,7 +16,7 @@ namespace _02350Project.Other
             Transform transform = surface.LayoutTransform;
             // reset current transform (in case it is scaled or rotated)
             surface.LayoutTransform = null;
-            
+
             //// Get the size of canvas
             //Size size = new Size(surface.Width, surface.Height);
             //// Measure and arrange the surface
@@ -31,8 +31,8 @@ namespace _02350Project.Other
                 //(int)size.Height,
                 width, height,
                 //600,600,
-                192d,
-                192d,
+                96d,
+                96d,
                 PixelFormats.Pbgra32);
             renderBitmap.Render(surface);
 
@@ -45,6 +45,7 @@ namespace _02350Project.Other
                 encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
                 // save the data to the stream
                 encoder.Save(outStream);
+
             }
 
             // Restore previously saved layout
