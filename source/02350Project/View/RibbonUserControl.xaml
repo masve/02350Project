@@ -22,10 +22,13 @@
                         <RibbonApplicationMenuItem Header="Open"  Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
                         <RibbonApplicationMenuItem Header="Save" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
                         <RibbonApplicationMenuItem Header="Save as" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />
-                        <!--<RibbonApplicationSplitMenuItem Header="Save as" Command="{Binding SaveAsCommand}"       ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png">
+                        <RibbonApplicationSplitMenuItem Header="Export"       ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png">
                             <RibbonApplicationSplitMenuItem Header="PNG picture" ImageSource="../Resources/Images/appmenu/PNG.png"/>
                             <RibbonApplicationSplitMenuItem Header="JPEG picture" ImageSource="../Resources/Images/appmenu/JPEG.png"/>
-                        </RibbonApplicationSplitMenuItem>-->
+                            <RibbonApplicationSplitMenuItem Header="TIFF picture" ImageSource="../Resources/Images/appmenu/JPEG.png"/>
+                            <RibbonApplicationSplitMenuItem Header="GIF picture" ImageSource="../Resources/Images/appmenu/JPEG.png"/>
+                            <RibbonApplicationSplitMenuItem Header="BMP picture" ImageSource="../Resources/Images/appmenu/JPEG.png"/>
+                        </RibbonApplicationSplitMenuItem>
                         <RibbonSeparator/>
                         <RibbonApplicationMenuItem Header="Print" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
                         <RibbonSeparator/>

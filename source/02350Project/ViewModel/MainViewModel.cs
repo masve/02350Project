@@ -113,7 +113,7 @@ namespace _02350Project.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
             CreateNodeCommand = new RelayCommand(CreateNode);
-            EditNodeCommand = new RelayCommand(EditNode);
+            EditNodeCommand = new RelayCommand(EditNode, CanEdit);
             //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
@@ -173,6 +173,15 @@ namespace _02350Project.ViewModel
             _canRemove = false;
             _canCancel = false;
         }
+        private bool CanEdit()
+        {
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.IsSelected)
+                    return true;
+            }
+            return false;
+        }
 
 
 
@@ -184,13 +193,13 @@ namespace _02350Project.ViewModel
             //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
 
             PrintDialog printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() != true)
+            if (printDialog.ShowDialog() == true)
             {
                 printDialog.PrintVisual(canvasTwo, "kwje");
             }
 
             Point p = getExportResolution();
-            ExportDiagram.ExportToPng("C:\\test\\save01.png", canvasTwo, (int)p.Y + 5, (int)p.X + 5);
+            //ExportDiagram.ExportToPng("C:\\test\\save01.png", canvasTwo, (int)p.Y + 5, (int)p.X + 5);
         }
 
 
@@ -308,6 +317,37 @@ namespace _02350Project.ViewModel
             {
                 NodeViewModel nvm = new NodeViewModel(n.Id, n);
                 Nodes.Add(nvm);
+            }
+            foreach (Edge e in diagram.Edges)
+            {
+                NodeViewModel endA = null;
+                NodeViewModel endB = null;
+                foreach (NodeViewModel vm in Nodes)
+                {
+                    if (e.NodeIdA == vm.Id)
+                    {
+                        endA = vm;
+                    }
+                    if (e.NodeIdB == vm.Id)
+                    {
+                        endB = vm;
+                    }
+                }
+               string type = "";
+               if (e.Type == EdgeType.AGG)
+               {
+                   type = "AGG";
+               }
+               else if (e.Type == EdgeType.ASS)
+                   type = "ASS";
+               else if (e.Type == EdgeType.COM)
+                   type = "COM";
+               else if (e.Type == EdgeType.DEP)
+                   type = "DEP";
+               else
+                   type = "GEN";
+
+                    Edges.Add(endA.newEdge(endB, type));
             }
         }
 
