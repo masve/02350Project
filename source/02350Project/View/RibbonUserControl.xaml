@@ -48,8 +48,8 @@
                     <RibbonButton Label="Cancel" Command="{Binding CancelActionCommand}" LargeImageSource="../Resources/Images/Other/cancelaction.png" ToolTipTitle="{StaticResource cancelTooltipTitle}" ToolTipDescription="{StaticResource cancelTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
-                    <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding OpenCreateDialogCommand}"/>
-                    <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png"/>
+                    <RibbonButton Label="New" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}"/>
+                    <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}"/>
                     <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveNodeCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">

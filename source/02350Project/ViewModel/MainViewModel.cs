@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Windows.Media.Imaging;
 using _02350Project.Command;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -53,7 +56,8 @@ namespace _02350Project.ViewModel
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
 
-        public ICommand OpenCreateDialogCommand { get; private set; }
+        public ICommand CreateNodeCommand { get; private set; }
+        public ICommand EditNodeCommand { get; private set; }
 
         public ICommand ExpandResizeCommand { get; private set; }
         public ICommand CancelActionCommand { get; private set; }
@@ -94,9 +98,9 @@ namespace _02350Project.ViewModel
             NodeViewModel testNode = new NodeViewModel(_nodeIdCounter++, new Node())
             {
                 Name = "Calculator",
-                NoneFlag = true,
-                Attributes = new List<string> {"+ a : int", "+ b : int", "+ sum : int"},
-                Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
+                NodeType = NodeType.INTERFACE,
+                Attributes = new List<string> { "- a : int", "- b : int", "- sum : int" },
+                Methods = new List<string> { "+ add ( val1 : int, val2 : int )", "+ sub ( val1 : int, val2 : int )" }
             };
 
             AddNode(testNode);
@@ -108,7 +112,8 @@ namespace _02350Project.ViewModel
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
 
-            OpenCreateDialogCommand = new RelayCommand(OpenCreateClassDialog);
+            CreateNodeCommand = new RelayCommand(CreateNode);
+            EditNodeCommand = new RelayCommand(EditNode);
             //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
@@ -169,22 +174,49 @@ namespace _02350Project.ViewModel
             _canCancel = false;
         }
 
-        
+
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
         /// </summary>
         public void Test()
         {
-            PrintDialog printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() == true)
-                ConsolePrinter.Write("Printing...");
+            //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
+            //printDialog.PrintVisual(canvas, "IFMS Print Screen");
+            //PrintDialog printDialog = new PrintDialog();
+            //if (printDialog.ShowDialog() != true)
+            //    return;
+            //ConsolePrinter.Write("Printing...");
+            //int h = 0;
+            //int w = 0;
+            //double minX, minY, maxX, maxY;
+            //minX = minY = maxX = maxY = 0;
+            //foreach (NodeViewModel n in Nodes)
+            //{
+            //    if (n.X < minX)
+            //        minX = n.X;
+            //    if (n.Y < minY)
+            //        minY = n.Y;
+            //    if (n.X + n.Width > maxX)
+            //        maxX = n.X + n.Width;
+            //    if (n.Y + n.Height > maxY)
+            //        maxY = n.Y + n.Height;
+            //}
+            //ConsolePrinter.Write("minX: "+minX+", minY: "+minY+", maxX: "+maxX+", maxY: "+maxY);
+            ConsolePrinter.Write("hello");
+
+            //ExportDiagram.ExportToPng("E:\\1_downloads\\0_sabnzbd\\diagram.png", canvasTwo,600,600);
+            //foreach(NodeViewModel v in Nodes)
+            //    if(v.IsSelected)
+            //        ConsolePrinter.Write("Height: " + v.Height);
         }
+
+        
 
         public void New()
         {
             ClearDiagram();
-            _path = null;            
+            _path = null;
         }
 
         private bool ClearDiagram()
@@ -199,29 +231,22 @@ namespace _02350Project.ViewModel
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        Other.ConsolePrinter.Write("Yes");
+                        ConsolePrinter.Write("Yes");
                         Save();
                         Nodes.Clear();
                         Edges.Clear();
                         return true;
-                        break;
                     case MessageBoxResult.No:
-                        Other.ConsolePrinter.Write("No");
+                        ConsolePrinter.Write("No");
                         Nodes.Clear();
                         Edges.Clear();
                         return true;
-                        break;
                     default:
-                        Other.ConsolePrinter.Write("Cancel");
+                        ConsolePrinter.Write("Cancel");
                         return false;
-                        break;
                 }
-
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
 
@@ -234,7 +259,7 @@ namespace _02350Project.ViewModel
             {
                 FileName = "save",
                 DefaultExt = ".xml",
-                Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*"
+                Filter = "Extensible Markup Language (*.xml)|*.xml|Portable Network Graphics (*.png)|*.png|All Files (*.*)|*.*"
             };
 
             if (sfd.ShowDialog() == true)
@@ -246,7 +271,15 @@ namespace _02350Project.ViewModel
                 //{
                 //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
                 //}).Start();
-                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                switch (sfd.FilterIndex)
+                {
+                    case 1:
+                        DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                        break;
+                    case 2:
+                        ConsolePrinter.Write("save as png");
+                        break;
+                }
             }
         }
 
@@ -265,18 +298,22 @@ namespace _02350Project.ViewModel
 
         public void Open()
         {
-            
-            OpenFileDialog ofd = new OpenFileDialog();
+
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Filter = "Extensible Markup Language|*.xml"
+            };
 
 
             if (ofd.ShowDialog() == false)
             {
-                
                 ConsolePrinter.Write("path : " + _path);
                 return;
             }
+
             if (!ClearDiagram())
                 return;
+
             _path = ofd.FileName;
             DiagramSerializer.Diagram diagram = DiagramSerializer.Load(_path);
             RestoreDiagram(diagram);
@@ -322,6 +359,7 @@ namespace _02350Project.ViewModel
             {
                 RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, nodeToRemove);
                 _undoRedoController.AddAndExecute(m);
+                nodeToRemove.IsSelected = false;
             }
             _isRemovingNode = false;
             _canRemove = false;
@@ -391,6 +429,7 @@ namespace _02350Project.ViewModel
         private Point _offsetPosition;
         private double _oldPosX;
         private double _oldPosY;
+        private Canvas canvas;
 
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
@@ -405,7 +444,7 @@ namespace _02350Project.ViewModel
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                canvas = FindParentOfType<Canvas>(movingRect);
 
                 _offsetPosition = Mouse.GetPosition(canvas);
                 _oldPosX = movingNode.X;
@@ -413,6 +452,8 @@ namespace _02350Project.ViewModel
 
             }
         }
+
+        private Canvas canvasTwo;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -426,15 +467,16 @@ namespace _02350Project.ViewModel
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                canvasTwo = FindParentOfType<Canvas>(canvas);
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
                 mousePosition.X -= _offsetPosition.X;
                 mousePosition.Y -= _offsetPosition.Y;
-                
+
                 movingNode.X = _oldPosX + mousePosition.X;
                 movingNode.Y = _oldPosY + mousePosition.Y;
-                
+
                 _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;
 
@@ -533,7 +575,7 @@ namespace _02350Project.ViewModel
         /// Creates a CreateNodeViewModel, opens a CreateNodeWindow (dialog) and sets the datacontext.
         /// If the dialog returns true a the NodeViewModel given to the CreateNodeViewModel should be added.
         /// </summary>
-        public void OpenCreateClassDialog()
+        public void CreateNode()
         {
             NodeViewModel newNodeVM = new NodeViewModel(_nodeIdCounter++, new Node());
 
@@ -543,6 +585,73 @@ namespace _02350Project.ViewModel
             dialog.DataContext = dialogViewModel;
             if (dialog.ShowDialog() == true)
                 AddNode(newNodeVM);
+        }
+
+        public void EditNode()
+        {
+            string oldName = null;
+            // DEFAULTING TO ABSTRACT HERE
+            NodeType oldType = NodeType.ABSTRACT;
+            ObservableCollection<string> oldAttributes = null;
+            ObservableCollection<string> oldMethods = null;
+            NodeViewModel node = null;
+            
+           /*
+            * Gets the first selected node in Nodes and saves that node's
+            * relevant properties.
+            */
+            foreach (NodeViewModel n in Nodes)
+            {
+                if (n.IsSelected)
+                {
+                    node = n;
+                    oldName = n.Name;
+                    oldType = n.NodeType;
+                    oldAttributes = new ObservableCollection<string>(n.Attributes);
+                    oldMethods = new ObservableCollection<string>(n.Methods);
+                    break;
+                }
+            }
+
+            if (node == null)
+                return;
+
+            /*
+             * Initializes and opens the edit dialog
+             */
+            var dialog = new CreateNodeWindow();
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(dialog, node);
+            dialog.DataContext = dialogViewModel;
+            var dialogReturn = dialog.ShowDialog();
+
+            
+            /*
+             * After the dialog returns, saves the new property values for the edited node. Then
+             * it is assigned its properties old values, in case the dialog returns false.
+             */
+            var newName = node.Name;
+            var newType = node.NodeType;
+            var newAttributes = new ObservableCollection<string>(node.Attributes);
+            var newMethods = new ObservableCollection<string>(node.Methods);
+            node.Name = oldName;
+            node.NodeType = oldType;
+            node.Attributes = new List<string>(oldAttributes.ToList());
+            node.Methods = new List<string>(oldMethods.ToList());
+            
+            /*
+             * Because we assign the node its old values after the dialog return
+             * we don't need to do anything if the dialog returns false.
+             * It goes to say that we could also do it the other way around.
+             * In this case this means that if the dialog returns true we execute
+             * the EditNodeCommand which takes the node to update and the new 
+             * property values.
+             */
+            if (dialogReturn == true)
+            {
+                ConsolePrinter.Write("editnode" + newName);
+                _undoRedoController.AddAndExecute(new EditNodeCommand(node, newName, newType, newAttributes.ToList(),
+                    newMethods.ToList()));
+            }
         }
 
         #region Undo/Redo Command Implementation
@@ -590,8 +699,8 @@ namespace _02350Project.ViewModel
 
         public bool CanRemove()
         {
-            return _canRemove; 
-            
+            return _canRemove;
+
         }
 
         public bool CanCancel()
@@ -602,15 +711,18 @@ namespace _02350Project.ViewModel
         private double _showGrid;
         private bool _gridCheck;
 
-        public double ShowGrid { get
+        public double ShowGrid
         {
-            if (GridCheck) 
-                _showGrid = 1.0;
-            else 
-                _showGrid = 0.0;
-            return _showGrid;
-        }}
-        
+            get
+            {
+                if (GridCheck)
+                    _showGrid = 1.0;
+                else
+                    _showGrid = 0.0;
+                return _showGrid;
+            }
+        }
+
         public bool GridCheck { get { return _gridCheck; } set { _gridCheck = value; RaisePropertyChanged("ShowGrid"); } }
 
         /// <summary>

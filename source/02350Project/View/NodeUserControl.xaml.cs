@@ -25,11 +25,5 @@ namespace _02350Project.View
         {
             InitializeComponent();
         }
-
-        private void Node_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-            Other.ConsolePrinter.Write("helloinit");
-        }
     }
 }
