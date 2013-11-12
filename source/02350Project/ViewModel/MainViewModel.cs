@@ -172,7 +172,6 @@ namespace _02350Project.ViewModel
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 FileName = "*",
-                DefaultExt = ".png",
                 Filter = "PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
             };
 
@@ -359,21 +358,21 @@ namespace _02350Project.ViewModel
                         endB = vm;
                     }
                 }
-               string type = "";
-               if (e.Type == EdgeType.AGG)
-               {
-                   type = "AGG";
-               }
-               else if (e.Type == EdgeType.ASS)
-                   type = "ASS";
-               else if (e.Type == EdgeType.COM)
-                   type = "COM";
-               else if (e.Type == EdgeType.DEP)
-                   type = "DEP";
-               else
-                   type = "GEN";
+                string type = "";
+                if (e.Type == EdgeType.AGG)
+                {
+                    type = "AGG";
+                }
+                else if (e.Type == EdgeType.ASS)
+                    type = "ASS";
+                else if (e.Type == EdgeType.COM)
+                    type = "COM";
+                else if (e.Type == EdgeType.DEP)
+                    type = "DEP";
+                else
+                    type = "GEN";
 
-                    Edges.Add(endA.newEdge(endB, type));
+                Edges.Add(endA.newEdge(endB, type));
             }
         }
 
