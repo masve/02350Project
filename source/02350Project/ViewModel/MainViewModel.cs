@@ -628,5 +628,22 @@ namespace _02350Project.ViewModel
             else
                 return FindParentOfType<T>(parent);
         }
+
+        private Point getExportResolution()
+        {
+            double maxX = 0, maxY = 0;
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.X+vm.Width > maxX)
+                {
+                    maxX = vm.X;
+                }
+                else if (vm.Y+vm.Height > maxY)
+                {
+                    maxY = vm.Y;
+                }
+            }
+            return new Point(maxX, maxY);
+        }
     }
 }
