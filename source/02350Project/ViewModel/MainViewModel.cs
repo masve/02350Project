@@ -71,6 +71,8 @@ namespace _02350Project.ViewModel
         public ICommand RedoCommand { get; private set; }
         public ICommand UndoRedoCheckCommand { get; private set; }
 
+        public ICommand SelectAllNodesCommmand { get; private set; }
+
         #region Edge type commands
         public ICommand AddAGGCommand { get; private set; }
         public ICommand AddDEPCommand { get; private set; }
@@ -124,6 +126,8 @@ namespace _02350Project.ViewModel
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
             RedoCommand = new RelayCommand(Redo, CanRedo);
+
+            SelectAllNodesCommmand = new RelayCommand(SelectAllNodes);
 
             #region Line RelayCommands
             AddAGGCommand = new RelayCommand(AddAgg);
@@ -351,6 +355,16 @@ namespace _02350Project.ViewModel
             _isRemovingNode = false;
             _canRemove = false;
             _canCancel = false;
+        }
+
+        private void SelectAllNodes()
+        {
+            nodesToMove.Clear();
+            foreach (NodeViewModel node in Nodes)
+            {
+                node.IsSelected = true;
+                nodesToMove.Add(node);
+            }
         }
 
         //public bool CanRemove()
