@@ -436,7 +436,7 @@ namespace _02350Project.ViewModel
 
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                     
-                if (Keyboard.Modifiers != ModifierKeys.Control && !movingNode.IsSelected)
+                if (Keyboard.Modifiers != ModifierKeys.Shift && !movingNode.IsSelected)
                 {
                     foreach (NodeViewModel vm in Nodes)
                         vm.IsSelected = false;
@@ -448,7 +448,7 @@ namespace _02350Project.ViewModel
                     _canRemove = false;
                 }
 
-                if ((Keyboard.Modifiers == ModifierKeys.Control || noOfEdgesSelected + noOfNodesSelected < 1) && (movingRect.DataContext is NodeViewModel || movingRect.DataContext is EdgeViewModel) && !movingNode.IsSelected)
+                if ((Keyboard.Modifiers == ModifierKeys.Shift || noOfEdgesSelected + noOfNodesSelected < 1) && (movingRect.DataContext is NodeViewModel || movingRect.DataContext is EdgeViewModel) && !movingNode.IsSelected)
                 {
                     if (movingRect.DataContext is NodeViewModel)
                     {
