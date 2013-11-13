@@ -414,7 +414,10 @@ namespace _02350Project.ViewModel
 
         #region Mouse UP DOWN MOVE
         private Point _startMovePosition;
+        private Point _oldPos;
+        private Point _newPos;
         private Vector _moveOffsetVector;
+        private NodeViewModel _topNode, _leftNode;
 
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
@@ -422,7 +425,7 @@ namespace _02350Project.ViewModel
         /// <param name="e"></param>
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-            _isMovingNode = false;
+            //_isMovingNode = false;
             if (!_isAddingEdge && !_isRemovingNode)
             {
                 try
@@ -457,6 +460,19 @@ namespace _02350Project.ViewModel
                         noOfNodesSelected += 1;
                         nodesToMove.Add(rectNode);
                         _canRemove = true;
+                        if (_leftNode == null)
+                        {
+                            _leftNode = rectNode;
+                        }
+                        if (_topNode == null)
+                            _topNode = rectNode;
+                    foreach (NodeViewModel vm in nodesToMove)
+                    {
+                        if (_leftNode.X > vm.X)
+                            _leftNode = vm;
+                        if (_topNode.Y > vm.Y)
+                            _topNode = vm;
+                    }
                     }
 
                     if (movingRect.DataContext is EdgeViewModel)
@@ -474,6 +490,7 @@ namespace _02350Project.ViewModel
                     Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                     _startMovePosition = Mouse.GetPosition(canvas);
+                    _oldPos = _startMovePosition;
                     _moveOffsetVector = new Vector();
                 }
 
@@ -493,34 +510,59 @@ namespace _02350Project.ViewModel
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
-                Point moveOffsetPosition = Mouse.GetPosition(canvas);
+                Point _newPos = Mouse.GetPosition(canvas);
 
-                Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
+                //Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
 
-                for (int i = 0; i < nodesToMove.Count; ++i)
+                //for (int i = 0; i < nodesToMove.Count; ++i)
+                //{
+                //    if (minValue.X > nodesToMove[i].X)
+                //        minValue.X = nodesToMove[i].X;
+                //    if (minValue.Y > nodesToMove[i].Y)
+                //        minValue.Y = nodesToMove[i].Y;
+
+                //}
+                Point offSet = new Point();
+                offSet.X = Math.Round(_newPos.X - _oldPos.X);
+                offSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
+                bool hit = false;
+                if (_topNode.Y + offSet.Y < 0d)
                 {
-                    if (minValue.X > nodesToMove[i].X)
-                        minValue.X = nodesToMove[i].X;
-                    if (minValue.Y > nodesToMove[i].Y)
-                        minValue.Y = nodesToMove[i].Y;
-
+                _topNode.Y = 0;
+                hit = true;
+                }
+                if (_leftNode.X + offSet.X < 0d)
+                {
+                    _leftNode.X = 0;
+                    ConsolePrinter.Write(" left offsetx: " + offSet.X + " offsety: " + offSet.Y);
+                    hit = true;
+                }
+                if (!hit)
+                {
+                foreach (NodeViewModel node in nodesToMove)
+                {
+                    node.X += offSet.X;
+                    node.Y += offSet.Y;
                 }
 
-                Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
+                }
+                _oldPos.X = Math.Round(_newPos.X);
+                _oldPos.Y = Math.Round(_newPos.Y);
+                //Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
 
-                if (minValue.X + move.X <= 0)
-                    move.X -= minValue.X;
-                if (minValue.Y + move.Y <= 0)
-                    move.Y -= minValue.Y;
+                //if (minValue.X + move.X <= 0)
+                //    move.X -= minValue.X;
+                //if (minValue.Y + move.Y <= 0)
+                //    move.Y -= minValue.Y;
                 
 
-                for(int i = 0; i < nodesToMove.Count; ++i)
-                {
-                        nodesToMove[i].X += move.X;
-                        nodesToMove[i].Y += move.Y;
-                }
+                //for(int i = 0; i < nodesToMove.Count; ++i)
+                //{
+                //        nodesToMove[i].X += move.X;
+                //        nodesToMove[i].Y += move.Y;
+                //}
 
-                _moveOffsetVector = moveOffsetPosition - _startMovePosition;
+                //_moveOffsetVector = moveOffsetPosition - _startMovePosition;
                 
             }
         }
