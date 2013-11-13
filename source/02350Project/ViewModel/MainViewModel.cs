@@ -192,8 +192,6 @@ namespace _02350Project.ViewModel
             nodesToMove.Clear();
         }
 
-        
-
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
         /// </summary>
@@ -241,7 +239,6 @@ namespace _02350Project.ViewModel
             return true;
         }
 
-
         /// <summary>
         /// Opens a Save File Dialog and calls the save function in Data with the returned path.
         /// </summary>
@@ -257,12 +254,7 @@ namespace _02350Project.ViewModel
             if (sfd.ShowDialog() == true)
             {
                 _path = sfd.FileName;
-                //Task t = new Task(DiagramSerializer.j);
-                //;
-                //new Thread(() =>
-                //{
-                //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
-                //}).Start();
+                //Her we start a new thread that will store the diagram
                 DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
             }
         }
@@ -282,9 +274,7 @@ namespace _02350Project.ViewModel
 
         public void Open()
         {
-            
             OpenFileDialog ofd = new OpenFileDialog();
-
 
             if (ofd.ShowDialog() == false)
             {
@@ -429,7 +419,6 @@ namespace _02350Project.ViewModel
         #region Mouse UP DOWN MOVE
         private Point _startMovePosition;
         private Point _oldPos;
-        private Point _newPos;
         private Vector _moveOffsetVector;
         private NodeViewModel _topNode, _leftNode;
 
@@ -526,24 +515,16 @@ namespace _02350Project.ViewModel
 
                 Point _newPos = Mouse.GetPosition(canvas);
 
-                //Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
-
-                //for (int i = 0; i < nodesToMove.Count; ++i)
-                //{
-                //    if (minValue.X > nodesToMove[i].X)
-                //        minValue.X = nodesToMove[i].X;
-                //    if (minValue.Y > nodesToMove[i].Y)
-                //        minValue.Y = nodesToMove[i].Y;
-
-                //}
                 Point offSet = new Point();
                 offSet.X = Math.Round(_newPos.X - _oldPos.X);
                 offSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
+
+
                 bool hit = false;
                 if (_topNode.Y + offSet.Y < 0d)
                 {
-                _topNode.Y = 0;
-                hit = true;
+                    _topNode.Y = 0;
+                    hit = true;
                 }
                 if (_leftNode.X + offSet.X < 0d)
                 {
@@ -553,31 +534,14 @@ namespace _02350Project.ViewModel
                 }
                 if (!hit)
                 {
-                foreach (NodeViewModel node in nodesToMove)
-                {
-                    node.X += offSet.X;
-                    node.Y += offSet.Y;
-                }
-
+                    foreach (NodeViewModel node in nodesToMove)
+                    {
+                        node.X += offSet.X;
+                        node.Y += offSet.Y;
+                    }
                 }
                 _oldPos.X = Math.Round(_newPos.X);
                 _oldPos.Y = Math.Round(_newPos.Y);
-                //Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
-
-                //if (minValue.X + move.X <= 0)
-                //    move.X -= minValue.X;
-                //if (minValue.Y + move.Y <= 0)
-                //    move.Y -= minValue.Y;
-                
-
-                //for(int i = 0; i < nodesToMove.Count; ++i)
-                //{
-                //        nodesToMove[i].X += move.X;
-                //        nodesToMove[i].Y += move.Y;
-                //}
-
-                //_moveOffsetVector = moveOffsetPosition - _startMovePosition;
-                
             }
         }
         
