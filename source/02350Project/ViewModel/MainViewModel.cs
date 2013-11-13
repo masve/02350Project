@@ -169,6 +169,7 @@ namespace _02350Project.ViewModel
         #region Export Methods
         public void Export()
         {
+            Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Export",
@@ -182,7 +183,7 @@ namespace _02350Project.ViewModel
 
             string path = dialog.FileName;
             Point p = getExportResolution();
-            ExportDiagram.ExportImage(path, canvasTwo, (int)p.Y + 5, (int)p.X + 5);
+            ExportDiagram.ExportImage(path, mainCanvas, (int)p.Y + 5, (int)p.X + 5);
         }
         #endregion
 
@@ -222,7 +223,7 @@ namespace _02350Project.ViewModel
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                printDialog.PrintVisual(canvasTwo, "kwje");
+                printDialog.PrintVisual(mainCanvas, "kwje");
             }
 
 
@@ -500,16 +501,16 @@ namespace _02350Project.ViewModel
                 _oldPosY = movingNode.Y;
 
                 oldMovePosX = (int)_oldPosX;
-                oldMovePosY = (int) _oldPosY;
+                oldMovePosY = (int)_oldPosY;
             }
         }
 
-        private Canvas canvasTwo;
+        private Canvas mainCanvas;
         private int counterX;
         private int counterY;
         private double oldMovePosX;
         private double oldMovePosY;
-        private const int snapValue = 20;
+        private const int snapValue = 0;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -523,7 +524,7 @@ namespace _02350Project.ViewModel
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
-                canvasTwo = FindParentOfType<Canvas>(canvas);
+
 
                 Point mousePosition = Mouse.GetPosition(canvas);
 
@@ -541,7 +542,7 @@ namespace _02350Project.ViewModel
                     movingNode.Y = _oldPosY + mousePosition.Y;
                     oldMovePosY = mousePosition.Y;
                 }
-                
+
 
                 _posX = movingNode.X = movingNode.X >= 0 ? movingNode.X : 0;
                 _posY = movingNode.Y = movingNode.Y >= 0 ? movingNode.Y : 0;

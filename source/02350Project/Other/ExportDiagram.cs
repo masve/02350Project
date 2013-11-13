@@ -39,7 +39,7 @@ namespace _02350Project.Other
                 // save the data to the stream
                 encoder.Save(outStream);
                 //var img = new Image();
-                
+
             }
 
             // Restore previously saved layout
