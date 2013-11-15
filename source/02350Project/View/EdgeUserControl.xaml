@@ -30,6 +30,10 @@
             <i:EventTrigger EventName="MouseDown">
                 <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
+            <i:EventTrigger EventName="MouseUp">
+                <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+
         </i:Interaction.Triggers>
         <!--TRIGGERS END-->
 

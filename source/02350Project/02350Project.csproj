@@ -71,6 +71,7 @@
     </ApplicationDefinition>
     <Compile Include="Command\AddEdgeCommand.cs" />
     <Compile Include="Command\AddNodeCommand.cs" />
+    <Compile Include="Command\MoveNodeCommand1.cs" />
     <Compile Include="Command\RemoveElementsCommand.cs" />
     <Compile Include="Command\EditNodeCommand.cs" />
     <Compile Include="Command\IUndoRedoCommand.cs" />

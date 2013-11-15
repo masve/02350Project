@@ -34,7 +34,6 @@
 
     <DockPanel LastChildFill="True">
         <view:RibbonUserControl DockPanel.Dock="Top"/>
-        <Slider Height="23" Name="Slider" Minimum="-4" Maximum="4" Value="0" ValueChanged="slider_ValueChanged" DockPanel.Dock="Bottom" RenderTransformOrigin="1.29,0.217" Margin="582,0,10,0"  />
         <!-- <DockPanel Background="LightSteelBlue" LastChildFill="True"> -->
         <Grid Name="MyGrid" Background="LightSteelBlue">
 
@@ -42,6 +41,9 @@
             <Border Margin="5,5,6,6">
 
                 <Canvas ClipToBounds="True" Name="MainCanvas">
+                    <Canvas.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"/>
+                    </Canvas.LayoutTransform>
                     <ItemsControl ItemsSource="{Binding Nodes}"/>
                     <ItemsControl ItemsSource="{Binding Edges}"/>
 

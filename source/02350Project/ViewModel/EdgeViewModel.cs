@@ -181,8 +181,6 @@ namespace _02350Project.ViewModel
 
         public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
 
-        private PointCollection actualLine;
-        public PointCollection ActualLine { get { return actualLine; } set { actualLine = value; RaisePropertyChanged("ActualLine"); } }
         #endregion
 
         #region Private Helpers

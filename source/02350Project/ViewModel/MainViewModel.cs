@@ -34,7 +34,8 @@ namespace _02350Project.ViewModel
         //private double leastY = Double.PositiveInfinity;
         //private Dictionary<NodeViewModel, Point> dic =  #### til nodestomove!!
         
-        
+        private double scale = 1;
+        public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged("Scale"); } } 
 
         //private Point moveNodePoint; // No longer in use
 
@@ -70,6 +71,11 @@ namespace _02350Project.ViewModel
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
         public ICommand UndoRedoCheckCommand { get; private set; }
+
+        public ICommand ZoomInCommand { get; private set; }
+        public ICommand ZoomOutCommand { get; private set; }
+        public ICommand Zoom100Command { get; private set; }
+        
 
         #region Edge type commands
         public ICommand AddAGGCommand { get; private set; }
@@ -133,6 +139,11 @@ namespace _02350Project.ViewModel
             AddGENCommand = new RelayCommand(AddGen);
             #endregion
 
+            ZoomInCommand = new RelayCommand(ZoomIn);
+            ZoomOutCommand = new RelayCommand(ZoomOut);
+            Zoom100Command = new RelayCommand(Zoom100);
+
+
             CancelActionCommand = new RelayCommand(CancelAction, CanCancel);
 
             TestCommand = new RelayCommand(Test);
@@ -165,6 +176,21 @@ namespace _02350Project.ViewModel
 
         }
 
+        private void Zoom100()
+        {
+            Scale = 1;
+        }
+
+        private void ZoomOut()
+        {
+            Scale = Scale * 0.9;
+        }
+
+        private void ZoomIn()
+        {
+            Scale = Scale * 1.1;
+        }
+
         #endregion
 
         private void CancelAction()
@@ -186,6 +212,20 @@ namespace _02350Project.ViewModel
             noOfNodesSelected = 0;
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
+            oldPoints.Clear();
+            newPoints.Clear();
+        }
+
+        private void ClearSelection()
+        {
+            foreach (NodeViewModel vm in Nodes)
+                vm.IsSelected = false;
+            foreach (EdgeViewModel evm in Edges)
+                evm.IsSelected = false;
+            noOfNodesSelected = 0;
+            noOfEdgesSelected = 0;
+            nodesToMove.Clear();
+            _canRemove = false;
         }
 
         
@@ -415,14 +455,17 @@ namespace _02350Project.ViewModel
         #region Mouse UP DOWN MOVE
         private Point _startMovePosition;
         private Vector _moveOffsetVector;
-
+        private List<Point> newPoints = new List<Point>();
+        private List<Point> oldPoints = new List<Point>(); 
+        
+        private Point minValue;
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
         /// </summary>
         /// <param name="e"></param>
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-            _isMovingNode = false;
+//            _isMovingNode = false;
             if (!_isAddingEdge && !_isRemovingNode)
             {
                 try
@@ -432,51 +475,74 @@ namespace _02350Project.ViewModel
                 catch (NullReferenceException i) { return; }
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-
-
-                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                    
-                if (Keyboard.Modifiers != ModifierKeys.Control && !movingNode.IsSelected)
+                
+                
+    
+                if (Keyboard.Modifiers != ModifierKeys.Shift)
                 {
-                    foreach (NodeViewModel vm in Nodes)
-                        vm.IsSelected = false;
-                    foreach (EdgeViewModel evm in Edges)
-                        evm.IsSelected = false;
-                    noOfNodesSelected = 0;
-                    noOfEdgesSelected = 0;
-                    nodesToMove.Clear();
-                    _canRemove = false;
+                    if (movingRect.DataContext is NodeViewModel) 
+                    {
+                        NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+                        if (!movingNode.IsSelected)
+                             ClearSelection();
+                    }
+                    if (movingRect.DataContext is EdgeViewModel)
+                    {
+                        ClearSelection();     
+                    }
                 }
 
-                if ((Keyboard.Modifiers == ModifierKeys.Control || noOfEdgesSelected + noOfNodesSelected < 1) && (movingRect.DataContext is NodeViewModel || movingRect.DataContext is EdgeViewModel) && !movingNode.IsSelected)
+                if ((Keyboard.Modifiers == ModifierKeys.Shift || noOfEdgesSelected + noOfNodesSelected < 1) && (movingRect.DataContext is NodeViewModel || movingRect.DataContext is EdgeViewModel))
                 {
                     if (movingRect.DataContext is NodeViewModel)
                     {
-                        NodeViewModel rectNode = (NodeViewModel)movingRect.DataContext;
-                        rectNode.IsSelected = true;
-                        noOfNodesSelected += 1;
-                        nodesToMove.Add(rectNode);
-                        _canRemove = true;
+                        ConsolePrinter.Write("rofl");
+
+                        NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+                        if (!movingNode.IsSelected)
+                        {
+                            movingNode.IsSelected = true;
+                            noOfNodesSelected += 1;
+                            nodesToMove.Add(movingNode);
+                            _canRemove = true;
+                        }
                     }
 
                     if (movingRect.DataContext is EdgeViewModel)
                     {
+                        ConsolePrinter.Write("lol");
                         EdgeViewModel rectEdge = (EdgeViewModel)movingRect.DataContext;
-                        rectEdge.IsSelected = true;
-                        noOfEdgesSelected += 1;
-                        _canRemove = true;
+                        if (!rectEdge.IsSelected)
+                        {
+                            rectEdge.IsSelected = true;
+                            noOfEdgesSelected += 1;
+                            _canRemove = true;
+                        }
                     }
                 }
                 _canCancel = true;
 
-                if (movingRect.DataContext is NodeViewModel)
-                {
                     Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                     _startMovePosition = Mouse.GetPosition(canvas);
-                    _moveOffsetVector = new Vector();
-                }
+                    _startMovePosition.X = Math.Floor(_startMovePosition.X);
+                    _startMovePosition.Y = Math.Floor(_startMovePosition.Y);
+                    _moveOffsetVector = new Vector(0,0);
 
+                     minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
+
+                    for (int i = 0; i < nodesToMove.Count; ++i)
+                    {
+                        if (minValue.X > nodesToMove[i].X)
+                            minValue.X = nodesToMove[i].X;
+                        if (minValue.Y > nodesToMove[i].Y)
+                            minValue.Y = nodesToMove[i].Y;
+
+                        oldPoints.Add(new Point(nodesToMove[i].X, nodesToMove[i].Y));
+                    }
+
+ 
+  
             }
         }
 
@@ -488,40 +554,83 @@ namespace _02350Project.ViewModel
         {
             if (Mouse.Captured != null && !_isAddingEdge && !_isRemovingNode)
             {
-                _isMovingNode = true;
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
-                Point moveOffsetPosition = Mouse.GetPosition(canvas);
-
-                Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
-
-                for (int i = 0; i < nodesToMove.Count; ++i)
+                if (movingRect.DataContext is NodeViewModel)
                 {
-                    if (minValue.X > nodesToMove[i].X)
-                        minValue.X = nodesToMove[i].X;
-                    if (minValue.Y > nodesToMove[i].Y)
-                        minValue.Y = nodesToMove[i].Y;
+                    _isMovingNode = true;
 
-                }
+                    Point moveOffsetPosition = Mouse.GetPosition(canvas);
 
-                Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
+                    moveOffsetPosition.X = Math.Floor(moveOffsetPosition.X);
+                    moveOffsetPosition.Y = Math.Floor(moveOffsetPosition.Y);
 
-                if (minValue.X + move.X <= 0)
-                    move.X -= minValue.X;
-                if (minValue.Y + move.Y <= 0)
-                    move.Y -= minValue.Y;
-                
 
-                for(int i = 0; i < nodesToMove.Count; ++i)
-                {
-                        nodesToMove[i].X += move.X;
-                        nodesToMove[i].Y += move.Y;
-                }
+                    moveOffsetPosition.X -= _startMovePosition.X;
+                    moveOffsetPosition.Y -= _startMovePosition.Y;
 
-                _moveOffsetVector = moveOffsetPosition - _startMovePosition;
-                
+                    if(moveOffsetPosition.X >= -minValue.X)
+                    for(int i = 0; i < nodesToMove.Count; ++i)
+                    {
+                        nodesToMove[i].X = oldPoints[i].X + moveOffsetPosition.X;
+                    }
+
+                    if(moveOffsetPosition.Y >= -minValue.Y)
+                    for(int i = 0; i < nodesToMove.Count; ++i)
+                    {
+                        nodesToMove[i].Y = oldPoints[i].Y + moveOffsetPosition.Y;
+                    }
+
+
+                    //Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
+
+                    //for (int i = 0; i < nodesToMove.Count; ++i)
+                    //{
+                    //    if (minValue.X > nodesToMove[i].X)
+                    //        minValue.X = nodesToMove[i].X;
+                    //    if (minValue.Y > nodesToMove[i].Y)
+                    //        minValue.Y = nodesToMove[i].Y;
+                    //}
+
+                    //if (minValue.X < 0)
+                    //    moveOffsetPosition.X = 0;
+
+                    //if (minValue.Y < 0)
+                    //    moveOffsetPosition.Y = 0;
+
+                    //Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
+
+                    ////if (minValue.X + move.X <= 0)
+                    ////    move.X -= minValue.X;
+                    ////if (minValue.Y + move.Y <= 0)
+                    ////    move.Y -= minValue.Y;
+
+
+
+                    //Vector moveTwo = (Vector)(moveOffsetPosition - _moveOffsetVector);
+
+                    //for()
+
+                    //if (_moveOffsetVector.X > -minValue.X)
+                    //for (int i = 0; i < nodesToMove.Count; ++i)
+                    //{
+                    //        nodesToMove[i].X +=  move.X;        
+                    //}
+
+                    //if (_moveOffsetVector.Y > -minValue.Y)
+                    //    for (int i = 0; i < nodesToMove.Count; ++i)
+                    //        nodesToMove[i].Y += move.Y;
+
+                    //_moveOffsetVector = moveOffsetPosition - _startMovePosition;
+
+                    //if (_moveOffsetVector.X < -minValue.X)
+                    //    _moveOffsetVector.X = -minValue.X;
+
+                    //if (_moveOffsetVector.Y < -minValue.Y)
+                    //    _moveOffsetVector.Y = -minValue.Y;
+
+                }               
             }
         }
         
@@ -565,59 +674,29 @@ namespace _02350Project.ViewModel
             else if (_isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-
-
-                for (int i = 0; i < nodesToMove.Count; ++i)
+                if (movingRect.DataContext is NodeViewModel)
                 {
-                    nodesToMove[i].X -= _moveOffsetVector.X;
-                    nodesToMove[i].Y -= _moveOffsetVector.Y;
-                }
+                    //for (int i = 0; i < nodesToMove.Count; ++i)
+                    //{
+                    //    nodesToMove[i].X -= _moveOffsetVector.X;
+                    //    nodesToMove[i].Y -= _moveOffsetVector.Y;
+                    //}
 
-                MoveNodeCommand m = new MoveNodeCommand(nodesToMove, _moveOffsetVector);
-                _undoRedoController.AddAndExecute(m);
+                    for (int i = 0; i < nodesToMove.Count; ++i)
+                    {
+                        newPoints.Add(new Point(nodesToMove[i].X, nodesToMove[i].Y));
+                    }
+
+                    //MoveNodeCommand m = new MoveNodeCommand(nodesToMove, _moveOffsetVector);
+                    MoveNodeCommand1 m = new MoveNodeCommand1(nodesToMove, oldPoints, newPoints);
+                    _undoRedoController.AddAndExecute(m);
+                    oldPoints.Clear();
+                    newPoints.Clear();
+
+                }
 
                 _isMovingNode = false;
             }
-            else
-            {
-                //FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
-
-                //if (Keyboard.Modifiers != ModifierKeys.Control)
-                //{
-                //    foreach (NodeViewModel vm in Nodes)
-                //        vm.IsSelected = false;
-                //    foreach (EdgeViewModel evm in Edges)
-                //        evm.IsSelected = false;
-                //    leastX = Double.PositiveInfinity;
-                //    leastY = Double.PositiveInfinity;
-                //    noOfNodesSelected = 0;
-                //    noOfEdgesSelected = 0;
-                //    nodesToMove.Clear();
-                //    _canRemove = false;
-                //}
-
-                //if (rect.DataContext is NodeViewModel)
-                //{
-                //    NodeViewModel rectNode = (NodeViewModel)rect.DataContext;
-                //    rectNode.IsSelected = true;
-                //    noOfNodesSelected += 1;
-                //    leastX = Math.Min(rectNode.X, leastX);
-                //    leastY = Math.Min(rectNode.Y, leastY);
-                //    nodesToMove.Add(rectNode);
-                //    _canRemove = true;
-                //}
-
-                //if (rect.DataContext is EdgeViewModel)
-                //{
-                //    EdgeViewModel rectEdge = (EdgeViewModel)rect.DataContext;
-                //    rectEdge.IsSelected = true;
-                //    noOfEdgesSelected += 1;
-                //    _canRemove = true;
-                //}
-
-                //_canCancel = true;
-                }
             
             if (Mouse.Captured != null)
                 e.MouseDevice.Target.ReleaseMouseCapture();

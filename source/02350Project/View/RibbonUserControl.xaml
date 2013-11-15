@@ -67,9 +67,9 @@
 
             <RibbonTab Header="View">
                 <RibbonGroup Header="Zoom">
-                    <RibbonButton Label="Zoom in" LargeImageSource="../Resources/Images/zoomgroup/zoomin.png"/>
-                    <RibbonButton Label="Zoom out" LargeImageSource="../Resources/Images/zoomgroup/zoomout.png"/>
-                    <RibbonButton Label="100%" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
+                    <RibbonButton Label="Zoom in" Command="{Binding ZoomInCommand}" LargeImageSource="../Resources/Images/zoomgroup/zoomin.png"/>
+                    <RibbonButton Label="Zoom out" Command="{Binding ZoomOutCommand}" LargeImageSource="../Resources/Images/zoomgroup/zoomout.png"/>
+                    <RibbonButton Label="100%" Command="{Binding Zoom100Command}" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Show and hide">
                     <RibbonCheckBox Label="Gridlines" IsChecked="{Binding GridCheck}"/>
