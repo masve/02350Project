@@ -14,10 +14,10 @@ namespace _02350Project.ViewModel
         #region Fields and Properties
         private Node node;
 
-        public int Id { get { return node.Id; } set { node.Id = value; RaisePropertyChanged("Id"); } }
+        public int Id { get { return node.Id; } set { node.Id = value; } }
 
         private int orientation;
-        public int Orientation { get { return orientation; } set { orientation = value; RaisePropertyChanged("Orientation"); } }
+        public int Orientation { get { return orientation; } set { orientation = value; } }
 
         /*
          * Coordinates and Dimensions
@@ -25,8 +25,8 @@ namespace _02350Project.ViewModel
         private double height;
         private double width;
 
-        public double X { get { return node.X; } set { node.X = (int)value; RaisePropertyChanged("X"); RaisePropertyChanged("CanvasCenterX"); } }
-        public double Y { get { return node.Y; } set { node.Y = (int)value; RaisePropertyChanged("Y"); RaisePropertyChanged("CanvasCenterY"); } }
+        public double X { get { return node.X; } set { node.X = (int)value; RaisePropertyChanged("X"); } }
+        public double Y { get { return node.Y; } set { node.Y = (int)value; RaisePropertyChanged("Y"); } }
         public double Height { get { return height; } set { height = value; RaisePropertyChanged("Height"); } }
         public double Width { get { return width; } set { width = value; RaisePropertyChanged("Width"); } }
 
@@ -51,15 +51,9 @@ namespace _02350Project.ViewModel
         /*
          * Content
          */
-        private bool noneFlag;
-        private bool abstractFlag;
-        private bool interfaceFlag;
         private string nodeSubText;
 
         public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); } }
-        //public bool NoneFlag { get { return noneFlag; } set { noneFlag = value; RaisePropertyChanged("NoneFlag"); RaisePropertyChanged("NodeSubText"); } }
-        //public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; RaisePropertyChanged("AbstractFlag"); RaisePropertyChanged("NodeSubText"); } }
-        //public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; RaisePropertyChanged("InterfaceFlag"); RaisePropertyChanged("NodeSubText"); } }
         public string NodeSubText
         {
             get
@@ -128,22 +122,6 @@ namespace _02350Project.ViewModel
         private double northWest = -3.0 * Math.PI / 4.0;
         private double southEast = Math.PI / 4.0;
         private double southWest = 3.0 * Math.PI / 4.0;
-
-        //public void CalculateAnchor(NodeViewModel node)
-        //{
-        //    foreach (EdgeViewModel e in Edges)
-        //    {
-        //        if (e.VMEndA.Equals(node))
-        //        {
-        //            setEnds(e);
-
-        //        }
-        //        else if (e.VMEndB.Equals(node))
-        //        {
-        //            setEnds(e);
-        //        }
-        //    }
-        //}
 
         public void setEnds(EdgeViewModel e)
         {

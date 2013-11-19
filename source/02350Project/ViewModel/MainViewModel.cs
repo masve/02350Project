@@ -330,16 +330,10 @@ namespace _02350Project.ViewModel
             if (sfd.ShowDialog() == true)
             {
                 _path = sfd.FileName;
-                //Task t = new Task(DiagramSerializer.j);
-                //;
-                //new Thread(() =>
-                //{
-                //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
-                //}).Start();
                 switch (sfd.FilterIndex)
                 {
                     case 1:
-                DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                        DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
                         break;
                     case 2:
                         ConsolePrinter.Write("save as png");
@@ -480,15 +474,6 @@ namespace _02350Project.ViewModel
                 nodesToMove.Add(node);
             }
         }
-
-        //public bool CanRemove()
-        //{
-        //    foreach (NodeViewModel vm in Nodes)
-        //        if (vm.IsSelected)
-        //            return true;
-        //    return false;
-        //}
-
 
         #region Edge Adding
         /// <summary>

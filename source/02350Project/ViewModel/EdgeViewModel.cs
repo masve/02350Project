@@ -33,34 +33,22 @@ namespace _02350Project.ViewModel
         private PointCollection pointyArrow = new PointCollection();
         private PointCollection rhombusArrow = new PointCollection();
         private PointCollection actualArrow = new PointCollection();
-        private PointCollection arrowClingpoints = new PointCollection(2);
         #endregion
 
         #region Public Fields
         public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
         #endregion
 
-        PointCollection ArrowClingpoints {get {return arrowClingpoints;}
-            set {
-            PointCollection a = new PointCollection(2);
-            a.Add(new Point());
-            arrowClingpoints = a;
-        } }
+
 
         public PointCollection LinePoints {
             
             get {
                 PointCollection linepoints;
 
-
                 linepoints = CalcPoly();
 
-            //linepoints.Insert(0,new Point(VMEndA.X, VMEndA.Y));
-            //linepoints.Insert(1,new Point(VMEndB.X, VMEndB.Y));
-            
-           //     ArrowClingpoints = linepoints;
-
-            return linepoints;
+                return linepoints;
             }
         
         }
@@ -89,7 +77,6 @@ namespace _02350Project.ViewModel
             Type = typeConverter(type);
             initPointyArrowTemplate();
             initRhombusArrowTemplate();
-//            MouseUpCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             setFlags();
         }
 
@@ -102,21 +89,6 @@ namespace _02350Project.ViewModel
                 case "Width":
                 case "Height":
                     RaisePropertyChanged("LinePoints");
-                    break;
-            }
-        }
-
-        void VMEndB_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "X":
-                case "Y":
-                case "Width":
-                case "Height":
-                    RaisePropertyChanged("LinePoints");
-                    //VMEndB.setEnds(this);
-                    //ArrowControl();
                     break;
             }
         }
@@ -156,19 +128,19 @@ namespace _02350Project.ViewModel
         #endregion
 
         #region Properties
-        public NodeViewModel VMEndA { get { return vMEndA; } set { vMEndA = value; RaisePropertyChanged("VMEndA"); RaisePropertyChanged("AnchorA"); } }
-        public NodeViewModel VMEndB { get { return vMEndB; } set { vMEndB = value; RaisePropertyChanged("VMEndB"); RaisePropertyChanged("AnchorB"); } }
-        public Node EndA { get { return edge.EndA; } set { edge.EndA = value; RaisePropertyChanged("EndA"); RaisePropertyChanged("AnchorA"); } }
-        public Node EndB { get { return edge.EndB; } set { edge.EndB = value; RaisePropertyChanged("EndB"); RaisePropertyChanged("AnchorB"); } }
+        public NodeViewModel VMEndA { get { return vMEndA; } set { vMEndA = value; } }
+        public NodeViewModel VMEndB { get { return vMEndB; } set { vMEndB = value; } }
+        public Node EndA { get { return edge.EndA; } set { edge.EndA = value; } }
+        public Node EndB { get { return edge.EndB; } set { edge.EndB = value; } }
 
-        public EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged("Type"); } }
+        public EdgeType Type { get { return edge.Type; } set { edge.Type = value; } }
         public Brush Color { get { return color; } set { color = value; RaisePropertyChanged("Color"); } }
         public bool Filled { get { return filled; } set { filled = value; RaisePropertyChanged("Filled"); } }
         public bool Dash { get { return dash; } set { dash = value; RaisePropertyChanged("Dash"); } }
 
 
-        public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; RaisePropertyChanged("AnchorA"); RaisePropertyChanged("AX"); RaisePropertyChanged("AY"); } }
-        public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; RaisePropertyChanged("AnchorB"); RaisePropertyChanged("BX"); RaisePropertyChanged("BY"); } }
+        public ANCHOR AnchorA { get { return anchorA; } set { anchorA = value; } }
+        public ANCHOR AnchorB { get { return anchorB; } set { anchorB = value; } }
 
         public double AX { get { return aX; } set { aX = value; RaisePropertyChanged("AX"); } }
         public double AY { get { return aY; } set { aY = value; RaisePropertyChanged("AY"); } }
@@ -364,54 +336,11 @@ namespace _02350Project.ViewModel
             return p;
         }
 
-        private PointCollection CalcPolyTwo()
-        {
-            VMEndA.setEnds(this);
-            Point pointEndA = new Point(AX, AY);
-            Point pointEndB = new Point(BX, BY);
-            Point mid1 = new Point();
-            Point mid2 = new Point();
-            PointCollection p = new PointCollection();
-            ConsolePrinter.Write("Orientation: " + VMEndA.Orientation);
-
-            //Vector m 
-
-            if (VMEndA.Orientation == 0)
-            {
-                mid2 = new Point(Math.Abs((AX - BX) / 2), BY);
-                mid1 = new Point(Math.Abs((AX - BX) / 2), AY);
-            }
-            else if (VMEndA.Orientation == 1)
-            {
-                mid2 = new Point(Math.Abs((AX - BX) / 2), BY);
-                mid1 = new Point(Math.Abs((AX - BX) / 2), AY);
-            }
-            p.Add(pointEndA);
-            p.Add(mid1);
-            p.Add(mid2);
-            p.Add(pointEndB);
-            return p;
-        }
-
         /// <summary>
         /// Gets the Edge for the ViewModel. Should only be used for serializing.
         /// </summary>
         /// <returns></returns>
         public Edge getEdge() { return edge; }
-
-        public ICommand MouseUpCommand { get; private set; }
-        
-
-        public void MouseUpNode(MouseButtonEventArgs e)
-        {
-            FrameworkElement rect = (FrameworkElement)e.MouseDevice.Target;
-
-            if (isSelected)
-                IsSelected = false;
-            else
-                IsSelected = true;
-
-        }
 
     }
 }

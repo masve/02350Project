@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace _02350Project.Model
 {
-    public class Node /*: NotifyBase*/
+    public class Node
     {
         [XmlAttribute]
         public int Id { get; set; }

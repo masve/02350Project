@@ -49,18 +49,15 @@ namespace _02350Project.ViewModel
         public CreateNodeViewModel(NodeViewModel node, Window window)
         {
             _state = State.CREATE;
-            Other.ConsolePrinter.Write("hello");
             _window = window;
             _node = node;
 
             _attributes = new ObservableCollection<string>();
             _methods = new ObservableCollection<string>();
 
-
-
             NoneCheck = true;
             ConstructorInit();
-            SelectedChoice = "Default";
+            SelectedChoice = "Class";
         }
 
         /// <summary>
@@ -251,9 +248,6 @@ namespace _02350Project.ViewModel
             ListboxToEnumRadioConverter();
 
             _node.Name = NodeName;
-            //_node.NoneFlag = NoneCheck;
-            //_node.AbstractFlag = AbstractCheck;
-            //_node.InterfaceFlag = InterfaceCheck;
             _node.NodeType = NodeType;
             _node.Methods = Methods.ToList();
             _node.Attributes = Attributes.ToList();

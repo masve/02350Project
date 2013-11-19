@@ -2,7 +2,7 @@
 
 namespace _02350Project.Model
 {
-    public class Edge /*: NotifyBase*/
+    public class Edge
     {
         private int nodeIdA;
         private int nodeIdB;

@@ -44,7 +44,6 @@
     <Compile Include="EdgeType.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeType.cs" />
-    <Compile Include="NotifyBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -119,7 +119,6 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NodeViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="ViewModel\XMLSerial.cs" />
     <Compile Include="View\CreateNodeWindow.xaml.cs">
       <DependentUpon>CreateNodeWindow.xaml</DependentUpon>
     </Compile>

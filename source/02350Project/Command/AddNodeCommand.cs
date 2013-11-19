@@ -17,16 +17,11 @@ namespace _02350Project.Command
         private ObservableCollection<NodeViewModel> nodes;
         private NodeViewModel node;
         private NodeViewModel createNode;
-        //private List<string> attributes;
-        //private string name;
 
-        public AddNodeCommand(ObservableCollection<NodeViewModel> _nodes, /*string _name, List<string> _attributes*/ NodeViewModel _createNode)
+        public AddNodeCommand(ObservableCollection<NodeViewModel> _nodes, NodeViewModel _createNode)
         {
             nodes = _nodes;
             createNode = _createNode;
-
-            /*name = _name;
-            attributes = _attributes;*/
         }
 
         public void Execute()
