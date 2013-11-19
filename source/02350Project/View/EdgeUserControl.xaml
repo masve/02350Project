@@ -18,13 +18,11 @@
 
         <Polyline Name="InvisibleLine" Stroke="LightSkyBlue" StrokeThickness="10"  Points="{Binding Path=Points, ElementName=ActualLine}" Opacity="{Binding Opacity}" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
 
-
         <Polyline Name="ActualLine" Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" 
               Points="{Binding LinePoints}" />
                 
         <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
-                
-        
+                        
         <!--TRIGGERS START-->
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDown">
