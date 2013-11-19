@@ -69,7 +69,7 @@ namespace _02350Project.ViewModel
         public void ConstructorInit()
         {
             _nodeTypes = new ObservableCollection<string>();
-            RadioChoices.Add("Default");
+            RadioChoices.Add("Class");
             RadioChoices.Add("Interface");
             RadioChoices.Add("Abstract");
             AddAttributeCommand = new RelayCommand(AddAttribute);
@@ -130,8 +130,8 @@ namespace _02350Project.ViewModel
         public bool NoneCheck { get { return _noneCheck; } set { _noneCheck = value; RaisePropertyChanged("NoneCheck"); } }
         public bool AbstractCheck { get { return _abstractCheck; } set { _abstractCheck = value; RaisePropertyChanged("AbstractCheck"); } }
         public bool InterfaceCheck { get { return _interfaceCheck; } set { _interfaceCheck = value; RaisePropertyChanged("InterfaceCheck"); } }
-        public string SelectedChoice { get { return _nodeType; } set { _nodeType = value; RaisePropertyChanged("selectedradio"); } }
-        public ObservableCollection<string> RadioChoices { get { return _nodeTypes; } set { _nodeTypes = value; RaisePropertyChanged("Choices"); } }
+        public string SelectedChoice { get { return _nodeType; } set { _nodeType = value; RaisePropertyChanged("SelectedChoice"); } }
+        public ObservableCollection<string> RadioChoices { get { return _nodeTypes; } set { _nodeTypes = value; RaisePropertyChanged("RadioChoices"); } }
         public bool CanCreate { get { return _canCreate; } set { _canCreate = value; RaisePropertyChanged("CanCreate"); } }
         public bool CanAddAttribute { get { return _canAddAttribute; } set { _canAddAttribute = value; RaisePropertyChanged("CanAddAttribute"); } }
         public bool CanAddMethod { get { return _canAddMethod; } set { _canAddMethod = value; RaisePropertyChanged("CanAddMethod"); } }
@@ -222,6 +222,7 @@ namespace _02350Project.ViewModel
                     SelectedChoice = "Default";
                     break;
             }
+
         }
 
         /// <summary>
@@ -262,6 +263,7 @@ namespace _02350Project.ViewModel
 
         public void EditNode()
         {
+            ListboxToEnumRadioConverter();
             _node.Name = NodeName;
             _node.NodeType = NodeType;
             _node.Methods = Methods.ToList();
