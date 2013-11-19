@@ -8,11 +8,10 @@
              mc:Ignorable="d"
              xmlns:c="clr-namespace:_02350Project.Other"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" MinWidth="135"
-             d:DesignHeight="180" d:DesignWidth="135" DataContextChanged="Node_DataContextChanged" 
              c:SizeObserver.Observe="true" c:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"
-             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}"
-             Focusable="True" IsTabStop="True">
+             c:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}">
     <!--
         ListBox Styling found from: http://social.msdn.microsoft.com/Forums/vstudio/en-US/5922cda0-c668-4333-a44d-7dab266555b4/listbox-readonly?forum=wpf
     -->
@@ -92,16 +91,25 @@
         <c:BooleanToItalicConverter x:Key="BoolToItalic"/>
     </UserControl.Resources>
 
-
-
     <!--http://www.codeproject.com/Tips/286211/All-purpose-Boolean-to-Visibility-Converter
             Convert VisibilityToBoolean so true:Visible, false:Hidden and not true:Visible, false:Collapsed-->
-    <Border Name="selectBorder" BorderThickness="0" CornerRadius="5" BorderBrush="Blue" Background="LightSkyBlue">
-    <Border Name="border" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="WhiteSmoke" Opacity="{Binding Opacity}">
-        
+    <Border Name="selectBorder" BorderThickness="0" CornerRadius="3" BorderBrush="Blue" Background="LightSkyBlue">
+        <Border Name="border" BorderBrush="LightGray" BorderThickness="1" CornerRadius="2" Background="WhiteSmoke" Opacity="{Binding Opacity}" Tag="{Binding Path=DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+            
+            <Border.ContextMenu>
+                <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                    <MenuItem Header="Cut" InputGestureText="Ctrl+X"/>
+                    <MenuItem Header="Copy" InputGestureText="Ctrl+C"/>
+                    <Separator/>
+                    <MenuItem Header="Edit" Command="{Binding TestCommand}" InputGestureText="???"/>
+                    <MenuItem Header="Delete" Command="{Binding RemoveNodeCommand}" InputGestureText="Del"/>
+                    <Separator/>
+                    <MenuItem Header="Cancel" InputGestureText="Esc"/>
+                </ContextMenu>
+            </Border.ContextMenu>
 
 
-        <DockPanel Margin="0,7,0,7">
+            <DockPanel Margin="0,7,0,7">
 
 
             <!-- <TextBlock Text="«Interface»" FontSize="10" TextAlignment="Center" Visibility="{Binding InterfaceFlag, Converter={StaticResource BoolToVis}}"/>-->

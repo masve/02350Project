@@ -16,6 +16,8 @@
         <KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCommand}"/>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
         <KeyBinding Key="F12" Command="{Binding SaveAsCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>
+        <KeyBinding Key="E" Modifiers="Control+Shift" Command="{Binding ExportCommand}"/>
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
 
@@ -31,6 +33,21 @@
             </Canvas>
         </DataTemplate>
     </Window.Resources>
+    
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="New Node" Command="{Binding TestCommand}" InputGestureText="???"/>
+            <Separator/>
+            <MenuItem Header="Paste" InputGestureText="Ctrl+V"/>
+            <Separator/>
+            <MenuItem Header="Undo" InputGestureText="Ctrl+Z"/>
+            <MenuItem Header="Redo" InputGestureText="Ctrl+Y"/>
+            <Separator/>
+            <MenuItem Header="Select All" InputGestureText="Ctrl+A"/>
+            <Separator/>
+            <MenuItem Header="Cancel" InputGestureText="Esc"/>
+        </ContextMenu>
+    </Window.ContextMenu>
 
     <DockPanel LastChildFill="True">
         <view:RibbonUserControl DockPanel.Dock="Top"/>

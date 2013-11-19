@@ -32,6 +32,8 @@ namespace _02350Project.ViewModel
 
         public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
         public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double MaxX { get { return node.X + Width; } }
+        public double MaxY { get { return node.Y + Height; } }
 
         /*
          * Edge Anchor Points
@@ -54,10 +56,10 @@ namespace _02350Project.ViewModel
         private bool interfaceFlag;
         private string nodeSubText;
 
-        public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); RaisePropertyChanged("NodeSubText"); } }
-        public bool NoneFlag { get { return noneFlag; } set { noneFlag = value; RaisePropertyChanged("NoneFlag"); RaisePropertyChanged("NodeSubText"); } }
-        public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; RaisePropertyChanged("AbstractFlag"); RaisePropertyChanged("NodeSubText"); } }
-        public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; RaisePropertyChanged("InterfaceFlag"); RaisePropertyChanged("NodeSubText"); } }
+        public string Name { get { return node.Name; } set { node.Name = value; RaisePropertyChanged("Name"); } }
+        //public bool NoneFlag { get { return noneFlag; } set { noneFlag = value; RaisePropertyChanged("NoneFlag"); RaisePropertyChanged("NodeSubText"); } }
+        //public bool AbstractFlag { get { return abstractFlag; } set { abstractFlag = value; RaisePropertyChanged("AbstractFlag"); RaisePropertyChanged("NodeSubText"); } }
+        //public bool InterfaceFlag { get { return interfaceFlag; } set { interfaceFlag = value; RaisePropertyChanged("InterfaceFlag"); RaisePropertyChanged("NodeSubText"); } }
         public string NodeSubText
         {
             get

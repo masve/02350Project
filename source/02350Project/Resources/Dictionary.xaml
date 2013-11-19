@@ -36,5 +36,7 @@
 
     <system:String x:Key="printTooltipTitle">Print (Ctrl+P)</system:String>
     <system:String x:Key="printTooltipDesc">Print the diagram picture.</system:String>
-
+    
+    <system:String x:Key="exportToolTipTitle">Export (Ctrl+Shift+E)</system:String>
+    <system:String x:Key="exportTooltipDesc">Export diagram to image file.</system:String>
 </ResourceDictionary>

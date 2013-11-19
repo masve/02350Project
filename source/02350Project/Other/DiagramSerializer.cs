@@ -74,6 +74,9 @@ namespace _02350Project.Other
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
             TextWriter writer = new StreamWriter(path);
+
+            //TextWriter writer = new FileStream(path,FileAccess.Write);
+            //FileStream FileStream = new 
             try
             {
                 serializer.Serialize(writer, diagram);

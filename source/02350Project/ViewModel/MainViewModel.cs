@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Windows.Media.Imaging;
 using _02350Project.Command;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -72,6 +75,8 @@ namespace _02350Project.ViewModel
         public ICommand RedoCommand { get; private set; }
         public ICommand UndoRedoCheckCommand { get; private set; }
 
+        public ICommand ExportCommand { get; private set; }
+
         public ICommand SelectAllNodesCommmand { get; private set; }
 
         public ICommand ZoomInCommand { get; private set; }
@@ -112,8 +117,8 @@ namespace _02350Project.ViewModel
             {
                 Name = "Calculator",
                 NodeType = NodeType.INTERFACE,
-                Attributes = new List<string> {"+ a : int", "+ b : int", "+ sum : int"},
-                Methods = new List<string> { "- add ( val1 : int, val2 : int )", "- sub ( val1 : int, val2 : int )" }
+                Attributes = new List<string> { "- a : int", "- b : int", "- sum : int" },
+                Methods = new List<string> { "+ add ( val1 : int, val2 : int )", "+ sub ( val1 : int, val2 : int )" }
             };
 
             AddNode(testNode);
@@ -139,6 +144,10 @@ namespace _02350Project.ViewModel
             AddDEPCommand = new RelayCommand(AddDep);
             AddCOMCommand = new RelayCommand(AddCom);
             AddGENCommand = new RelayCommand(AddGen);
+            #endregion
+
+            #region ExportCommands
+            ExportCommand = new RelayCommand(Export);
             #endregion
 
             ZoomInCommand = new RelayCommand(ZoomIn);
@@ -196,6 +205,28 @@ namespace _02350Project.ViewModel
 
         #endregion
 
+        #region Export Methods
+        public void Export()
+        {
+            Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Title = "Export",
+                FileName = "Untitled",
+                Filter = " PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
+            };
+
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            string path = dialog.FileName;
+            Point p = getExportResolution();
+            ExportDiagram.ExportImage(path, mainCanvas, (int)p.Y + 5, (int)p.X + 5);
+        }
+        #endregion
+
+
         private void CancelAction()
         {
             foreach (NodeViewModel vm in Nodes)
@@ -216,6 +247,15 @@ namespace _02350Project.ViewModel
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
         }
+        private bool CanEdit()
+        {
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.IsSelected)
+                    return true;
+            }
+            return false;
+        }
 
         private void ClearSelection()
         {
@@ -230,22 +270,31 @@ namespace _02350Project.ViewModel
             _leftNode = null;
             _topNode = null;
         }
-
         
+
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
         /// </summary>
         public void Test()
         {
+            //http://denisvuyka.wordpress.com/2007/12/03/wpf-diagramming-saving-you-canvas-to-image-xps-document-or-raw-xaml/
+
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
-                ConsolePrinter.Write("Printing...");
+            {
+                printDialog.PrintVisual(mainCanvas, "kwje");
         }
+
+
+        }
+
+
 
         public void New()
         {
             ClearDiagram();
+            _undoRedoController.Reset();
             _path = null;            
         }
 
@@ -275,7 +324,6 @@ namespace _02350Project.ViewModel
                         ConsolePrinter.Write("Cancel");
                         return false;
                 }
-
             }
             return true;
         }
@@ -290,7 +338,7 @@ namespace _02350Project.ViewModel
             {
                 FileName = "save",
                 DefaultExt = ".xml",
-                Filter = "Extensible Markup Language (*.xml)|*.xml|All Files (*.*)|*.*"
+                Filter = "Extensible Markup Language (*.xml)|*.xml|"
             };
 
             if (sfd.ShowDialog() == true)
@@ -302,8 +350,16 @@ namespace _02350Project.ViewModel
                 //{
                 //    DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
                 //}).Start();
+                switch (sfd.FilterIndex)
+                {
+                    case 1:
                 DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
+                        break;
+                    case 2:
+                        ConsolePrinter.Write("save as png");
+                        break;
             }
+        }
         }
 
         /// <summary>
@@ -322,17 +378,21 @@ namespace _02350Project.ViewModel
         public void Open()
         {
             
-            OpenFileDialog ofd = new OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Filter = "Extensible Markup Language|*.xml"
+            };
 
 
             if (ofd.ShowDialog() == false)
             {
-                
                 ConsolePrinter.Write("path : " + _path);
                 return;
             }
+
             if (!ClearDiagram())
                 return;
+
             _path = ofd.FileName;
             DiagramSerializer.Diagram diagram = DiagramSerializer.Load(_path);
             RestoreDiagram(diagram);
@@ -345,6 +405,37 @@ namespace _02350Project.ViewModel
             {
                 NodeViewModel nvm = new NodeViewModel(n.Id, n);
                 Nodes.Add(nvm);
+            }
+            foreach (Edge e in diagram.Edges)
+            {
+                NodeViewModel endA = null;
+                NodeViewModel endB = null;
+                foreach (NodeViewModel vm in Nodes)
+                {
+                    if (e.NodeIdA == vm.Id)
+                    {
+                        endA = vm;
+        }
+                    if (e.NodeIdB == vm.Id)
+                    {
+                        endB = vm;
+                    }
+                }
+                string type = "";
+                if (e.Type == EdgeType.AGG)
+                {
+                    type = "AGG";
+                }
+                else if (e.Type == EdgeType.ASS)
+                    type = "ASS";
+                else if (e.Type == EdgeType.COM)
+                    type = "COM";
+                else if (e.Type == EdgeType.DEP)
+                    type = "DEP";
+                else
+                    type = "GEN";
+
+                Edges.Add(endB.newEdge(endA, type));
             }
         }
 
@@ -482,7 +573,7 @@ namespace _02350Project.ViewModel
             {
                 try
                 {
-                    e.MouseDevice.Target.CaptureMouse();
+                e.MouseDevice.Target.CaptureMouse();
                 }
                 catch (NullReferenceException i) { return; }
 
@@ -494,7 +585,7 @@ namespace _02350Project.ViewModel
                 {
                     if (movingRect.DataContext is NodeViewModel) 
                     {
-                        NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                         if (!movingNode.IsSelected)
                              ClearSelection();
                     }
@@ -553,9 +644,18 @@ namespace _02350Project.ViewModel
                     offset.Y = _topNode.Y;
 
                 }
-  
+
+                oldMovePosX = (int)_oldPosX;
+                oldMovePosY = (int)_oldPosY;
             }
         }
+
+        private Canvas mainCanvas;
+        private int counterX;
+        private int counterY;
+        private double oldMovePosX;
+        private double oldMovePosY;
+        private const int snapValue = 0;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -578,7 +678,7 @@ namespace _02350Project.ViewModel
                     localOffSet.X = Math.Round(_newPos.X - _oldPos.X);
                     localOffSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
 
-
+                
                     bool hitLeft = false;
                     bool hitTop = false;
                     if (_topNode.Y + localOffSet.Y < 0d)
@@ -591,7 +691,10 @@ namespace _02350Project.ViewModel
                         _leftNode.X = 0;
                         hitLeft = true;
                     }
-                    
+                    oldMovePosY = mousePosition.Y;
+                }
+
+                
                     foreach (NodeViewModel node in nodesToMove)
                     {
                         node.X = (hitLeft?node.X:(localOffSet.X+node.X));
@@ -599,11 +702,11 @@ namespace _02350Project.ViewModel
                     }
                     _oldPos.X = Math.Round(_newPos.X);
                     _oldPos.Y = Math.Round(_newPos.Y);
-     
+
                 }               
             }
         }
-        
+
         /// <summary>
         /// MouseUpNode handles the implementation used when a MouseUp is triggered through an EventToCommand.
         /// </summary>
@@ -615,21 +718,21 @@ namespace _02350Project.ViewModel
                 FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
                 if (rectEnd.DataContext is NodeViewModel)
                 {
-                    NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
+                NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
 
-                    if (_firstSelectedEdgeEnd == null)
-                    {
-                        _firstSelectedEdgeEnd = rectNode;
-                    }
-                    else if (_firstSelectedEdgeEnd != rectNode)
-                    {
-                        AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
-                        _undoRedoController.AddAndExecute(m);
-
-                        _isAddingEdge = false;
-                        _firstSelectedEdgeEnd = null;
-                    }
+                if (_firstSelectedEdgeEnd == null)
+                {
+                    _firstSelectedEdgeEnd = rectNode;
                 }
+                else if (_firstSelectedEdgeEnd != rectNode)
+                {
+                    AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
+                    _undoRedoController.AddAndExecute(m);
+
+                    _isAddingEdge = false;
+                    _firstSelectedEdgeEnd = null;
+                }
+            }
             }
             else if (_isMovingNode)
             {
@@ -646,13 +749,13 @@ namespace _02350Project.ViewModel
                         vm.Y -= p.Y;
                     }
                     MoveNodeCommand m = new MoveNodeCommand(nodesToMove, p);
-                    _undoRedoController.AddAndExecute(m);
+                _undoRedoController.AddAndExecute(m);
 
-                }
+            }
 
                 _isMovingNode = false;
             }
-            
+
             if (Mouse.Captured != null)
                 e.MouseDevice.Target.ReleaseMouseCapture();
         }
@@ -705,39 +808,69 @@ namespace _02350Project.ViewModel
 
         public void EditNode()
         {
-            string name = null;
-            NodeType type = NodeType.ABSTRACT;
-            ObservableCollection<string> attributes = null;
-            ObservableCollection<string> methods = null;
+            string oldName = null;
+            // DEFAULTING TO ABSTRACT HERE
+            NodeType oldType = NodeType.ABSTRACT;
+            ObservableCollection<string> oldAttributes = null;
+            ObservableCollection<string> oldMethods = null;
             NodeViewModel node = null;
+
+            /*
+             * Gets the first selected node in Nodes and saves that node's
+             * relevant properties.
+             */
             foreach (NodeViewModel n in Nodes)
             {
                 if (n.IsSelected)
                 {
                     node = n;
-                    name = n.Name;
-                    type = n.NodeType;
-                    attributes = new ObservableCollection<string>(n.Attributes);
-                    methods = new ObservableCollection<string>(n.Methods);
+                    oldName = n.Name;
+                    oldType = n.NodeType;
+                    oldAttributes = new ObservableCollection<string>(n.Attributes);
+                    oldMethods = new ObservableCollection<string>(n.Methods);
                     break;
                 }
             }
+
+            if (node == null)
+                return;
+
+            /*
+             * Initializes and opens the edit dialog
+             */
             var dialog = new CreateNodeWindow();
-            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(ref name, ref type, ref attributes, ref methods, dialog);
+            CreateNodeViewModel dialogViewModel = new CreateNodeViewModel(dialog, node);
             dialog.DataContext = dialogViewModel;
-            if (dialog.ShowDialog() == true)
+            var dialogReturn = dialog.ShowDialog();
+
+
+            /*
+             * After the dialog returns, saves the new property values for the edited node. Then
+             * it is assigned its properties old values, in case the dialog returns false.
+             */
+            var newName = node.Name;
+            var newType = node.NodeType;
+            var newAttributes = new ObservableCollection<string>(node.Attributes);
+            var newMethods = new ObservableCollection<string>(node.Methods);
+            node.Name = oldName;
+            node.NodeType = oldType;
+            node.Attributes = new List<string>(oldAttributes.ToList());
+            node.Methods = new List<string>(oldMethods.ToList());
+
+            /*
+             * Because we assign the node its old values after the dialog return
+             * we don't need to do anything if the dialog returns false.
+             * It goes to say that we could also do it the other way around.
+             * In this case this means that if the dialog returns true we execute
+             * the EditNodeCommand which takes the node to update and the new 
+             * property values.
+             */
+            if (dialogReturn == true)
             {
-                _undoRedoController.AddAndExecute(new EditNodeCommand(node, Nodes, name, type, attributes.ToList(), methods.ToList()));
+                ConsolePrinter.Write("editnode" + newName);
+                _undoRedoController.AddAndExecute(new EditNodeCommand(node, newName, newType, newAttributes.ToList(),
+                    newMethods.ToList()));
             }
-                
-        }
-
-        public bool CanEdit()
-        {
-            if ((noOfNodesSelected + noOfEdgesSelected) == 1)
-                return true;
-            return false;
-
         }
 
         #region Undo/Redo Command Implementation
@@ -787,7 +920,7 @@ namespace _02350Project.ViewModel
 
         public bool CanRemove()
         {
-            return _canRemove;             
+            return _canRemove; 
         }
 
         public bool CanCancel()
@@ -798,14 +931,17 @@ namespace _02350Project.ViewModel
         private double _showGrid;
         private bool _gridCheck;
 
-        public double ShowGrid { get
+        public double ShowGrid
+        {
+            get
         {
             if (GridCheck) 
                 _showGrid = 1.0;
             else 
                 _showGrid = 0.0;
             return _showGrid;
-        }}
+            }
+        }
         
         public bool GridCheck { get { return _gridCheck; } set { _gridCheck = value; RaisePropertyChanged("ShowGrid"); } }
 
@@ -823,6 +959,23 @@ namespace _02350Project.ViewModel
                 return parent is T ? parent as T : null;
             else
                 return FindParentOfType<T>(parent);
+        }
+
+        private Point getExportResolution()
+        {
+            double maxX = 0, maxY = 0;
+            foreach (NodeViewModel vm in Nodes)
+            {
+                if (vm.MaxX > maxX)
+                {
+                    maxX = vm.MaxX;
+                }
+                if (vm.MaxY > maxY)
+                {
+                    maxY = vm.MaxY;
+                }
+            }
+            return new Point(maxX, maxY);
         }
     }
 }

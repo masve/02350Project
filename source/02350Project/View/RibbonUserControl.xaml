@@ -22,12 +22,11 @@
                         <RibbonApplicationMenuItem Header="Open"  Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
                         <RibbonApplicationMenuItem Header="Save" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
                         <RibbonApplicationMenuItem Header="Save as" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />
-                        <!--<RibbonApplicationSplitMenuItem Header="Save as" Command="{Binding SaveAsCommand}"       ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png">
-                            <RibbonApplicationSplitMenuItem Header="PNG picture" ImageSource="../Resources/Images/appmenu/PNG.png"/>
-                            <RibbonApplicationSplitMenuItem Header="JPEG picture" ImageSource="../Resources/Images/appmenu/JPEG.png"/>
-                        </RibbonApplicationSplitMenuItem>-->
+                        
+                        
                         <RibbonSeparator/>
-                        <RibbonApplicationMenuItem Header="Print" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
+                        <RibbonApplicationMenuItem Header="Print" Command="{Binding TestCommand}" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
+                        <RibbonApplicationMenuItem Header="Export"  Command="{Binding ExportCommand}" ToolTipTitle="{StaticResource exportToolTipTitle}" ToolTipDescription="{StaticResource exportTooltipDesc}" ImageSource="../Resources/Images/appmenu/export.png"/>
                         <RibbonSeparator/>
                         <RibbonApplicationMenuItem Header="About" ImageSource="../Resources/Images/appmenu/about.png"/>
                         <RibbonSeparator/>
@@ -37,18 +36,18 @@
             </Ribbon.ApplicationMenu>
 
             <RibbonTab Header="Home">
-                <RibbonGroup Name="Clipboard" Header="Clipboard">
+                <!--<RibbonGroup Name="Clipboard" Header="Clipboard">
                     <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}"/>
                     <RibbonButton Label="Cut" SmallImageSource="../Resources/Images/clipboardgroup/edit-cut.png" ToolTipTitle="{StaticResource cutTooltipTitle}" ToolTipDescription="{StaticResource cutTooltipDesc}"/>
                     <RibbonButton Label="Copy" SmallImageSource="../Resources/Images/clipboardgroup/edit-copy.png" ToolTipTitle="{StaticResource copyTooltipTitle}" ToolTipDescription="{StaticResource copyTooltipDesc}"/>
-                </RibbonGroup>
+                </RibbonGroup>-->
                 <RibbonGroup Header="Edit">
                     <RibbonButton Label="Undo" Command="{Binding UndoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-undo.png" ToolTipTitle="{StaticResource undoTooltipTitle}" ToolTipDescription="{StaticResource undoTooltipDesc}"/>
                     <RibbonButton Label="Redo" Command="{Binding RedoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
                     <RibbonButton Label="Cancel" Command="{Binding CancelActionCommand}" LargeImageSource="../Resources/Images/Other/cancelaction.png" ToolTipTitle="{StaticResource cancelTooltipTitle}" ToolTipDescription="{StaticResource cancelTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
-                    <RibbonButton Label="Create" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}"/>
+                    <RibbonButton Label="New" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}"/>
                     <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}"/>
                     <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}"/>
                 </RibbonGroup>
@@ -59,10 +58,13 @@
                     <RibbonButton Label=" Aggregation"    Command="{Binding AddAGGCommand}" SmallImageSource="../Resources/Images/linegroup/aggregation.png" />
                     <RibbonButton Label=" Composition"    Command="{Binding AddCOMCommand}" SmallImageSource="../Resources/Images/linegroup/composition.png"/>
                 </RibbonGroup>
-                <RibbonGroup Header="Insert">
+                <!--<RibbonGroup Header="Insert">
                     <RibbonButton Label="Note" Command="{Binding TestCommand}" LargeImageSource="../Resources/Images/other/note.png"/>
-                </RibbonGroup>
+                </RibbonGroup>-->
+                <RibbonGroup Header="Show and hide">
+                    <RibbonCheckBox Label="Gridlines" IsChecked="{Binding GridCheck}"/>
 
+                </RibbonGroup>
             </RibbonTab>
 
             <RibbonTab Header="View">
@@ -71,10 +73,7 @@
                     <RibbonButton Label="Zoom out" Command="{Binding ZoomOutCommand}" LargeImageSource="../Resources/Images/zoomgroup/zoomout.png"/>
                     <RibbonButton Label="100%" Command="{Binding Zoom100Command}" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
                 </RibbonGroup>
-                <RibbonGroup Header="Show and hide">
-                    <RibbonCheckBox Label="Gridlines" IsChecked="{Binding GridCheck}"/>
-                    
-                </RibbonGroup>
+                
             </RibbonTab>
         </Ribbon>
     </DockPanel>

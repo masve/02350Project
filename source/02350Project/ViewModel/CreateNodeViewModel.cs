@@ -17,7 +17,7 @@ namespace _02350Project.ViewModel
 
         private ObservableCollection<String> _attributes;
         private ObservableCollection<String> _methods;
-        
+
         private string _nodeName;
         private string _attribute;
         private string _method;
@@ -55,7 +55,7 @@ namespace _02350Project.ViewModel
 
             _attributes = new ObservableCollection<string>();
             _methods = new ObservableCollection<string>();
-            
+
 
 
             NoneCheck = true;
@@ -63,6 +63,9 @@ namespace _02350Project.ViewModel
             SelectedChoice = "Default";
         }
 
+        /// <summary>
+        /// Initializes commands commmon for both constructors.
+        /// </summary>
         public void ConstructorInit()
         {
             _nodeTypes = new ObservableCollection<string>();
@@ -82,45 +85,43 @@ namespace _02350Project.ViewModel
         private ObservableCollection<string> _editNodeAttributes;
         private ObservableCollection<string> _editNodeMethods;
 
-        public CreateNodeViewModel(ref string nodeName, ref NodeType nodeType, ref ObservableCollection<string> nodeAttributes,
-            ref ObservableCollection<string> nodeMethods, Window window)
+        public CreateNodeViewModel(Window window, NodeViewModel nodeVM)
         {
             _window = window;
             ConstructorInit();
             _state = State.EDIT;
-            _editNodeName = nodeName;
-            _editNodeType = nodeType;
-            _editNodeAttributes = nodeAttributes;
-            _editNodeMethods = nodeMethods;
 
-            //NodeName = nodeName;
-            //EnumToListboxRadioConverter(nodeType);
-            //Attributes = new ObservableCollection<string>(nodeAttributes);
-            //Methods = new ObservableCollection<string>(nodeMethods);
-            FillFields();                
+            _node = nodeVM;
+            NodeName = nodeVM.Name;
+            EnumToListboxRadioConverter(nodeVM.NodeType);
+            Attributes = new ObservableCollection<string>(nodeVM.Attributes);
+            Methods = new ObservableCollection<string>(nodeVM.Methods);
+
+            //FillFields();
         }
+        //public CreateNodeViewModel(ref NodeViewModel)
         #endregion
 
         #region Properties
-        public string ActualAttribute 
-        { 
-            get { return _attribute; } 
-            set 
-            { 
-                _attribute = value; 
-                CanAddAttribute = !String.IsNullOrWhiteSpace(ActualAttribute);
-                RaisePropertyChanged("ActualAttribute"); 
-            } 
-        }
-        public string ActualMethod 
+        public string ActualAttribute
         {
-            get { return _method; } 
-            set 
-            { 
+            get { return _attribute; }
+            set
+            {
+                _attribute = value;
+                CanAddAttribute = !String.IsNullOrWhiteSpace(ActualAttribute);
+                RaisePropertyChanged("ActualAttribute");
+            }
+        }
+        public string ActualMethod
+        {
+            get { return _method; }
+            set
+            {
                 _method = value;
                 CanAddMethod = !String.IsNullOrWhiteSpace(ActualMethod);
-                RaisePropertyChanged("ActualMethod"); 
-            } 
+                RaisePropertyChanged("ActualMethod");
+            }
         }
         public ObservableCollection<string> Attributes { get { return _attributes; } set { _attributes = value; RaisePropertyChanged("Attributes"); } }
         public ObservableCollection<string> Methods { get { return _methods; } set { _methods = value; RaisePropertyChanged("Methods"); } }
@@ -135,7 +136,7 @@ namespace _02350Project.ViewModel
         public bool CanAddAttribute { get { return _canAddAttribute; } set { _canAddAttribute = value; RaisePropertyChanged("CanAddAttribute"); } }
         public bool CanAddMethod { get { return _canAddMethod; } set { _canAddMethod = value; RaisePropertyChanged("CanAddMethod"); } }
         public NodeType NodeType { get; set; }
-        public Visibility CreateVisibility { get {if(_state == State.CREATE) return Visibility.Visible; return Visibility.Collapsed;} }
+        public Visibility CreateVisibility { get { if (_state == State.CREATE) return Visibility.Visible; return Visibility.Collapsed; } }
         public Visibility EditVisibility { get { if (_state == State.EDIT) return Visibility.Visible; return Visibility.Collapsed; } }
         #endregion
 
@@ -146,7 +147,7 @@ namespace _02350Project.ViewModel
             Attributes = new ObservableCollection<string>(_editNodeAttributes);
             Methods = new ObservableCollection<string>(_editNodeMethods);
         }
-        
+
         /// <summary>
         /// Adds the content of ActualAttribute to Attributes
         /// </summary>
@@ -261,7 +262,10 @@ namespace _02350Project.ViewModel
 
         public void EditNode()
         {
-            _editNodeName = NodeName;
+            _node.Name = NodeName;
+            _node.NodeType = NodeType;
+            _node.Methods = Methods.ToList();
+            _node.Attributes = Attributes.ToList();
             _window.DialogResult = true;
         }
 
@@ -270,7 +274,7 @@ namespace _02350Project.ViewModel
 
         public string this[string columnName]
         {
-            get 
+            get
             {
                 if (columnName == "NodeName")
                 {

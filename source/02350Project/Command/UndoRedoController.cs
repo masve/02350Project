@@ -39,6 +39,12 @@ namespace _02350Project.Command
             command.Execute();
         }
 
+        public void Reset()
+        {
+            redoStack.Clear();
+            undoStack.Clear();
+        }
+        
         public bool CanUndo() { return undoStack.Any(); }
         public bool CanRedo() { return redoStack.Any(); }
 
