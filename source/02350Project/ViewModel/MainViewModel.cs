@@ -129,7 +129,7 @@ namespace _02350Project.ViewModel
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
-            MouseDoubleClickNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDoubleClickNode);
+            //MouseDoubleClickNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDoubleClickNode);
 
             CreateNodeCommand = new RelayCommand(CreateNode);
             EditNodeCommand = new RelayCommand(EditNode, CanEdit);
@@ -208,7 +208,7 @@ namespace _02350Project.ViewModel
         #region Export Methods
         public void Export()
         {
-            Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
+            //Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Export",
@@ -284,12 +284,8 @@ namespace _02350Project.ViewModel
             if (printDialog.ShowDialog() == true)
             {
                 printDialog.PrintVisual(mainCanvas, "kwje");
+            }
         }
-
-
-        }
-
-
 
         public void New()
         {
@@ -358,8 +354,8 @@ namespace _02350Project.ViewModel
                     case 2:
                         ConsolePrinter.Write("save as png");
                         break;
+                }
             }
-        }
         }
 
         /// <summary>
@@ -415,7 +411,7 @@ namespace _02350Project.ViewModel
                     if (e.NodeIdA == vm.Id)
                     {
                         endA = vm;
-        }
+                    }
                     if (e.NodeIdB == vm.Id)
                     {
                         endB = vm;
@@ -423,9 +419,7 @@ namespace _02350Project.ViewModel
                 }
                 string type = "";
                 if (e.Type == EdgeType.AGG)
-                {
                     type = "AGG";
-                }
                 else if (e.Type == EdgeType.ASS)
                     type = "ASS";
                 else if (e.Type == EdgeType.COM)
@@ -585,7 +579,7 @@ namespace _02350Project.ViewModel
                 {
                     if (movingRect.DataContext is NodeViewModel) 
                     {
-                NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
+                        NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                         if (!movingNode.IsSelected)
                              ClearSelection();
                     }
@@ -645,8 +639,8 @@ namespace _02350Project.ViewModel
 
                 }
 
-                oldMovePosX = (int)_oldPosX;
-                oldMovePosY = (int)_oldPosY;
+                //oldMovePosX = (int)_oldPosX;
+               // oldMovePosY = (int)_oldPosY;
             }
         }
 
@@ -678,7 +672,7 @@ namespace _02350Project.ViewModel
                     localOffSet.X = Math.Round(_newPos.X - _oldPos.X);
                     localOffSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
 
-                
+
                     bool hitLeft = false;
                     bool hitTop = false;
                     if (_topNode.Y + localOffSet.Y < 0d)
@@ -691,19 +685,18 @@ namespace _02350Project.ViewModel
                         _leftNode.X = 0;
                         hitLeft = true;
                     }
-                    oldMovePosY = mousePosition.Y;
-                }
 
-                
+
+
                     foreach (NodeViewModel node in nodesToMove)
                     {
-                        node.X = (hitLeft?node.X:(localOffSet.X+node.X));
-                        node.Y = (hitTop?node.Y:(localOffSet.Y+node.Y));
+                        node.X = (hitLeft ? node.X : (localOffSet.X + node.X));
+                        node.Y = (hitTop ? node.Y : (localOffSet.Y + node.Y));
                     }
                     _oldPos.X = Math.Round(_newPos.X);
                     _oldPos.Y = Math.Round(_newPos.Y);
 
-                }               
+                }
             }
         }
 
@@ -718,41 +711,39 @@ namespace _02350Project.ViewModel
                 FrameworkElement rectEnd = (FrameworkElement)e.MouseDevice.Target;
                 if (rectEnd.DataContext is NodeViewModel)
                 {
-                NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
+                    NodeViewModel rectNode = (NodeViewModel)rectEnd.DataContext;
 
-                if (_firstSelectedEdgeEnd == null)
-                {
-                    _firstSelectedEdgeEnd = rectNode;
-                }
-                else if (_firstSelectedEdgeEnd != rectNode)
-                {
-                    AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
-                    _undoRedoController.AddAndExecute(m);
+                    if (_firstSelectedEdgeEnd == null)
+                    {
+                        _firstSelectedEdgeEnd = rectNode;
+                    }
+                    else if (_firstSelectedEdgeEnd != rectNode)
+                    {
+                        AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
+                        _undoRedoController.AddAndExecute(m);
 
-                    _isAddingEdge = false;
-                    _firstSelectedEdgeEnd = null;
+                        _isAddingEdge = false;
+                        _firstSelectedEdgeEnd = null;
+                    }
                 }
-            }
             }
             else if (_isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 if (movingRect.DataContext is NodeViewModel)
                 {
-
                     Point p = new Point();
                     p.X = _leftNode.X - offset.X;
                     p.Y = _topNode.Y - offset.Y;
 
-                    foreach (NodeViewModel vm in nodesToMove){
+                    foreach (NodeViewModel vm in nodesToMove)
+                    {
                         vm.X -= p.X;
                         vm.Y -= p.Y;
                     }
                     MoveNodeCommand m = new MoveNodeCommand(nodesToMove, p);
-                _undoRedoController.AddAndExecute(m);
-
-            }
-
+                    _undoRedoController.AddAndExecute(m);
+                }
                 _isMovingNode = false;
             }
 
@@ -761,12 +752,12 @@ namespace _02350Project.ViewModel
         }
         #endregion
 
-        private void MouseDoubleClickNode(MouseButtonEventArgs obj)
-        {
-            if(CanEdit())
+        //private void MouseDoubleClickNode(MouseButtonEventArgs obj)
+        //{
+        //    if(CanEdit())
                 
-                EditNode();
-        }
+        //        EditNode();
+        //}
 
         /// <summary>
         /// Calculates anchor points for a given node. (The points on the node that edges snap)
