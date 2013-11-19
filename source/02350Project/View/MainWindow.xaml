@@ -16,8 +16,10 @@
         <KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCommand}"/>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
         <KeyBinding Key="F12" Command="{Binding SaveAsCommand}"/>
-        <KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding RemoveElementsCommand}"/>
         <KeyBinding Key="E" Modifiers="Control+Shift" Command="{Binding ExportCommand}"/>
+        <KeyBinding Key="E" Modifiers="Control" Command="{Binding EditNodeCommand}"/>
+
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
 
@@ -36,16 +38,16 @@
     
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="New Node" Command="{Binding TestCommand}" InputGestureText="???"/>
+            <MenuItem Header="New Node" Command="{Binding CreateNodeCommand}" InputGestureText=""/>
+            <!--<Separator/>
+            <MenuItem Header="Paste" InputGestureText="Ctrl+V"/>-->
             <Separator/>
-            <MenuItem Header="Paste" InputGestureText="Ctrl+V"/>
+            <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}"/>
+            <MenuItem Header="Redo" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}"/>
             <Separator/>
-            <MenuItem Header="Undo" InputGestureText="Ctrl+Z"/>
-            <MenuItem Header="Redo" InputGestureText="Ctrl+Y"/>
+            <MenuItem Header="Select All" InputGestureText="Ctrl+A" Command="{Binding SelectAllNodesCommmand}"/>
             <Separator/>
-            <MenuItem Header="Select All" InputGestureText="Ctrl+A"/>
-            <Separator/>
-            <MenuItem Header="Cancel" InputGestureText="Esc"/>
+            <MenuItem Header="Cancel" InputGestureText="Esc" Command="{Binding CancelActionCommand}"/>
         </ContextMenu>
     </Window.ContextMenu>
 

@@ -25,7 +25,7 @@
                         
                         
                         <RibbonSeparator/>
-                        <RibbonApplicationMenuItem Header="Print" Command="{Binding TestCommand}" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>
+                        <!--<RibbonApplicationMenuItem Header="Print" Command="{Binding TestCommand}" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>-->
                         <RibbonApplicationMenuItem Header="Export"  Command="{Binding ExportCommand}" ToolTipTitle="{StaticResource exportToolTipTitle}" ToolTipDescription="{StaticResource exportTooltipDesc}" ImageSource="../Resources/Images/appmenu/export.png"/>
                         <RibbonSeparator/>
                         <RibbonApplicationMenuItem Header="About" ImageSource="../Resources/Images/appmenu/about.png"/>
@@ -47,9 +47,9 @@
                     <RibbonButton Label="Cancel" Command="{Binding CancelActionCommand}" LargeImageSource="../Resources/Images/Other/cancelaction.png" ToolTipTitle="{StaticResource cancelTooltipTitle}" ToolTipDescription="{StaticResource cancelTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
-                    <RibbonButton Label="New" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}"/>
-                    <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}"/>
-                    <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}"/>
+                    <RibbonButton Label="New" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}" ToolTipTitle="{StaticResource newNodeTooltipTitle}" ToolTipDescription="{StaticResource newNodeTooltipDesc}"/>
+                    <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}" ToolTipTitle="{StaticResource editNodeTooltipTitle}" ToolTipDescription="{StaticResource editNodeTooltipDesc}"/>
+                    <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}" ToolTipTitle="{StaticResource removeNodeTooltipTitle}" ToolTipDescription="{StaticResource removeNodeTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">
                     <RibbonButton Label=" Dependency"     Command="{Binding AddDEPCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png"/>

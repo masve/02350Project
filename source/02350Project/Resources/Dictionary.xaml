@@ -21,6 +21,16 @@
     <system:String x:Key="cancelTooltipTitle">Cancel (Esc)</system:String>
     <system:String x:Key="cancelTooltipDesc">Cancels all ongoing actions. Like class select and line add.</system:String>
 
+    <system:String x:Key="newNodeTooltipTitle">New Node</system:String>
+    <system:String x:Key="newNodeTooltipDesc">Creates a new class</system:String>
+
+    <system:String x:Key="editNodeTooltipTitle">Edit Node (Ctrl + E)</system:String>
+    <system:String x:Key="editNodeTooltipDesc">Edit the selected node</system:String>
+
+    <system:String x:Key="removeNodeTooltipTitle">Delete Node (Delete)</system:String>
+    <system:String x:Key="removeNodeTooltipDesc">Delete selected nodes and edges</system:String>
+
+
     <!--TOOLTIPS APPLICATIONMENU CONTENT-->
     <system:String x:Key="newTooltipTitle">New (Ctrl+N)</system:String>
     <system:String x:Key="newTooltipDesc">Create a new diagram.</system:String>

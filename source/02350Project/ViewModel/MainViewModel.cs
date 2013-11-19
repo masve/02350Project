@@ -208,7 +208,8 @@ namespace _02350Project.ViewModel
         #region Export Methods
         public void Export()
         {
-            //Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
+            Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
+            ClearSelection();
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 Title = "Export",
@@ -249,10 +250,8 @@ namespace _02350Project.ViewModel
         }
         private bool CanEdit()
         {
-            foreach (NodeViewModel vm in Nodes)
-            {
-                if (vm.IsSelected)
-                    return true;
+            if (noOfNodesSelected == 1){
+                return true;
             }
             return false;
         }
@@ -334,7 +333,7 @@ namespace _02350Project.ViewModel
             {
                 FileName = "save",
                 DefaultExt = ".xml",
-                Filter = "Extensible Markup Language (*.xml)|*.xml|"
+                Filter = "Extensible Markup Language (*.xml)|*.xml"
             };
 
             if (sfd.ShowDialog() == true)
@@ -499,19 +498,6 @@ namespace _02350Project.ViewModel
         //    return false;
         //}
 
-        /// <summary>
-        /// Catches an SizeChangedEvent. Used to get the height and width of a NodeUserControl.
-        /// </summary>
-        /// <param name="e"></param>
-        //public void ExpandResize(SizeChangedEventArgs e)
-        //{
-        //    FrameworkElement rect = (FrameworkElement)e.Source;
-        //    NodeViewModel node = (NodeViewModel)rect.DataContext;
-
-        //    node.Height = e.NewSize.Height;
-        //    node.Width = e.NewSize.Width;
-        //    CalculateAnchor(node);
-        //}
 
         #region Edge Adding
         /// <summary>
@@ -554,6 +540,7 @@ namespace _02350Project.ViewModel
         private Point _startMovePosition;
         private Point _oldPos, offset = new Point();
         private NodeViewModel _topNode, _leftNode;
+        private Canvas canvas = new Canvas();
 
         //private Point minValue;
         /// <summary>
@@ -572,7 +559,7 @@ namespace _02350Project.ViewModel
                 catch (NullReferenceException i) { return; }
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
-                
+                canvas = FindParentOfType<Canvas>(movingRect);
                 
     
                 if (Keyboard.Modifiers != ModifierKeys.Shift)
@@ -629,7 +616,6 @@ namespace _02350Project.ViewModel
                 }
                 _canCancel = true;
 
-                Canvas canvas = FindParentOfType<Canvas>(movingRect);
                 if (movingRect.DataContext is NodeViewModel)
                 {
                     _startMovePosition = Mouse.GetPosition(canvas);
