@@ -13,9 +13,6 @@ namespace _02350Project.Command
     
         private List<NodeViewModel> nodes;
         private Point offset;
-        private double y;
-        private double newX;
-        private double newY;
 
         public MoveNodeCommand(List<NodeViewModel> _nodes, Point _offset)
         {
@@ -41,8 +38,5 @@ namespace _02350Project.Command
                 nodes[i].Y -= offset.Y;
             }
         }
-
-        //public NodeViewModel Node { get { return node; } }
-
     }
 }
