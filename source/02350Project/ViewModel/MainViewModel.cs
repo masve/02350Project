@@ -72,6 +72,8 @@ namespace _02350Project.ViewModel
         public ICommand RedoCommand { get; private set; }
         public ICommand UndoRedoCheckCommand { get; private set; }
 
+        public ICommand SelectAllNodesCommmand { get; private set; }
+
         public ICommand ZoomInCommand { get; private set; }
         public ICommand ZoomOutCommand { get; private set; }
         public ICommand Zoom100Command { get; private set; }
@@ -143,6 +145,7 @@ namespace _02350Project.ViewModel
             ZoomOutCommand = new RelayCommand(ZoomOut);
             Zoom100Command = new RelayCommand(Zoom100);
 
+            SelectAllNodesCommmand = new RelayCommand(SelectAllNodes);
 
             CancelActionCommand = new RelayCommand(CancelAction, CanCancel);
 
@@ -212,8 +215,6 @@ namespace _02350Project.ViewModel
             noOfNodesSelected = 0;
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
-            oldPoints.Clear();
-            newPoints.Clear();
         }
 
         private void ClearSelection()
@@ -393,6 +394,16 @@ namespace _02350Project.ViewModel
             _canCancel = false;
         }
 
+        private void SelectAllNodes()
+        {
+            nodesToMove.Clear();
+            foreach (NodeViewModel node in Nodes)
+            {
+                node.IsSelected = true;
+                nodesToMove.Add(node);
+            }
+        }
+
         //public bool CanRemove()
         //{
         //    foreach (NodeViewModel vm in Nodes)
@@ -454,11 +465,10 @@ namespace _02350Project.ViewModel
 
         #region Mouse UP DOWN MOVE
         private Point _startMovePosition;
-        private Vector _moveOffsetVector;
-        private List<Point> newPoints = new List<Point>();
-        private List<Point> oldPoints = new List<Point>(); 
-        
-        private Point minValue;
+        private Point _oldPos, offset = new Point();
+        private NodeViewModel _topNode, _leftNode;
+
+        //private Point minValue;
         /// <summary>
         /// MouseDownNode handles the implementation used when a MouseDown is triggered through an EventToCommand.
         /// </summary>
@@ -496,13 +506,26 @@ namespace _02350Project.ViewModel
                 {
                     if (movingRect.DataContext is NodeViewModel)
                     {
-                        NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
-                        if (!movingNode.IsSelected)
+                        NodeViewModel rectNode = (NodeViewModel)movingRect.DataContext;
+                        if (!rectNode.IsSelected)
                         {
-                            movingNode.IsSelected = true;
+                            rectNode.IsSelected = true;
                             noOfNodesSelected += 1;
-                            nodesToMove.Add(movingNode);
+                            nodesToMove.Add(rectNode);
                             _canRemove = true;
+                            if (_leftNode == null)
+                            {
+                                _leftNode = rectNode;
+                            }
+                            if (_topNode == null)
+                                _topNode = rectNode;
+                            foreach (NodeViewModel vm in nodesToMove)
+                            {
+                                if (_leftNode.X > vm.X)
+                                    _leftNode = vm;
+                                if (_topNode.Y > vm.Y)
+                                    _topNode = vm;
+                            }
                         }
                     }
 
@@ -522,23 +545,9 @@ namespace _02350Project.ViewModel
                     Canvas canvas = FindParentOfType<Canvas>(movingRect);
 
                     _startMovePosition = Mouse.GetPosition(canvas);
-                    _startMovePosition.X = Math.Floor(_startMovePosition.X);
-                    _startMovePosition.Y = Math.Floor(_startMovePosition.Y);
-                    _moveOffsetVector = new Vector(0,0);
-
-                     minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
-                     oldPoints.Clear();
-                    for (int i = 0; i < nodesToMove.Count; ++i)
-                    {
-                        if (minValue.X > nodesToMove[i].X)
-                            minValue.X = nodesToMove[i].X;
-                        if (minValue.Y > nodesToMove[i].Y)
-                            minValue.Y = nodesToMove[i].Y;
-
-                        oldPoints.Add(new Point(nodesToMove[i].X, nodesToMove[i].Y));
-                    }
-
- 
+                    _oldPos = _startMovePosition;
+                    offset.X = _leftNode.X;
+                    offset.Y = _topNode.Y;
   
             }
         }
@@ -558,75 +567,36 @@ namespace _02350Project.ViewModel
                 {
                     _isMovingNode = true;
 
-                    Point moveOffsetPosition = Mouse.GetPosition(canvas);
+                    Point _newPos = Mouse.GetPosition(canvas);
 
-                    moveOffsetPosition.X = Math.Floor(moveOffsetPosition.X);
-                    moveOffsetPosition.Y = Math.Floor(moveOffsetPosition.Y);
+                    Point offSet = new Point();
+                    offSet.X = Math.Round(_newPos.X - _oldPos.X);
+                    offSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
 
 
-                    moveOffsetPosition.X -= _startMovePosition.X;
-                    moveOffsetPosition.Y -= _startMovePosition.Y;
-
-                    if(moveOffsetPosition.X >= -minValue.X)
-                    for(int i = 0; i < nodesToMove.Count; ++i)
+                    bool hit = false;
+                    if (_topNode.Y + offSet.Y < 0d)
                     {
-                        nodesToMove[i].X = oldPoints[i].X + moveOffsetPosition.X;
+                        _topNode.Y = 0;
+                        hit = true;
                     }
-
-                    if(moveOffsetPosition.Y >= -minValue.Y)
-                    for(int i = 0; i < nodesToMove.Count; ++i)
+                    if (_leftNode.X + offSet.X < 0d)
                     {
-                        nodesToMove[i].Y = oldPoints[i].Y + moveOffsetPosition.Y;
+                        _leftNode.X = 0;
+                        //ConsolePrinter.Write(" left offsetx: " + offSet.X + " offsety: " + offSet.Y);
+                        hit = true;
                     }
-
-
-                    //Point minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
-
-                    //for (int i = 0; i < nodesToMove.Count; ++i)
-                    //{
-                    //    if (minValue.X > nodesToMove[i].X)
-                    //        minValue.X = nodesToMove[i].X;
-                    //    if (minValue.Y > nodesToMove[i].Y)
-                    //        minValue.Y = nodesToMove[i].Y;
-                    //}
-
-                    //if (minValue.X < 0)
-                    //    moveOffsetPosition.X = 0;
-
-                    //if (minValue.Y < 0)
-                    //    moveOffsetPosition.Y = 0;
-
-                    //Vector move = (moveOffsetPosition - _startMovePosition) - _moveOffsetVector;
-
-                    ////if (minValue.X + move.X <= 0)
-                    ////    move.X -= minValue.X;
-                    ////if (minValue.Y + move.Y <= 0)
-                    ////    move.Y -= minValue.Y;
-
-
-
-                    //Vector moveTwo = (Vector)(moveOffsetPosition - _moveOffsetVector);
-
-                    //for()
-
-                    //if (_moveOffsetVector.X > -minValue.X)
-                    //for (int i = 0; i < nodesToMove.Count; ++i)
-                    //{
-                    //        nodesToMove[i].X +=  move.X;        
-                    //}
-
-                    //if (_moveOffsetVector.Y > -minValue.Y)
-                    //    for (int i = 0; i < nodesToMove.Count; ++i)
-                    //        nodesToMove[i].Y += move.Y;
-
-                    //_moveOffsetVector = moveOffsetPosition - _startMovePosition;
-
-                    //if (_moveOffsetVector.X < -minValue.X)
-                    //    _moveOffsetVector.X = -minValue.X;
-
-                    //if (_moveOffsetVector.Y < -minValue.Y)
-                    //    _moveOffsetVector.Y = -minValue.Y;
-
+                    if (!hit)
+                    {
+                        foreach (NodeViewModel node in nodesToMove)
+                        {
+                            node.X += offSet.X;
+                            node.Y += offSet.Y;
+                        }
+                    }
+                    _oldPos.X = Math.Round(_newPos.X);
+                    _oldPos.Y = Math.Round(_newPos.Y);
+     
                 }               
             }
         }
@@ -647,48 +617,33 @@ namespace _02350Project.ViewModel
                     if (_firstSelectedEdgeEnd == null)
                     {
                         _firstSelectedEdgeEnd = rectNode;
-                        ConsolePrinter.Write("first edge");
                     }
                     else if (_firstSelectedEdgeEnd != rectNode)
                     {
                         AddEdgeCommand m = new AddEdgeCommand(Edges, _firstSelectedEdgeEnd, rectNode, _edgeType);
                         _undoRedoController.AddAndExecute(m);
 
-                        //CalculateAnchor(rectNode);
                         _isAddingEdge = false;
                         _firstSelectedEdgeEnd = null;
                     }
                 }
-            }
-            else if (_isRemovingNode)
-            {
-                //FrameworkElement rectNode = (FrameworkElement)e.MouseDevice.Target;
-                //NodeViewModel NodeToRemove = (NodeViewModel)rectNode.DataContext;
-                //RemoveNodeCommand m = new RemoveNodeCommand(Nodes, Edges, NodeToRemove);
-                //undoRedoController.AddAndExecute(m);
-                //isRemovingNode = false;
             }
             else if (_isMovingNode)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 if (movingRect.DataContext is NodeViewModel)
                 {
-                    //for (int i = 0; i < nodesToMove.Count; ++i)
-                    //{
-                    //    nodesToMove[i].X -= _moveOffsetVector.X;
-                    //    nodesToMove[i].Y -= _moveOffsetVector.Y;
-                    //}
-                    newPoints.Clear();
-                    for (int i = 0; i < nodesToMove.Count; ++i)
-                    {
-                        newPoints.Add(new Point(nodesToMove[i].X, nodesToMove[i].Y));
-                    }
 
-                    //MoveNodeCommand m = new MoveNodeCommand(nodesToMove, _moveOffsetVector);
-                    MoveNodeCommand1 m = new MoveNodeCommand1(nodesToMove, oldPoints, newPoints);
+                    Point p = new Point();
+                    p.X = _leftNode.X - offset.X;
+                    p.Y = _topNode.Y - offset.Y;
+
+                    foreach (NodeViewModel vm in nodesToMove){
+                        vm.X -= p.X;
+                        vm.Y -= p.Y;
+                    }
+                    MoveNodeCommand m = new MoveNodeCommand(nodesToMove, p);
                     _undoRedoController.AddAndExecute(m);
-                    oldPoints.Clear();
-                    newPoints.Clear();
 
                 }
 

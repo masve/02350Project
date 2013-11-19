@@ -12,12 +12,12 @@ namespace _02350Project.Command
     {
     
         private List<NodeViewModel> nodes;
-        private Vector offset;
+        private Point offset;
         private double y;
         private double newX;
         private double newY;
 
-        public MoveNodeCommand(List<NodeViewModel> _nodes, Vector _offset)
+        public MoveNodeCommand(List<NodeViewModel> _nodes, Point _offset)
         {
             nodes = _nodes;
             offset = _offset;
