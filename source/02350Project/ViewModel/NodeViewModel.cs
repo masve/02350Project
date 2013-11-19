@@ -67,7 +67,7 @@ namespace _02350Project.ViewModel
                 switch (NodeType)
                 {
                     case NodeType.ABSTRACT:
-                        nodeSubText = "Abstract class";
+                        nodeSubText = "Abstract";
                         break;
                     case NodeType.INTERFACE:
                         nodeSubText = "Interface";
@@ -79,7 +79,7 @@ namespace _02350Project.ViewModel
                 return nodeSubText;
             }
         }
-        public NodeType NodeType { get { return node.NodeType; } set { node.NodeType = value; RaisePropertyChanged("NodeType"); } }
+        public NodeType NodeType { get { return node.NodeType; } set { node.NodeType = value; RaisePropertyChanged("NodeType"); RaisePropertyChanged("NodeSubText"); } }
         public List<string> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged("Attributes"); } }
         public List<string> Methods { get { return node.Methods; } set { node.Methods = value; RaisePropertyChanged("Methods"); } }
 
