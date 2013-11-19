@@ -13,21 +13,6 @@ namespace _02350Project.Other
 {
     public class DiagramSerializer
     {
-        //private static Data instance;
-
-        //private Data() { }
-
-        //public static Data Instance
-        //{
-        //    get
-        //    {
-        //        if (instance == null)
-        //        {
-        //            instance = new Data();
-        //        }
-        //        return instance;
-        //    }
-        //}
 
         public class Diagram
         {
