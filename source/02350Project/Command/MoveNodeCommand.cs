@@ -19,7 +19,7 @@ namespace _02350Project.Command
 
         public MoveNodeCommand(List<NodeViewModel> _nodes, Point _offset)
         {
-            nodes = _nodes;
+            nodes = new List<NodeViewModel>(_nodes);
             offset = _offset;
         }
 

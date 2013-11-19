@@ -44,8 +44,8 @@
                     <Canvas.LayoutTransform>
                         <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"/>
                     </Canvas.LayoutTransform>
-                    <ItemsControl ItemsSource="{Binding Nodes}"/>
                     <ItemsControl ItemsSource="{Binding Edges}"/>
+                    <ItemsControl ItemsSource="{Binding Nodes}"/>
 
                     <!--http://social.msdn.microsoft.com/Forums/vstudio/en-US/ec22563c-97db-4166-a1f8-2689f0f6e3db/wpf-gridlines-on-canvas?forum=wpf-->
                     <Canvas.Background>

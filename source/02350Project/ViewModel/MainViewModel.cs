@@ -227,6 +227,8 @@ namespace _02350Project.ViewModel
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
             _canRemove = false;
+            _leftNode = null;
+            _topNode = null;
         }
 
         
@@ -476,7 +478,7 @@ namespace _02350Project.ViewModel
         public void MouseDownNode(MouseButtonEventArgs e)
         {
 //            _isMovingNode = false;
-            if (!_isAddingEdge && !_isRemovingNode)
+            if (!_isAddingEdge /*&& !_isRemovingNode*/)
             {
                 try
                 {
@@ -529,7 +531,7 @@ namespace _02350Project.ViewModel
                         }
                     }
 
-                    if (movingRect.DataContext is EdgeViewModel)
+                    else if (movingRect.DataContext is EdgeViewModel)
                     {
                         EdgeViewModel rectEdge = (EdgeViewModel)movingRect.DataContext;
                         if (!rectEdge.IsSelected)
@@ -542,12 +544,15 @@ namespace _02350Project.ViewModel
                 }
                 _canCancel = true;
 
-                    Canvas canvas = FindParentOfType<Canvas>(movingRect);
-
+                Canvas canvas = FindParentOfType<Canvas>(movingRect);
+                if (movingRect.DataContext is NodeViewModel)
+                {
                     _startMovePosition = Mouse.GetPosition(canvas);
                     _oldPos = _startMovePosition;
                     offset.X = _leftNode.X;
                     offset.Y = _topNode.Y;
+
+                }
   
             }
         }
@@ -558,7 +563,7 @@ namespace _02350Project.ViewModel
         /// <param name="e"></param>
         public void MouseMoveNode(MouseEventArgs e)
         {
-            if (Mouse.Captured != null && !_isAddingEdge && !_isRemovingNode)
+            if (Mouse.Captured != null && !_isAddingEdge /*&& !_isRemovingNode*/)
             {
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 Canvas canvas = FindParentOfType<Canvas>(movingRect);
@@ -569,30 +574,28 @@ namespace _02350Project.ViewModel
 
                     Point _newPos = Mouse.GetPosition(canvas);
 
-                    Point offSet = new Point();
-                    offSet.X = Math.Round(_newPos.X - _oldPos.X);
-                    offSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
+                    Point localOffSet = new Point();
+                    localOffSet.X = Math.Round(_newPos.X - _oldPos.X);
+                    localOffSet.Y = Math.Round(_newPos.Y - _oldPos.Y);
 
 
-                    bool hit = false;
-                    if (_topNode.Y + offSet.Y < 0d)
+                    bool hitLeft = false;
+                    bool hitTop = false;
+                    if (_topNode.Y + localOffSet.Y < 0d)
                     {
                         _topNode.Y = 0;
-                        hit = true;
+                        hitTop = true;
                     }
-                    if (_leftNode.X + offSet.X < 0d)
+                    if (_leftNode.X + localOffSet.X < 0d)
                     {
                         _leftNode.X = 0;
-                        //ConsolePrinter.Write(" left offsetx: " + offSet.X + " offsety: " + offSet.Y);
-                        hit = true;
+                        hitLeft = true;
                     }
-                    if (!hit)
+                    
+                    foreach (NodeViewModel node in nodesToMove)
                     {
-                        foreach (NodeViewModel node in nodesToMove)
-                        {
-                            node.X += offSet.X;
-                            node.Y += offSet.Y;
-                        }
+                        node.X = (hitLeft?node.X:(localOffSet.X+node.X));
+                        node.Y = (hitTop?node.Y:(localOffSet.Y+node.Y));
                     }
                     _oldPos.X = Math.Round(_newPos.X);
                     _oldPos.Y = Math.Round(_newPos.Y);
