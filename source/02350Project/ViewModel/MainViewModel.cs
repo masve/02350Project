@@ -496,8 +496,6 @@ namespace _02350Project.ViewModel
                 {
                     if (movingRect.DataContext is NodeViewModel)
                     {
-                        ConsolePrinter.Write("rofl");
-
                         NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                         if (!movingNode.IsSelected)
                         {
@@ -510,7 +508,6 @@ namespace _02350Project.ViewModel
 
                     if (movingRect.DataContext is EdgeViewModel)
                     {
-                        ConsolePrinter.Write("lol");
                         EdgeViewModel rectEdge = (EdgeViewModel)movingRect.DataContext;
                         if (!rectEdge.IsSelected)
                         {
@@ -530,7 +527,7 @@ namespace _02350Project.ViewModel
                     _moveOffsetVector = new Vector(0,0);
 
                      minValue = new Point(double.PositiveInfinity, double.PositiveInfinity);
-
+                     oldPoints.Clear();
                     for (int i = 0; i < nodesToMove.Count; ++i)
                     {
                         if (minValue.X > nodesToMove[i].X)
@@ -681,7 +678,7 @@ namespace _02350Project.ViewModel
                     //    nodesToMove[i].X -= _moveOffsetVector.X;
                     //    nodesToMove[i].Y -= _moveOffsetVector.Y;
                     //}
-
+                    newPoints.Clear();
                     for (int i = 0; i < nodesToMove.Count; ++i)
                     {
                         newPoints.Add(new Point(nodesToMove[i].X, nodesToMove[i].Y));
