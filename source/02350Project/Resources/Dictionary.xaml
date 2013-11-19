@@ -24,10 +24,10 @@
     <system:String x:Key="newNodeTooltipTitle">New Node</system:String>
     <system:String x:Key="newNodeTooltipDesc">Creates a new class</system:String>
 
-    <system:String x:Key="editNodeTooltipTitle">Edit Node (Ctrl + E)</system:String>
+    <system:String x:Key="editNodeTooltipTitle">Edit Node (Ctrl+E)</system:String>
     <system:String x:Key="editNodeTooltipDesc">Edit the selected node</system:String>
 
-    <system:String x:Key="removeNodeTooltipTitle">Delete Node (Delete)</system:String>
+    <system:String x:Key="removeNodeTooltipTitle">Delete Node (Del)</system:String>
     <system:String x:Key="removeNodeTooltipDesc">Delete selected nodes and edges</system:String>
 
 

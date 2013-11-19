@@ -631,11 +631,11 @@ namespace _02350Project.ViewModel
         }
 
         private Canvas mainCanvas;
-        private int counterX;
-        private int counterY;
-        private double oldMovePosX;
-        private double oldMovePosY;
-        private const int snapValue = 0;
+        //private int counterX;
+        //private int counterY;
+        //private double oldMovePosX;
+        //private double oldMovePosY;
+        //private const int snapValue = 0;
 
         /// <summary>
         /// MouseMoveNode handles the implementation used when a MouseMove is triggered through an EventToCommand.
@@ -671,8 +671,6 @@ namespace _02350Project.ViewModel
                         _leftNode.X = 0;
                         hitLeft = true;
                     }
-
-
 
                     foreach (NodeViewModel node in nodesToMove)
                     {
