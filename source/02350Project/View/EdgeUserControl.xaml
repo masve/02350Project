@@ -21,10 +21,10 @@
 
         <Polyline Name="ActualLine" Stroke="Black" StrokeThickness="1" StrokeDashArray="{Binding Dash, Converter={StaticResource BoolToDash}}" 
               Points="{Binding LinePoints}" />
-
-
-             <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
-
+                
+        <Polyline Points="{Binding ActualArrow}" StrokeThickness="1" Stroke="Black" Fill="{Binding Color}"/>
+                
+        
         <!--TRIGGERS START-->
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDown">

@@ -25,13 +25,13 @@ namespace _02350Project.ViewModel
         private double height;
         private double width;
 
-        public double X { get { return node.X; } set { node.X = (int)value; RaisePropertyChanged("X"); RaisePropertyChanged("CanvasCenterX"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
-        public double Y { get { return node.Y; } set { node.Y = (int)value; RaisePropertyChanged("Y"); RaisePropertyChanged("CanvasCenterY"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
-        public double Height { get { return height; } set { height = value; RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
-        public double Width { get { return width; } set { width = value; RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double X { get { return node.X; } set { node.X = (int)value; RaisePropertyChanged("X"); RaisePropertyChanged("CanvasCenterX"); } }
+        public double Y { get { return node.Y; } set { node.Y = (int)value; RaisePropertyChanged("Y"); RaisePropertyChanged("CanvasCenterY"); } }
+        public double Height { get { return height; } set { height = value; RaisePropertyChanged("Height"); } }
+        public double Width { get { return width; } set { width = value; RaisePropertyChanged("Width"); } }
 
-        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); RaisePropertyChanged("Width"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
-        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); RaisePropertyChanged("Height"); RaisePropertyChanged("North"); RaisePropertyChanged("South"); RaisePropertyChanged("East"); RaisePropertyChanged("West"); } }
+        public double CanvasCenterX { get { return node.X + Width / 2; } set { node.X = (int)value - (int)Width / 2; RaisePropertyChanged("X"); } }
+        public double CanvasCenterY { get { return node.Y + Height / 2; } set { node.Y = (int)value - (int)Height / 2; RaisePropertyChanged("Y"); } }
         public double MaxX { get { return node.X + Width; } }
         public double MaxY { get { return node.Y + Height; } }
 

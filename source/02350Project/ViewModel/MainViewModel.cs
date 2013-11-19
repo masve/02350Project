@@ -33,14 +33,10 @@ namespace _02350Project.ViewModel
         private int noOfEdgesSelected = 0;
         private int noOfNodesSelected = 0;
         private List<NodeViewModel> nodesToMove = new List<NodeViewModel>();
-        //private double leastX = Double.PositiveInfinity;
-        //private double leastY = Double.PositiveInfinity;
         //private Dictionary<NodeViewModel, Point> dic =  #### til nodestomove!!
         
         private double scale = 1;
         public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged("Scale"); } } 
-
-        //private Point moveNodePoint; // No longer in use
 
         private string _edgeType;
         private string _path;
@@ -83,7 +79,6 @@ namespace _02350Project.ViewModel
         public ICommand ZoomOutCommand { get; private set; }
         public ICommand Zoom100Command { get; private set; }
         
-
         #region Edge type commands
         public ICommand AddAGGCommand { get; private set; }
         public ICommand AddDEPCommand { get; private set; }
@@ -98,8 +93,6 @@ namespace _02350Project.ViewModel
         public ICommand OpenCommand { get; private set; }
         public ICommand NewCommand { get; private set; }
         #endregion
-
-
 
         public ICommand TestCommand { get; private set; }
 
@@ -129,11 +122,9 @@ namespace _02350Project.ViewModel
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
-            //MouseDoubleClickNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDoubleClickNode);
 
             CreateNodeCommand = new RelayCommand(CreateNode);
             EditNodeCommand = new RelayCommand(EditNode, CanEdit);
-            //ExpandResizeCommand = new RelayCommand<SizeChangedEventArgs>(ExpandResize);
 
             UndoCommand = new RelayCommand(Undo, CanUndo);
             RedoCommand = new RelayCommand(Redo, CanRedo);

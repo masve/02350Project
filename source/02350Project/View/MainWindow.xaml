@@ -63,6 +63,7 @@
                     <Canvas.LayoutTransform>
                         <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"/>
                     </Canvas.LayoutTransform>
+                    
                     <ItemsControl ItemsSource="{Binding Edges}"/>
                     <ItemsControl ItemsSource="{Binding Nodes}"/>
 

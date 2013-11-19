@@ -122,7 +122,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="{Binding AbstractFlag, Converter={StaticResource BoolToItalic}}" FontWeight="Bold" Grid.Column="0"/>
+                    <TextBlock Text="{Binding Name, FallbackValue=[CLASS_NAME]}" FontStyle="Normal" FontWeight="Bold" Grid.Column="0"/>
                     <ToggleButton Style="{StaticResource toggleButtonStyle}" Cursor="Hand" Grid.Column="2" IsChecked="{Binding NodeCollapsed}" />
                 </Grid>
                 <TextBlock Text="{Binding NodeSubText, FallbackValue=ABSTRACT_CLASS}" FontSize="11"/>

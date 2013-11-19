@@ -13,17 +13,13 @@ namespace _02350Project.Model
         /*
          * Coordinates
          */
-
         public int X { get; set; }
         public int Y { get; set; }
 
         /*
          * Node Content
          */
-        //private string nodeSubText;
-
         public string Name { get; set; }
-        //public string NodeSubText { get { return nodeSubText; } set { nodeSubText = value; } }
         public NodeType NodeType { get; set; }
         public List<string> Attributes { get; set; }
         public List<string> Methods { get; set; }
