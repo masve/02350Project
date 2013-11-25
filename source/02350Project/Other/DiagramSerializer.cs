@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Windows;
 
 namespace _02350Project.Other
 {
@@ -60,8 +61,6 @@ namespace _02350Project.Other
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
             TextWriter writer = new StreamWriter(path);
 
-            //TextWriter writer = new FileStream(path,FileAccess.Write);
-            //FileStream FileStream = new 
             try
             {
                 serializer.Serialize(writer, diagram);
@@ -86,18 +85,51 @@ namespace _02350Project.Other
         {
             Diagram diagram = new Diagram();
             XmlSerializer serializer = new XmlSerializer(typeof(Diagram));
-            TextReader reader = new StreamReader(path);
-            diagram = (Diagram)serializer.Deserialize(reader);
-            reader.Close();
-            return diagram;
-
-        }
-        public static void j()
-        {
-            while (true)
+            serializer.UnknownNode += new XmlNodeEventHandler(UnknowNode);
+            serializer.UnknownAttribute += new XmlAttributeEventHandler(UnknowAttribute);
+            serializer.UnknownElement += new XmlElementEventHandler(UnknowElement);
+            FileStream reader = new FileStream(path, FileMode.Open);
+            try
             {
-
+                diagram = (Diagram)serializer.Deserialize(reader);
             }
+            catch (InvalidOperationException e)
+            {
+                DiagramSerializer.error("Invalid Operation Exception");
+            }
+            finally
+            {
+                reader.Close();
+            }
+            return diagram;
         }
+
+        protected static void UnknowNode(Object sender, XmlNodeEventArgs e)
+        {
+            Other.ConsolePrinter.Write("Node Error: " + e.Name);
+            DiagramSerializer.error(e.Name);
+        }
+
+        private static void UnknowAttribute(Object sender, XmlAttributeEventArgs e)
+        {
+            System.Xml.XmlAttribute attr = e.Attr;
+            Other.ConsolePrinter.Write("Attribute error: " + attr.Name);
+            DiagramSerializer.error(attr.Name);
+        }
+        private static void UnknowElement(Object sender, XmlElementEventArgs e)
+        {
+            Other.ConsolePrinter.Write("Element error: " + e.Element.Name);
+            DiagramSerializer.error(e.Element.Name);
+        }
+
+        private static void error(string e)
+        {
+            string messageBoxText = "Invalid or corrupt XML file\nError: " + e;
+            string caption = "XML error";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+            MessageBox.Show(messageBoxText, caption, button, icon);
+        }
+
     }
 }
