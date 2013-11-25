@@ -93,7 +93,7 @@ namespace _02350Project.Other
             {
                 diagram = (Diagram)serializer.Deserialize(reader);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 DiagramSerializer.error("Invalid Operation Exception");
             }
@@ -107,19 +107,19 @@ namespace _02350Project.Other
         protected static void UnknowNode(Object sender, XmlNodeEventArgs e)
         {
             Other.ConsolePrinter.Write("Node Error: " + e.Name);
-            DiagramSerializer.error(e.Name);
+            DiagramSerializer.error("Unknow node: " + e.Name);
         }
 
         private static void UnknowAttribute(Object sender, XmlAttributeEventArgs e)
         {
             System.Xml.XmlAttribute attr = e.Attr;
             Other.ConsolePrinter.Write("Attribute error: " + attr.Name);
-            DiagramSerializer.error(attr.Name);
+            DiagramSerializer.error("Unknow Attribute: " + attr.Name);
         }
         private static void UnknowElement(Object sender, XmlElementEventArgs e)
         {
             Other.ConsolePrinter.Write("Element error: " + e.Element.Name);
-            DiagramSerializer.error(e.Element.Name);
+            DiagramSerializer.error("Element error: " + e.Element.Name);
         }
 
         private static void error(string e)
