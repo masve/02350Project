@@ -19,6 +19,7 @@
         <KeyBinding Key="Delete" Command="{Binding RemoveElementsCommand}"/>
         <KeyBinding Key="E" Modifiers="Control+Shift" Command="{Binding ExportCommand}"/>
         <KeyBinding Key="E" Modifiers="Control" Command="{Binding EditNodeCommand}"/>
+        <KeyBinding Key="W" Modifiers="Control" Command="{Binding CreateNodeCommand}"/>
 
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>
@@ -38,7 +39,7 @@
     
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="New Node" Command="{Binding CreateNodeCommand}" InputGestureText=""/>
+            <MenuItem Header="New Node" InputGestureText="Ctrl+W" Command="{Binding CreateNodeCommand}"/>
             <!--<Separator/>
             <MenuItem Header="Paste" InputGestureText="Ctrl+V"/>-->
             <Separator/>

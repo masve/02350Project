@@ -216,7 +216,7 @@ namespace _02350Project.ViewModel
                     SelectedChoice = "Interface";
                     break;
                 case NodeType.CLASS:
-                    SelectedChoice = "Default";
+                    SelectedChoice = "Class";
                     break;
             }
 

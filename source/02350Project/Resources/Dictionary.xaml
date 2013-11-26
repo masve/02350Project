@@ -21,14 +21,14 @@
     <system:String x:Key="cancelTooltipTitle">Cancel (Esc)</system:String>
     <system:String x:Key="cancelTooltipDesc">Cancels all ongoing actions. Like class select and line add.</system:String>
 
-    <system:String x:Key="newNodeTooltipTitle">New Node</system:String>
-    <system:String x:Key="newNodeTooltipDesc">Creates a new class</system:String>
+    <system:String x:Key="newNodeTooltipTitle">New Class (Ctrl+W)</system:String>
+    <system:String x:Key="newNodeTooltipDesc">Creates a new class.</system:String>
 
-    <system:String x:Key="editNodeTooltipTitle">Edit Node (Ctrl+E)</system:String>
-    <system:String x:Key="editNodeTooltipDesc">Edit the selected node</system:String>
+    <system:String x:Key="editNodeTooltipTitle">Edit Class (Ctrl+E)</system:String>
+    <system:String x:Key="editNodeTooltipDesc">Edit the selected class.</system:String>
 
-    <system:String x:Key="removeNodeTooltipTitle">Delete Node (Del)</system:String>
-    <system:String x:Key="removeNodeTooltipDesc">Delete selected nodes and edges</system:String>
+    <system:String x:Key="removeNodeTooltipTitle">Delete Class (Del)</system:String>
+    <system:String x:Key="removeNodeTooltipDesc">Delete selected class and lines.</system:String>
 
 
     <!--TOOLTIPS APPLICATIONMENU CONTENT-->
@@ -41,7 +41,7 @@
     <system:String x:Key="saveTooltipTitle">Save (Ctrl+S)</system:String>
     <system:String x:Key="saveTooltipDesc">Save the current diagram.</system:String>
 
-    <system:String x:Key="saveAsTooltipTitle">Save as F12</system:String>
+    <system:String x:Key="saveAsTooltipTitle">Save as (F12)</system:String>
     <system:String x:Key="saveAsTooltipDesc">Save the current diagram as a new file.</system:String>
 
     <system:String x:Key="printTooltipTitle">Print (Ctrl+P)</system:String>

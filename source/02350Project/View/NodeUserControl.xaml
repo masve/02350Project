@@ -101,7 +101,7 @@
                     <!--<MenuItem Header="Cut" InputGestureText="Ctrl+X"/>
                     <MenuItem Header="Copy" InputGestureText="Ctrl+C"/>
                     <Separator/>-->
-                    <MenuItem Header="Edit" Command="{Binding EditNodeCommand}" InputGestureText="Ctrl + E"/>
+                    <MenuItem Header="Edit" Command="{Binding EditNodeCommand}" InputGestureText="Ctrl+E"/>
                     <MenuItem Header="Delete" Command="{Binding RemoveElementsCommand}" InputGestureText="Del"/>
                     <Separator/>
                     <MenuItem Header="Cancel" Command="{Binding CancelActionCommand}" InputGestureText="Esc"/>
