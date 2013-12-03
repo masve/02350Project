@@ -13,6 +13,7 @@ namespace _02350Project.ViewModel
 {
     public class CreateNodeViewModel : ViewModelBase, IDataErrorInfo
     {
+        #region Private Fields
         private readonly Window _window;
 
         private ObservableCollection<String> _attributes;
@@ -36,15 +37,18 @@ namespace _02350Project.ViewModel
         private enum State { CREATE, EDIT };
 
         private State _state;
+        #endregion
 
+        #region Public Fields
         public ICommand AddAttributeCommand { get; private set; }
         public ICommand AddMethodCommand { get; private set; }
         public ICommand RemoveItemCommand { get; private set; }
         public ICommand CreateNodeCommand { get; private set; }
         public ICommand EditNodeCommand { get; private set; }
         public ICommand CancelNodeCommand { get; private set; }
+        #endregion
 
-        #region Constructor
+        #region Constructors
         [PreferredConstructor]
         public CreateNodeViewModel(NodeViewModel node, Window window)
         {
@@ -137,14 +141,7 @@ namespace _02350Project.ViewModel
         public Visibility EditVisibility { get { if (_state == State.EDIT) return Visibility.Visible; return Visibility.Collapsed; } }
         #endregion
 
-        public void FillFields()
-        {
-            NodeName = _editNodeName;
-            EnumToListboxRadioConverter(_editNodeType);
-            Attributes = new ObservableCollection<string>(_editNodeAttributes);
-            Methods = new ObservableCollection<string>(_editNodeMethods);
-        }
-
+        #region Public Methods
         /// <summary>
         /// Adds the content of ActualAttribute to Attributes
         /// </summary>
@@ -255,15 +252,21 @@ namespace _02350Project.ViewModel
             _window.DialogResult = true;
         }
 
+        /// <summary>
+        /// Sets the node properties and returns true to the dialog invoker.
+        /// </summary>
         public void EditNode()
         {
             ListboxToEnumRadioConverter();
+
             _node.Name = NodeName;
             _node.NodeType = NodeType;
             _node.Methods = Methods.ToList();
             _node.Attributes = Attributes.ToList();
+
             _window.DialogResult = true;
         }
+        #endregion
 
         #region IDataErrorInfo Members
         public string Error { get; private set; }

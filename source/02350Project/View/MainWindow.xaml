@@ -20,6 +20,7 @@
         <KeyBinding Key="E" Modifiers="Control+Shift" Command="{Binding ExportCommand}"/>
         <KeyBinding Key="E" Modifiers="Control" Command="{Binding EditNodeCommand}"/>
         <KeyBinding Key="W" Modifiers="Control" Command="{Binding CreateNodeCommand}"/>
+        <KeyBinding Key="A" Modifiers="Control" Command="{Binding SelectAllNodesCommmand}"/>
 
         <!--<KeyBinding Key="Delete" Command="{Binding RemoveNodeCommand}"/>-->
     </Window.InputBindings>

@@ -16,17 +16,17 @@
         <Ribbon DockPanel.Dock="Top" Margin="0,-23,0,0">
 
             <Ribbon.ApplicationMenu>
-                <RibbonApplicationMenu SmallImageSource="../Resources/Images/appmenu/menuicon.png">
+                <RibbonApplicationMenu SmallImageSource="../Resources/Images/appmenu/menuicon.png" KeyTip="F">
                     <RibbonApplicationMenu.Items>
-                        <RibbonApplicationMenuItem Header="New                      " Command="{Binding NewCommand}" ToolTipTitle="{StaticResource newTooltipTitle}" ToolTipDescription="{StaticResource newTooltipDesc}" ImageSource="../Resources/Images/appmenu/new.png"/>
-                        <RibbonApplicationMenuItem Header="Open"  Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
-                        <RibbonApplicationMenuItem Header="Save" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
-                        <RibbonApplicationMenuItem Header="Save as" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />
+                        <RibbonApplicationMenuItem Header="New                      " KeyTip="N" Command="{Binding NewCommand}" ToolTipTitle="{StaticResource newTooltipTitle}" ToolTipDescription="{StaticResource newTooltipDesc}" ImageSource="../Resources/Images/appmenu/new.png"/>
+                        <RibbonApplicationMenuItem Header="Open" KeyTip="O" Command="{Binding OpenCommand}" ToolTipTitle="{StaticResource openTooltipTitle}" ToolTipDescription="{StaticResource openTooltipDesc}" ImageSource="../Resources/Images/appmenu/open.png"/>
+                        <RibbonApplicationMenuItem Header="Save" KeyTip="S" Command="{Binding SaveCommand}" ToolTipTitle="{StaticResource saveTooltipTitle}" ToolTipDescription="{StaticResource saveTooltipDesc}" ImageSource="../Resources/Images/appmenu/save.png"/>
+                        <RibbonApplicationMenuItem Header="Save as" KeyTip="A" Command="{Binding SaveAsCommand}" ToolTipTitle="{StaticResource saveAsTooltipTitle}" ToolTipDescription="{StaticResource saveAsTooltipDesc}" ImageSource="../Resources/Images/appmenu/saveas.png" />
                         
                         
                         <RibbonSeparator/>
                         <!--<RibbonApplicationMenuItem Header="Print" Command="{Binding TestCommand}" ToolTipTitle="{StaticResource printTooltipTitle}" ToolTipDescription="{StaticResource printTooltipDesc}" ImageSource="../Resources/Images/appmenu/printer.png"/>-->
-                        <RibbonApplicationMenuItem Header="Export"  Command="{Binding ExportCommand}" ToolTipTitle="{StaticResource exportToolTipTitle}" ToolTipDescription="{StaticResource exportTooltipDesc}" ImageSource="../Resources/Images/appmenu/export.png"/>
+                        <RibbonApplicationMenuItem Header="Export" KeyTip="E" Command="{Binding ExportCommand}" ToolTipTitle="{StaticResource exportToolTipTitle}" ToolTipDescription="{StaticResource exportTooltipDesc}" ImageSource="../Resources/Images/appmenu/export.png"/>
                         <RibbonSeparator/>
                         <RibbonApplicationMenuItem Header="About" ImageSource="../Resources/Images/appmenu/about.png"/>
                         <RibbonSeparator/>
@@ -35,43 +35,43 @@
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
 
-            <RibbonTab Header="Home">
+            <RibbonTab Header="Home" KeyTip="H">
                 <!--<RibbonGroup Name="Clipboard" Header="Clipboard">
                     <RibbonButton Label="Paste" LargeImageSource="../Resources/Images/clipboardgroup/edit-paste.png" ToolTipTitle="{StaticResource pasteTooltipTitle}" ToolTipDescription="{StaticResource pasteTooltipDesc}"/>
                     <RibbonButton Label="Cut" SmallImageSource="../Resources/Images/clipboardgroup/edit-cut.png" ToolTipTitle="{StaticResource cutTooltipTitle}" ToolTipDescription="{StaticResource cutTooltipDesc}"/>
                     <RibbonButton Label="Copy" SmallImageSource="../Resources/Images/clipboardgroup/edit-copy.png" ToolTipTitle="{StaticResource copyTooltipTitle}" ToolTipDescription="{StaticResource copyTooltipDesc}"/>
                 </RibbonGroup>-->
                 <RibbonGroup Header="Edit">
-                    <RibbonButton Label="Undo" Command="{Binding UndoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-undo.png" ToolTipTitle="{StaticResource undoTooltipTitle}" ToolTipDescription="{StaticResource undoTooltipDesc}"/>
-                    <RibbonButton Label="Redo" Command="{Binding RedoCommand}" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
-                    <RibbonButton Label="Cancel" Command="{Binding CancelActionCommand}" LargeImageSource="../Resources/Images/Other/cancelaction.png" ToolTipTitle="{StaticResource cancelTooltipTitle}" ToolTipDescription="{StaticResource cancelTooltipDesc}"/>
+                    <RibbonButton Label="Undo" Command="{Binding UndoCommand}" KeyTip="U" LargeImageSource="../Resources/Images/editgroup/edit-undo.png" ToolTipTitle="{StaticResource undoTooltipTitle}" ToolTipDescription="{StaticResource undoTooltipDesc}"/>
+                    <RibbonButton Label="Redo" Command="{Binding RedoCommand}" KeyTip="R" LargeImageSource="../Resources/Images/editgroup/edit-redo.png" ToolTipTitle="{StaticResource redoTooltipTitle}" ToolTipDescription="{StaticResource redoTooltipDesc}"/>
+                    <RibbonButton Label="Cancel" Command="{Binding CancelActionCommand}" KeyTip="C" LargeImageSource="../Resources/Images/Other/cancelaction.png" ToolTipTitle="{StaticResource cancelTooltipTitle}" ToolTipDescription="{StaticResource cancelTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Class">
-                    <RibbonButton Label="New" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}" ToolTipTitle="{StaticResource newNodeTooltipTitle}" ToolTipDescription="{StaticResource newNodeTooltipDesc}"/>
-                    <RibbonButton Label="Edit" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}" ToolTipTitle="{StaticResource editNodeTooltipTitle}" ToolTipDescription="{StaticResource editNodeTooltipDesc}"/>
-                    <RibbonButton Label="Delete" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}" ToolTipTitle="{StaticResource removeNodeTooltipTitle}" ToolTipDescription="{StaticResource removeNodeTooltipDesc}"/>
+                    <RibbonButton Label="New" KeyTip="N" LargeImageSource="../Resources/Images/classgroup/addclass.png" Command="{Binding CreateNodeCommand}" ToolTipTitle="{StaticResource newNodeTooltipTitle}" ToolTipDescription="{StaticResource newNodeTooltipDesc}"/>
+                    <RibbonButton Label="Edit" KeyTip="E" LargeImageSource="../Resources/Images/classgroup/editclass.png" Command="{Binding EditNodeCommand}" ToolTipTitle="{StaticResource editNodeTooltipTitle}" ToolTipDescription="{StaticResource editNodeTooltipDesc}"/>
+                    <RibbonButton Label="Delete" KeyTip="D" LargeImageSource="../Resources/Images/classgroup/deleteclass.png" Command="{Binding RemoveElementsCommand}" ToolTipTitle="{StaticResource removeNodeTooltipTitle}" ToolTipDescription="{StaticResource removeNodeTooltipDesc}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Lines">
-                    <RibbonButton Label=" Dependency"     Command="{Binding AddDEPCommand}" SmallImageSource="../Resources/Images/linegroup/dependency.png"/>
-                    <RibbonButton Label=" Generalization" Command="{Binding AddGENCommand}" SmallImageSource="../Resources/Images/linegroup/generalization.png" />
-                    <RibbonButton Label=" Association"    Command="{Binding AddASSCommand}" SmallImageSource="../Resources/Images/linegroup/association.png" />
-                    <RibbonButton Label=" Aggregation"    Command="{Binding AddAGGCommand}" SmallImageSource="../Resources/Images/linegroup/aggregation.png" />
-                    <RibbonButton Label=" Composition"    Command="{Binding AddCOMCommand}" SmallImageSource="../Resources/Images/linegroup/composition.png"/>
+                    <RibbonButton Label=" Dependency"     Command="{Binding AddDEPCommand}" KeyTip="1" SmallImageSource="../Resources/Images/linegroup/dependency.png"/>
+                    <RibbonButton Label=" Generalization" Command="{Binding AddGENCommand}" KeyTip="2" SmallImageSource="../Resources/Images/linegroup/generalization.png" />
+                    <RibbonButton Label=" Association"    Command="{Binding AddASSCommand}" KeyTip="3" SmallImageSource="../Resources/Images/linegroup/association.png" />
+                    <RibbonButton Label=" Aggregation"    Command="{Binding AddAGGCommand}" KeyTip="4" SmallImageSource="../Resources/Images/linegroup/aggregation.png" />
+                    <RibbonButton Label=" Composition"    Command="{Binding AddCOMCommand}" KeyTip="5" SmallImageSource="../Resources/Images/linegroup/composition.png"/>
                 </RibbonGroup>
                 <!--<RibbonGroup Header="Insert">
                     <RibbonButton Label="Note" Command="{Binding TestCommand}" LargeImageSource="../Resources/Images/other/note.png"/>
                 </RibbonGroup>-->
                 <RibbonGroup Header="Show and hide">
-                    <RibbonCheckBox Label="Gridlines" IsChecked="{Binding GridCheck}"/>
+                    <RibbonCheckBox Label="Gridlines" KeyTip="G" IsChecked="{Binding GridCheck}"/>
 
                 </RibbonGroup>
             </RibbonTab>
 
-            <RibbonTab Header="View">
+            <RibbonTab Header="View" KeyTip="V">
                 <RibbonGroup Header="Zoom">
-                    <RibbonButton Label="Zoom in" Command="{Binding ZoomInCommand}" LargeImageSource="../Resources/Images/zoomgroup/zoomin.png"/>
-                    <RibbonButton Label="Zoom out" Command="{Binding ZoomOutCommand}" LargeImageSource="../Resources/Images/zoomgroup/zoomout.png"/>
-                    <RibbonButton Label="100%" Command="{Binding Zoom100Command}" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
+                    <RibbonButton Label="Zoom in" Command="{Binding ZoomInCommand}" KeyTip="+" LargeImageSource="../Resources/Images/zoomgroup/zoomin.png"/>
+                    <RibbonButton Label="Zoom out" Command="{Binding ZoomOutCommand}" KeyTip="-" LargeImageSource="../Resources/Images/zoomgroup/zoomout.png"/>
+                    <RibbonButton Label="100%" Command="{Binding Zoom100Command}" KeyTip="0" LargeImageSource="../Resources/Images/zoomgroup/lens.png"/>
                 </RibbonGroup>
                 
             </RibbonTab>

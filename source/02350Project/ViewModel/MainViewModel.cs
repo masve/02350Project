@@ -25,18 +25,14 @@ namespace _02350Project.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        #region Private Fields
         private readonly UndoRedoController _undoRedoController = UndoRedoController.GetInstance();
-
-        public ObservableCollection<NodeViewModel> Nodes { get; set; }
-        public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
         private int noOfEdgesSelected = 0;
         private int noOfNodesSelected = 0;
         private List<NodeViewModel> nodesToMove = new List<NodeViewModel>();
-        //private Dictionary<NodeViewModel, Point> dic =  #### til nodestomove!!
-        
+
         private double scale = 1;
-        public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged("Scale"); } } 
 
         private string _edgeType;
         private string _path;
@@ -52,6 +48,11 @@ namespace _02350Project.ViewModel
         private bool _isRemovingNode;
         private bool _isMovingNode;
         private NodeViewModel _firstSelectedEdgeEnd;
+        #endregion
+
+        #region Public Fields
+        public ObservableCollection<NodeViewModel> Nodes { get; set; }
+        public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
         public ICommand RemoveElementsCommand { get; private set; }
         public ICommand RemoveEdgeCommand { get; private set; }
@@ -78,7 +79,7 @@ namespace _02350Project.ViewModel
         public ICommand ZoomInCommand { get; private set; }
         public ICommand ZoomOutCommand { get; private set; }
         public ICommand Zoom100Command { get; private set; }
-        
+
         #region Edge type commands
         public ICommand AddAGGCommand { get; private set; }
         public ICommand AddDEPCommand { get; private set; }
@@ -95,6 +96,7 @@ namespace _02350Project.ViewModel
         #endregion
 
         public ICommand TestCommand { get; private set; }
+        #endregion
 
         #region Constructor
         public MainViewModel()
@@ -196,7 +198,9 @@ namespace _02350Project.ViewModel
 
         #endregion
 
-        #region Export Methods
+        /// <summary>
+        /// Exports a canvas element to a image file.
+        /// </summary>
         public void Export()
         {
             Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
@@ -216,9 +220,10 @@ namespace _02350Project.ViewModel
             Point p = getExportResolution();
             ExportDiagram.ExportImage(path, mainCanvas, (int)p.Y + 5, (int)p.X + 5);
         }
-        #endregion
 
-
+        /// <summary>
+        /// Cancels any action. Those can be edge addition and selection.
+        /// </summary>
         private void CancelAction()
         {
             foreach (NodeViewModel vm in Nodes)
@@ -239,14 +244,23 @@ namespace _02350Project.ViewModel
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
         }
+        
+        /// <summary>
+        /// Checks whether a node from be edited
+        /// </summary>
+        /// <returns></returns>
         private bool CanEdit()
         {
-            if (noOfNodesSelected == 1){
+            if (noOfNodesSelected == 1)
+            {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Clears selection of a node or edge. Used by CancelAction
+        /// </summary>
         private void ClearSelection()
         {
             foreach (NodeViewModel vm in Nodes)
@@ -260,11 +274,10 @@ namespace _02350Project.ViewModel
             _leftNode = null;
             _topNode = null;
         }
-        
-
 
         /// <summary>
         /// A dummy command implemantation which allows us to debug and test methods on button press.
+        /// Do ignore for review.
         /// </summary>
         public void Test()
         {
@@ -277,13 +290,20 @@ namespace _02350Project.ViewModel
             }
         }
 
+        /// <summary>
+        /// Resets the canvas.
+        /// </summary>
         public void New()
         {
             ClearDiagram();
             _undoRedoController.Reset();
-            _path = null;            
+            _path = null;
         }
 
+        /// <summary>
+        /// Clears the diagram. Used by New.
+        /// </summary>
+        /// <returns></returns>
         private bool ClearDiagram()
         {
             if (Nodes.Any())
@@ -313,7 +333,6 @@ namespace _02350Project.ViewModel
             }
             return true;
         }
-
 
         /// <summary>
         /// Opens a Save File Dialog and calls the save function in Data with the returned path.
@@ -355,9 +374,12 @@ namespace _02350Project.ViewModel
                 DiagramSerializer.Save(Nodes.ToList(), Edges.ToList(), _path);
         }
 
+
+        /// <summary>
+        /// Loads the save file.
+        /// </summary>
         public void Open()
         {
-            
             OpenFileDialog ofd = new OpenFileDialog()
             {
                 Filter = "Extensible Markup Language|*.xml"
@@ -376,9 +398,12 @@ namespace _02350Project.ViewModel
             _path = ofd.FileName;
             DiagramSerializer.Diagram diagram = DiagramSerializer.Load(_path);
             RestoreDiagram(diagram);
-
         }
 
+        /// <summary>
+        /// Restores diagram from a save file to Node and EdgeViewModels.
+        /// </summary>
+        /// <param name="diagram"></param>
         private void RestoreDiagram(DiagramSerializer.Diagram diagram)
         {
             foreach (Node n in diagram.Nodes)
@@ -446,13 +471,13 @@ namespace _02350Project.ViewModel
                 }
 
             }
-            foreach (EdgeViewModel vm in Edges) 
+            foreach (EdgeViewModel vm in Edges)
             {
                 if (vm.IsSelected)
                 {
                     edgeCommands.Add(new RemoveEdgeCommand(Edges, vm));
                 }
-            }                     
+            }
 
             if (edgeCommands.Count != 0 || nodeCommands.Count != 0)
             {
@@ -465,6 +490,9 @@ namespace _02350Project.ViewModel
             _canCancel = false;
         }
 
+        /// <summary>
+        /// All select of nodes
+        /// </summary>
         private void SelectAllNodes()
         {
             nodesToMove.Clear();
@@ -525,30 +553,30 @@ namespace _02350Project.ViewModel
         /// <param name="e"></param>
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-//            _isMovingNode = false;
+            //            _isMovingNode = false;
             if (!_isAddingEdge /*&& !_isRemovingNode*/)
             {
                 try
                 {
-                e.MouseDevice.Target.CaptureMouse();
+                    e.MouseDevice.Target.CaptureMouse();
                 }
                 catch (NullReferenceException i) { return; }
 
                 FrameworkElement movingRect = (FrameworkElement)e.MouseDevice.Target;
                 canvas = FindParentOfType<Canvas>(movingRect);
-                
-    
+
+
                 if (Keyboard.Modifiers != ModifierKeys.Shift)
                 {
-                    if (movingRect.DataContext is NodeViewModel) 
+                    if (movingRect.DataContext is NodeViewModel)
                     {
                         NodeViewModel movingNode = (NodeViewModel)movingRect.DataContext;
                         if (!movingNode.IsSelected)
-                             ClearSelection();
+                            ClearSelection();
                     }
                     if (movingRect.DataContext is EdgeViewModel)
                     {
-                        ClearSelection();     
+                        ClearSelection();
                     }
                 }
 
@@ -602,7 +630,7 @@ namespace _02350Project.ViewModel
                 }
 
                 //oldMovePosX = (int)_oldPosX;
-               // oldMovePosY = (int)_oldPosY;
+                // oldMovePosY = (int)_oldPosY;
             }
         }
 
@@ -715,7 +743,7 @@ namespace _02350Project.ViewModel
         //private void MouseDoubleClickNode(MouseButtonEventArgs obj)
         //{
         //    if(CanEdit())
-                
+
         //        EditNode();
         //}
 
@@ -757,6 +785,9 @@ namespace _02350Project.ViewModel
                 AddNode(newNodeVM);
         }
 
+        /// <summary>
+        /// Does the same as CreateNode but with a already existing node.
+        /// </summary>
         public void EditNode()
         {
             string oldName = null;
@@ -865,53 +896,43 @@ namespace _02350Project.ViewModel
         {
             return _undoRedoController.CanRedo();
         }
-        #endregion
-
-
-
+        
         public bool CanRemove()
         {
-            return _canRemove; 
+            return _canRemove;
         }
 
         public bool CanCancel()
         {
             return _canCancel;
         }
+        #endregion
 
         private double _showGrid;
         private bool _gridCheck;
 
+        /// <summary>
+        /// Sets the grid opacity according to the user input.
+        /// </summary>
         public double ShowGrid
         {
             get
-        {
-            if (GridCheck) 
-                _showGrid = 1.0;
-            else 
-                _showGrid = 0.0;
-            return _showGrid;
+            {
+                if (GridCheck)
+                    _showGrid = 1.0;
+                else
+                    _showGrid = 0.0;
+                return _showGrid;
             }
         }
-        
+
         public bool GridCheck { get { return _gridCheck; } set { _gridCheck = value; RaisePropertyChanged("ShowGrid"); } }
+        public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged("Scale"); } }
 
         /// <summary>
-        /// Finds parent of an element recursively.
+        /// Gets the resolution needed to contain all nodes in the to-be-exported image.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="o"></param>
         /// <returns></returns>
-        private static T FindParentOfType<T>(DependencyObject o)
-            where T : class
-        {
-            DependencyObject parent = VisualTreeHelper.GetParent(o);
-            if (typeof(T).IsAssignableFrom(parent.GetType()))
-                return parent is T ? parent as T : null;
-            else
-                return FindParentOfType<T>(parent);
-        }
-
         private Point getExportResolution()
         {
             double maxX = 0, maxY = 0;
@@ -927,6 +948,22 @@ namespace _02350Project.ViewModel
                 }
             }
             return new Point(maxX, maxY);
+        }
+        
+        /// <summary>
+        /// Finds parent of an element recursively.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        private static T FindParentOfType<T>(DependencyObject o)
+            where T : class
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(o);
+            if (typeof(T).IsAssignableFrom(parent.GetType()))
+                return parent is T ? parent as T : null;
+            else
+                return FindParentOfType<T>(parent);
         }
     }
 }

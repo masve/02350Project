@@ -39,20 +39,6 @@ namespace _02350Project.ViewModel
         public enum ANCHOR { NORTH, SOUTH, WEST, EAST };
         #endregion
 
-
-
-        public PointCollection LinePoints {
-            
-            get {
-                PointCollection linepoints;
-
-                linepoints = CalcPoly();
-
-                return linepoints;
-            }
-        
-        }
-
         #region Constructor
         public EdgeViewModel(Node fromNode, Node toNode, NodeViewModel fromVM, NodeViewModel toVM, string type)
         {
@@ -152,6 +138,18 @@ namespace _02350Project.ViewModel
         public double Opacity { get { return IsSelected ? 0.7 : 0.0; } }
 
         public PointCollection ActualArrow { get { return actualArrow; } set { actualArrow = value; RaisePropertyChanged("ActualArrow"); } }
+        public PointCollection LinePoints
+        {
+
+            get
+            {
+                PointCollection linepoints;
+
+                linepoints = CalcPoly();
+
+                return linepoints;
+            }
+        }
 
         #endregion
 
@@ -240,8 +238,8 @@ namespace _02350Project.ViewModel
         /// <returns></returns>
         public PointCollection rotatePoint(Point refPoint, PointCollection points, double angle)
         {
-            double cosTheta = Math.Cos(angle + Math.PI );
-            double sinTheta = Math.Sin(angle + Math.PI );
+            double cosTheta = Math.Cos(angle + Math.PI);
+            double sinTheta = Math.Sin(angle + Math.PI);
 
             PointCollection newPoints = new PointCollection();
 
@@ -293,7 +291,7 @@ namespace _02350Project.ViewModel
                         temp3 = OffsetTemplate(refPoint, RhombusArrow);
                         break;
                 }
-                PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle(midX,midY));
+                PointCollection temp = rotatePoint(refPoint, temp3, calculateAngle(midX, midY));
 
                 /*
                  * Adds the reference point to as index[1] in the temp2 PointCollection
@@ -307,9 +305,13 @@ namespace _02350Project.ViewModel
                 }
                 ActualArrow = temp2;
             }
-        #endregion
         }
+        #endregion
 
+        /// <summary>
+        /// Calculates the point collections for the polyline. That is the crack line connecting the nodes.
+        /// </summary>
+        /// <returns></returns>
         private PointCollection CalcPoly()
         {
             VMEndA.setEnds(this);
@@ -323,10 +325,10 @@ namespace _02350Project.ViewModel
                 mid2 = new Point(BX, Math.Abs((AY + BY) / 2));
                 mid1 = new Point(AX, Math.Abs((AY + BY) / 2));
             }
-            else if (VMEndA.Orientation == 1) 
+            else if (VMEndA.Orientation == 1)
             {
-                mid2 = new Point(Math.Abs((AX + BX)/2), BY);
-                mid1 = new Point(Math.Abs((AX + BX)/2), AY);
+                mid2 = new Point(Math.Abs((AX + BX) / 2), BY);
+                mid1 = new Point(Math.Abs((AX + BX) / 2), AY);
             }
             p.Add(pointEndA);
             p.Add(mid1);
