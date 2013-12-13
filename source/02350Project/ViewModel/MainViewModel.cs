@@ -203,22 +203,26 @@ namespace _02350Project.ViewModel
         /// </summary>
         public void Export()
         {
-            Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
-            ClearSelection();
-            SaveFileDialog dialog = new SaveFileDialog()
+            try
             {
-                Title = "Export",
-                FileName = "Untitled",
-                Filter = " PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
-            };
+                Canvas mainCanvas = FindParentOfType<Canvas>(canvas);
+                ClearSelection();
+                SaveFileDialog dialog = new SaveFileDialog()
+                {
+                    Title = "Export",
+                    FileName = "Untitled",
+                    Filter = " PNG (*.png)|*.png| TIFF (*.tiff)|*.tiff| GIF (*.gif)|*.gif| BMP (*.bmp)|*.bmp| JPEG (*.jpeg)|*.jpeg"
+                };
 
 
-            if (dialog.ShowDialog() != true)
-                return;
+                if (dialog.ShowDialog() != true)
+                    return;
 
-            string path = dialog.FileName;
-            Point p = getExportResolution();
-            ExportDiagram.ExportImage(path, mainCanvas, (int)p.Y + 5, (int)p.X + 5);
+                string path = dialog.FileName;
+                Point p = getExportResolution();
+                ExportDiagram.ExportImage(path, mainCanvas, (int)p.Y + 5, (int)p.X + 5);
+            }
+            catch (NullReferenceException) { return; }
         }
 
         /// <summary>
@@ -244,7 +248,7 @@ namespace _02350Project.ViewModel
             noOfEdgesSelected = 0;
             nodesToMove.Clear();
         }
-        
+
         /// <summary>
         /// Checks whether a node from be edited
         /// </summary>
@@ -896,7 +900,7 @@ namespace _02350Project.ViewModel
         {
             return _undoRedoController.CanRedo();
         }
-        
+
         public bool CanRemove()
         {
             return _canRemove;
@@ -949,7 +953,7 @@ namespace _02350Project.ViewModel
             }
             return new Point(maxX, maxY);
         }
-        
+
         /// <summary>
         /// Finds parent of an element recursively.
         /// </summary>
